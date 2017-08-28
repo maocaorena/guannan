@@ -19,7 +19,7 @@ export default {
         let tabs = [
             {
                 isurl : 'accountList',
-                name : '客户管理'
+                name : '账号列表'
             }
         ];
         this.$store.dispatch('ChangeRightbar',tabs)

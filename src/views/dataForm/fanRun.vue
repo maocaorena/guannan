@@ -16,6 +16,13 @@ export default {
 
     },
     created(){
+        let tabs = [
+            {
+                isurl : 'fanRun',
+                name : '风机运行报表'
+            }
+        ];
+        this.$store.dispatch('ChangeRightbar',tabs)
     }
 }
 </script>

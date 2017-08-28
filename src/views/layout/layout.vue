@@ -62,7 +62,6 @@ export default {
             bottom: 32px;
             width: auto;
             height: auto;
-            background: #bababa;
         }
         .con-left{
             position: absolute;
@@ -71,10 +70,12 @@ export default {
             width: 194px;
             height: 100%;
             background: #f4f4f4;
+            border: 1px solid #dfdfdf;
+            border-top: 0;
         }
         .con-right{
             position: absolute;
-            left: 194px;
+            left: 195px;
             top: 0;
             right: 0;
             bottom: 0;

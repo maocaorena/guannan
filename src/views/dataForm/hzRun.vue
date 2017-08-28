@@ -16,6 +16,13 @@ export default {
 
     },
     created(){
+        let tabs = [
+            {
+                isurl : 'hzRun',
+                name : '变频器运行报表'
+            }
+        ];
+        this.$store.dispatch('ChangeRightbar',tabs)
     }
 }
 </script>

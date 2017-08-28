@@ -16,6 +16,13 @@ export default {
 
     },
     created(){
+        let tabs = [
+            {
+                isurl : 'roleList',
+                name : '角色'
+            }
+        ];
+        this.$store.dispatch('ChangeRightbar',tabs);
     }
 }
 </script>

@@ -131,7 +131,7 @@ export const routes = [
     {
         path: '/accountManage',
         component: layout,
-        name: '客户管理',
+        name: '账号管理',
         redirect: '/accountManage/accountList',
         children:[
             {// 账号列表

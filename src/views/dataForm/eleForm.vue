@@ -16,6 +16,14 @@ export default {
 
     },
     created(){
+        let tabs = [
+            {
+                isurl : 'eleForm',
+                name : '用电报表'
+            }
+        ];
+        this.$store.dispatch('ChangeRightbar',tabs);
+        
     }
 }
 </script>

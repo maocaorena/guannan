@@ -1,7 +1,7 @@
 <template>
     <div class="rightTabbar">
         <div class="rt-item" :class="{rtItemSelect: $route.path.indexOf(item.isurl)>=0}" v-for="item of rightbars">
-            <router-link :to="nowurl+item.isurl" >
+            <router-link :to="nowurl+item.isurl" replace>
                 {{item.name}}
             </router-link>
         </div>
@@ -24,11 +24,10 @@ export default {
         '$route' (to, from) {
             let strInd = this.$route.fullPath.lastIndexOf('/');
             this.nowurl = this.$route.fullPath.slice(0,strInd+1);
-            console.log(strInd)
-            console.log(this.nowurl);
         }
     },
     created(){
+
     },
 
 }

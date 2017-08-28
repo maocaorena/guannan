@@ -16,6 +16,13 @@ export default {
 
     },
     created(){
+        let tabs = [
+            {
+                isurl : 'fanIll',
+                name : '风机故障机报表'
+            }
+        ];
+        this.$store.dispatch('ChangeRightbar',tabs)
     }
 }
 </script>
