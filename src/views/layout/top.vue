@@ -24,4 +24,3 @@ export default {
         background: url(../../assets/img/top.png) no-repeat left top;
     }
 </style>
-1
