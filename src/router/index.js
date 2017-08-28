@@ -144,12 +144,9 @@ export const routes = [
             },
         ]
     },
-    //{ path: '*', redirect: '/monitoringRun' }
+    { path: '*', redirect: '/monitoringRun' }
 ];
 
 export default new Router({
     routes: routes
 });
-// router.beforeEach((to, from, next) => {
-//      next({ path: '/' })
-// })

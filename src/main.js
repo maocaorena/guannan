@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router';
-import store from './store'
+import store from './store'；
+import API from './api/API.js';
 import './assets/css/common.css'
 
-router.beforeEach((to, from, next) => {
-   	next();
-});
+const api = new API();
+Vue.prototype.api = api;
 
 new Vue({
   el: '#app',
+  API,
   router,
   store,
   template: '<App/>',
