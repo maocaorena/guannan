@@ -16,6 +16,19 @@ export default {
 
     },
     created(){
+        let tabs = [
+            {
+                isurl : 'fanRunwatch',
+                name : '风机运行监测'
+            },{
+                isurl : 'smartMeters',
+                name : '智能电表'
+            },{
+                isurl : 'hzWatch',
+                name : '变频器运行监测'
+            }
+        ];
+        this.$store.dispatch('ChangeRightbar',tabs)
     }
 }
 </script>
