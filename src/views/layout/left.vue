@@ -1,11 +1,11 @@
 <template>
     <div class="leftbar">
         <div class="lb-top" v-if="leftbarsType == 1">全部</div>
-        <div v-if="leftbarsType == 1" class="first-list" v-for="(item,index1) of leftbars">
+        <div v-if="leftbarsType == 1" class="first-list type1" v-for="(item,index1) of leftbars">
             <p class="first-item">{{item.tit}}</p>
             <ul class="second-list">
                 <li class="second-item"
-                    :class="{secondItemSelect:leftbarselected.first==index1&&leftbarselected.second==index2}"
+                    :class="{selected:leftbarselected.first==index1&&leftbarselected.second==index2}"
                     v-for="(second,index2) of item.list"
                     @click="clickThis1(index1,index2)">{{second.name}}</li>
             </ul>
@@ -112,24 +112,21 @@ export default {
         }
         .first-item{
             width: 100%;
-            height: 29px;
             text-indent: 28px;
-            line-height: 29px;
             background: #e3e3e3;
             background:-moz-linear-gradient(top, #fdfdfd, rgba(222, 222, 222, 1));
             background:-o-linear-gradient(top, #fdfdfd, rgba(222, 222, 222, 1));
+            background: -ms-linear-gradient(top, #fdfdfd 0%,#dedede 100%);
             background:-webkit-gradient(linear, 0 0, 0 bottom, from(#fdfdfd), to(rgba(222, 222, 222, 1)));
             background:gradient(linear, 0 0, 0 bottom, from(#fdfdfd), to(rgba(222, 222, 222, 1)));
+        }
+        .type1 .first-item{
+            height: 29px;
+            line-height: 29px;
             border: 1px solid #cccccc;
+
         }
-        .type2 .first-item{
-            border: none;
-            cursor: pointer;
-            height: 35px;
-            line-height: 35px;
-        }
-        .type2 .selected{
-            background: none;
+        .type1 .selected{
             background: #2899ee;
             color: #fff;
         }
@@ -141,13 +138,21 @@ export default {
             border-bottom: 2px dashed #ddd;
             cursor: pointer;
         }
-        .secondItemSelect{
-            background: #2899ee;
-        }
         .second-list{
             li:nth-last-child(1){
                 border: none;
             }
+        }
+        .type2 .first-item{
+            border: none;
+            cursor: pointer;
+            height: 35px;
+            line-height: 35px;
+        }
+        .type2 .selected{
+            background: none;
+            background: #2899ee;
+            color: #fff;
         }
     }
 </style>
