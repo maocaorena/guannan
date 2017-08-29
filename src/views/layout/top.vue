@@ -1,6 +1,6 @@
 <template>
     <div class="topbar">
-
+        <img src="../../assets/img/top_logo.png" alt="">
     </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
     .topbar{
         width: 100%;
         height: 100%;
-        background: url(../../assets/img/top.png) no-repeat left top;
+        background: url(../../assets/img/header-bg-left.png) no-repeat left top;
+        background-size: 100% 100%;
     }
 </style>

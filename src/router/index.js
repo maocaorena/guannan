@@ -144,7 +144,7 @@ export const routes = [
             },
         ]
     },
-    { path: '*', redirect: '/monitoringRun' }
+    { path: '*', redirect: '/login' }
 ];
 
 export default new Router({

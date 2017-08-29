@@ -8,7 +8,7 @@ const permission = {
             first: 0,
             second: 0,
         },
-        leftbarsType: 1,//左侧侧边栏类型1 为二级侧边栏，2为1级
+        leftbarsType: 1,//左侧侧边栏类型1 为二级侧边栏，2为只有1级 ，3为三级显示顶部select
         leftbars: [//要渲染的左侧侧边栏
             {
                 tit : '浙江省',
