@@ -56,7 +56,8 @@ export default {
             console.log(parentUrl);
             this.isthis2 = this.$route.fullPath;
             switch (parentUrl) {
-                case '/monitoringRun':
+                case '/monitoringRun'://运行监控
+                    this.$store.dispatch('ChangeLeftbarType',1);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
                             tit : '山西',
@@ -74,7 +75,7 @@ export default {
                         },
                     ]);
                     break
-                case '/monitoringInstall':
+                case '/monitoringInstall'://监控接装
                     this.$store.dispatch('ChangeLeftbarType',1);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
@@ -94,8 +95,7 @@ export default {
                     ]);
 
                     break
-                case '/dataForm':
-                    this.$store.dispatch('ChangeLeftbarType',1);
+                case '/dataForm'://数据报表
                     this.$store.dispatch('ChangeLeftbarType',2);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
@@ -116,7 +116,7 @@ export default {
                         }
                     ]);
                     break
-                case '/clientManage':
+                case '/clientManage'://客户管理
                     this.$store.dispatch('ChangeLeftbarType',1);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
@@ -136,7 +136,7 @@ export default {
                     ]);
 
                     break
-                case '/accountManage':
+                case '/accountManage'://账号管理
                     this.$store.dispatch('ChangeLeftbarType',2);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
