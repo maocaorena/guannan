@@ -26,22 +26,6 @@ export default {
             }
         ];
         this.$store.dispatch('ChangeRightbar',tabs);
-        this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-            {
-                tit : '湖北省',
-                list : [
-                    {
-                        name : '杭州东南有限公司',
-                    },
-                    {
-                        name : '杭州西北有限公司',
-                    },
-                    {
-                        name : '金华西南有限公司',
-                    },
-                ]
-            },
-        ]);
 
     }
 }

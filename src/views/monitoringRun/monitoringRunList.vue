@@ -29,22 +29,7 @@ export default {
             }
         ];
         this.$store.dispatch('ChangeRightbar',tabs);
-        this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-            {
-                tit : '山西',
-                list : [
-                    {
-                        name : '山西东南有限公司',
-                    },
-                    {
-                        name : '山西西北有限公司',
-                    },
-                    {
-                        name : '山西西南有限公司',
-                    },
-                ]
-            },
-        ]);
+        
     }
 }
 </script>

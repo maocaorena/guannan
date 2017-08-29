@@ -52,42 +52,106 @@ export default {
             })
         },
         leftType(){
-            let strInd = this.$route.fullPath.lastIndexOf('/');
+            let parentUrl = this.$route.matched[0].path
+            console.log(parentUrl);
             this.isthis2 = this.$route.fullPath;
-            if(this.isthis2.indexOf('dataForm') >= 0){
-                this.$store.dispatch('ChangeLeftbarType',2);
-                this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-                    {
-                        tit : '用电报表',
-                        url : '/dataForm/eleForm'
-                    },
-                    {
-                        tit : '风机运行报表',
-                        url : '/dataForm/fanRun'
-                    },
-                    {
-                        tit : '风机故障报表',
-                        url : '/dataForm/fanIll'
-                    },
-                    {
-                        tit : '变频器运行报表',
-                        url : '/dataForm/hzRun'
-                    }
-                ]);
-            }else if(this.isthis2.indexOf('accountManage') >= 0){
-                this.$store.dispatch('ChangeLeftbarType',2);
-                this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-                    {
-                        tit : '账号列表',
-                        url : '/accountManage/accountList'
-                    },
-                    {
-                        tit : '角色列表',
-                        url : '/accountManage/roleList'
-                    },
-                ]);
-            }else{
-                this.$store.dispatch('ChangeLeftbarType',1);
+            switch (parentUrl) {
+                case '/monitoringRun':
+                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
+                        {
+                            tit : '山西',
+                            list : [
+                                {
+                                    name : '山西东南有限公司',
+                                },
+                                {
+                                    name : '山西西北有限公司',
+                                },
+                                {
+                                    name : '山西西南有限公司',
+                                },
+                            ]
+                        },
+                    ]);
+                    break
+                case '/monitoringInstall':
+                    this.$store.dispatch('ChangeLeftbarType',1);
+                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
+                        {
+                            tit : '北京市',
+                            list : [
+                                {
+                                    name : '北京市东南有限公司',
+                                },
+                                {
+                                    name : '北京市西北有限公司',
+                                },
+                                {
+                                    name : '北京市西南有限公司',
+                                },
+                            ]
+                        },
+                    ]);
+
+                    break
+                case '/dataForm':
+                    this.$store.dispatch('ChangeLeftbarType',1);
+                    this.$store.dispatch('ChangeLeftbarType',2);
+                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
+                        {
+                            tit : '用电报表',
+                            url : '/dataForm/eleForm'
+                        },
+                        {
+                            tit : '风机运行报表',
+                            url : '/dataForm/fanRun'
+                        },
+                        {
+                            tit : '风机故障报表',
+                            url : '/dataForm/fanIll'
+                        },
+                        {
+                            tit : '变频器运行报表',
+                            url : '/dataForm/hzRun'
+                        }
+                    ]);
+                    break
+                case '/clientManage':
+                    this.$store.dispatch('ChangeLeftbarType',1);
+                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
+                        {
+                            tit : '客户',
+                            list : [
+                                {
+                                    name : '客户东南有限公司',
+                                },
+                                {
+                                    name : '客户西北有限公司',
+                                },
+                                {
+                                    name : '客户西南有限公司',
+                                },
+                            ]
+                        },
+                    ]);
+
+                    break
+                case '/accountManage':
+                    this.$store.dispatch('ChangeLeftbarType',2);
+                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
+                        {
+                            tit : '账号列表',
+                            url : '/accountManage/accountList'
+                        },
+                        {
+                            tit : '角色列表',
+                            url : '/accountManage/roleList'
+                        },
+                    ]);
+
+                    break
+                default:
+
             }
         }
     },

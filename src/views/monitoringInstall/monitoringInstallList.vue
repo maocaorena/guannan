@@ -27,22 +27,7 @@ export default {
             }
         ];
         this.$store.dispatch('ChangeRightbar',tabs);
-        this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-            {
-                tit : '北京市',
-                list : [
-                    {
-                        name : '北京市东南有限公司',
-                    },
-                    {
-                        name : '北京市西北有限公司',
-                    },
-                    {
-                        name : '北京市西南有限公司',
-                    },
-                ]
-            },
-        ]);
+        
     }
 }
 </script>
