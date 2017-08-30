@@ -1,0 +1,76 @@
+.content {
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	top: 76px;
+	bottom: 60px;
+	width: auto;
+	height: auto;
+	overflow: hidden;
+}
+
+.list-tit {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding-right: 17px;
+	width: 100%;
+}
+
+.list-container {
+	width: auto;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 30px;
+	bottom: 0;
+	margin: auto;
+	height: auto;
+	overflow-y: scroll;
+}
+
+table {
+	width: 100%;
+	table-layout: fixed;
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+	border-bottom: none;
+}
+
+th {
+	background: #fbfbfb;
+	color: #333;
+	text-align: center;
+	border-bottom: none;
+}
+
+tr {
+	transition: all 0.1s linear;
+}
+
+tr:hover {
+	background: #ccc;
+}
+
+td {
+	color: #333;
+	text-align: center;
+}
+
+tr:nth-child(2n+1){
+    background: #f4fafe;
+}
+
+td,
+th {
+	height: 30px;
+	border-color: #ddd;
+	font-size: 12px;
+	word-wrap:break-word;
+}
+
+.mode{
+	font-size: 13px;
+	margin: 5px;
+	color: blue;
+}

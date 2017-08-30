@@ -60,9 +60,11 @@ export default {
             return this.$store.getters.leftbarsType;
         },
         leftbars(){//获取要渲染的侧边栏
-            console.log(JSON.parse(JSON.stringify(this.$store.getters.leftbars)))
+            console.log('要渲染的侧边',JSON.parse(JSON.stringify(this.$store.getters.leftbars)))
             let bb = this.$store.getters.leftbars;
             this.threeSelect = bb[0].tit;
+            this.threeSelectInd = 0;
+            console.log(bb)
             return bb;
         },
         leftbarselected(){//获取要渲染的侧边栏
@@ -100,7 +102,7 @@ export default {
         },
         leftType(){
             let parentUrl = this.$route.matched[0].path;
-            console.log(parentUrl);
+            console.log('111',parentUrl);
             this.isthis2 = this.$route.fullPath;
             switch (parentUrl) {
                 case '/monitoringRun'://运行监控
@@ -167,21 +169,17 @@ export default {
                     this.$store.dispatch('ChangeLeftbarType',1);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
-                            tit : '北京市',
+                            tit : '山西',
                             list : [
                                 {
-                                    tit : '北京市东南有限公司',
+                                    tit : '山西东南有限公司',
                                 },
                                 {
-                                    tit : '北京市西北有限公司',
-                                },
-                                {
-                                    tit : '北京市西南有限公司',
+                                    tit : '山西西南有限公司',
                                 },
                             ]
                         },
                     ]);
-
                     break
                 case '/dataForm'://数据报表
                     this.$store.dispatch('ChangeLeftbarType',2);

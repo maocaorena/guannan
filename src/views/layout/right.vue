@@ -1,6 +1,6 @@
 <template>
     <div class="rightbar">
-        <right-tabbar></right-tabbar>
+        <!-- <right-tabbar></right-tabbar> -->
         <router-view></router-view>
     </div>
 </template>
