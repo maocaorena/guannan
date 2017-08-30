@@ -3,7 +3,7 @@
 	left: 10px;
 	right: 10px;
 	top: 76px;
-	bottom: 60px;
+	bottom: 30px;
 	width: auto;
 	height: auto;
 	overflow: hidden;
@@ -22,7 +22,7 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 30px;
+	top: 28px;
 	bottom: 0;
 	margin: auto;
 	height: auto;
@@ -37,40 +37,46 @@ table {
 	border-bottom: none;
 }
 
-th {
-	background: #fbfbfb;
-	color: #333;
-	text-align: center;
-	border-bottom: none;
-}
 
 tr {
 	transition: all 0.1s linear;
 }
 
+tr:nth-child(2n+1){
+	background: #f4fafe;
+}
+
 tr:hover {
 	background: #ccc;
+}
+td,
+th {
+	height: 28px;
+	border-color: #cfdde7;
+	font-size: 12px;
+	word-wrap:break-word;
+}
+
+th {
+	background: url(../img/th_bg.png) repeat-x;
+	color: #2899ee;
+	text-align: center;
+	border-bottom: none;
 }
 
 td {
 	color: #333;
 	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
-tr:nth-child(2n+1){
-    background: #f4fafe;
-}
 
-td,
-th {
-	height: 30px;
-	border-color: #ddd;
-	font-size: 12px;
-	word-wrap:break-word;
-}
 
 .mode{
-	font-size: 13px;
 	margin: 5px;
-	color: blue;
+	font-size: 12px;
+	color: #2899ee;
+	text-decoration: underline;
 }
