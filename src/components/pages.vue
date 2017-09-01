@@ -1,5 +1,9 @@
 <template>
     <div class="pages">
+        <div class="pages-left">
+            <input type="checkbox" name="" value="">
+            全选
+        </div>
         <div class="middle">
             <a href="javascript:;">
                 <img src="../assets/img/pages/Page1.png" alt="">
@@ -17,8 +21,14 @@
             <a href="javascript:;">
                 <img src="../assets/img/pages/Page4.png" alt="">
             </a>
-            <span>
-                1111
+            <span class="handle-page">
+                <input type="text" name="" value="">
+                <span class="change-page">
+                    <i class="to-top">
+                    </i>
+                    <i class="to-bottom">
+                    </i>
+                </span>
             </span>
         </div>
         <div class="pages-right">
@@ -51,10 +61,24 @@
         height: 30px;
         text-align: center;
         background: #f1f1f1;
+        .pages-left{
+            width: 60px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            line-height: 30px;
+            font-size: 12px;
+            color: #333;
+            input{
+                position: relative;
+                top: 2px;
+            }
+        }
         .middle{
             display: inline-block;
             vertical-align: middle;
-            width: 235px;
+            width: 255px;
             height: 30px;
             line-height: 30px;
             a{
@@ -83,6 +107,45 @@
             .all{
                 color: #6c6c6c;
                 font-size: 12px;
+            }
+        }
+        .handle-page{
+            display: inline-block;
+            position: relative;
+            top: 5px;
+            width: 55px;
+            height: 19px;
+            background: #F9F9F9;
+            border: 1px solid #E4E4E4;
+            border-radius: 5px;
+            input{
+                position: relative;
+                bottom: 7px;
+                width: 20px;
+                height: 15px;
+                outline: none;
+                border: 0;
+                font-size: 12px;
+                padding-left: 2px;
+            }
+            .change-page{
+                display: inline-block;
+                width: 20px;
+                i{
+                    position: absolute;
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    right: 5px;
+                }
+                .to-top{
+                    top: 0;
+                    background: url(../assets/img/pages/shang.png) no-repeat center;
+                }
+                .to-bottom{
+                    top: 7px;
+                    background: url(../assets/img/pages/xia.png) no-repeat center;
+                }
             }
         }
         .pages-right{
