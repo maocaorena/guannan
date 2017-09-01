@@ -15,7 +15,7 @@
                     <button type="button" name="button">批量删除</button>
                 </div>
                 <div class="handle-item">
-                    <button type="button" name="button">增加账号</button>
+                    <button type="button" name="button" @click="add">增加监控点</button>
                 </div>
             </div>
         </div>
@@ -79,30 +79,95 @@
                                 <a href="javascript:;" class="mode">删除</a>
                                 <a href="javascript:;" class="mode">编辑</a>
                             </td>
-
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
         <div class="downpage">
-            <pages-v></pages-v>
+            <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
         </div>
+        <alert-v v-if="aaa" v-on:close="close" v-on:next="next">
+            <span slot="name">增加监控点</span>
+            <div class="" slot="con">
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqw <br>
+                qwqwddddd <br>
+            </div>
+        </alert-v>
     </div>
 </template>
 
 <script>
-import pages from '../../components/pages.vue'
+import pages from '../../components/pages.vue';
+import alert from '../../components/alert.vue';
 export default {
     data() {
         return {
-
+            pageNum: 1,
+            pageSize: 10,
+            total: 200,
+            aaa: false,
         }
     },
     components:{
         'pages-v' : pages,
+        'alert-v' : alert,
+    },
+    methods:{
+        next(){
+            console.log('下一步')    
+        },
+        close(){
+            this.aaa = false;
+        },
+        add(){
+            this.aaa = true;
+        },
+        pagechange(val){
+            console.log(val+'页')
+        },
+        selectall(val){
+            console.log(val)
+        }
     },
     created(){
+
+    },
+    mounted(){
 
     }
 }

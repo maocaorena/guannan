@@ -1,53 +1,104 @@
 <template>
     <div class="pages">
         <div class="pages-left">
-            <input type="checkbox" name="" value="">
+            <input type="checkbox" name="" v-model="all" @change="selectAll">
             全选
         </div>
         <div class="middle">
-            <a href="javascript:;">
+            <a href="javascript:;" v-show="pageNums == 1">
                 <img src="../assets/img/pages/Page1.png" alt="">
             </a>
-            <a href="javascript:;">
+            <a href="javascript:;" v-show="pageNums > 1" @click="setCurrent(1)">
+                <img src="../assets/img/pages/Page8.png" alt="">
+            </a>
+            <a href="javascript:;" v-show="pageNums == 1">
                 <img src="../assets/img/pages/Page2.png" alt="">
             </a>
+            <a href="javascript:;" @click="setCurrent(pageNums - 1)" v-show="pageNums > 1">
+                <img src="../assets/img/pages/Page7.png" alt="">
+            </a>
             <span class="middle-mid">
-                <i class="white">22</i>
-                <i class="all">共 6 页</i>
+                <i class="white">{{pageNums}}</i>
+                <i class="all">共 {{pages}} 页</i>
             </span>
-            <a href="javascript:;">
+            <a href="javascript:;" @click="setCurrent(pageNums + 1)" v-show="pageNums < pages">
                 <img src="../assets/img/pages/Page3.png" alt="">
             </a>
-            <a href="javascript:;">
+            <a href="javascript:;" v-show="pageNums == pages">
+                <img src="../assets/img/pages/Page6.png" alt="">
+            </a>
+
+            <a href="javascript:;" v-show="pageNums < pages" @click="setCurrent(pages)"">
                 <img src="../assets/img/pages/Page4.png" alt="">
             </a>
+            <a href="javascript:;" v-show="pageNums == pages">
+                <img src="../assets/img/pages/Page5.png" alt="">
+            </a>
             <span class="handle-page">
-                <input type="text" name="" value="">
+                <span class="dd">{{pageNums}}</span>
                 <span class="change-page">
-                    <i class="to-top">
+                    <i class="to-top" @click="setCurrent(pageNums + 1)">
                     </i>
-                    <i class="to-bottom">
+                    <i class="to-bottom" @click="setCurrent(pageNums - 1)">
                     </i>
                 </span>
             </span>
         </div>
         <div class="pages-right">
-            1 - 10 &nbsp 共 54 条
+            {{(pageNums-1)*pageSize + 1}} - {{(pageNums)*pageSize}} &nbsp 共 {{total}} 条
         </div>
+        <p style="display: none;">{{bb}}</p>
     </div>
 </template>
 <script type="text/javascript">
+    //可以传入的数据
+    //数据总条数 total
+    //每页显示条数 pageSize
+    //当前页码 pageNum
+
+    // 返回的事件
+    // v-on:pagechange(val) 页码改变事件 val 为页码
+    // v-on:selectall(val) 页码改变事件 val 为全选状态
     export default{
         data(){
             return {
-
+                pageNums: this.pageNum,
+                all: false,
             }
         },
-        props:[
-
-        ],
+        props: {
+            total: {// 数据总条数
+                type: Number,
+                default: 0
+            },
+            pageSize: {// 每页显示条数
+                type: Number,
+                default: 10
+            },
+            pageNum: {// 当前页码
+                type: Number,
+                default: 1
+            },
+        },
+        computed:{
+            pages: function () { // 总页数
+                return Math.ceil(this.total / this.pageSize);
+            },
+            bb: function () { // 总页数
+                this.pageNums = this.pageNum
+                return this.pageNum;
+            },
+        },
         methods:{
-
+            setCurrent: function(idx) {
+                if( this.pageNums != idx && idx > 0 && idx < this.pages + 1) {
+                    this.pageNums = idx;
+                    this.$emit('pagechange',this.pageNums);
+                }
+            },
+            selectAll(){
+                this.$emit('selectall',this.all);
+            }
         },
         created(){
 
@@ -96,7 +147,7 @@
             }
             .white{
                 display: inline-block;
-                padding: 0 7px;
+                width: 30px;
                 height: 19px;
                 background: #fff;
                 border: 1px solid #e4e4e4;
@@ -118,7 +169,7 @@
             background: #F9F9F9;
             border: 1px solid #E4E4E4;
             border-radius: 5px;
-            input{
+            .dd{
                 position: relative;
                 bottom: 7px;
                 width: 20px;
@@ -135,7 +186,7 @@
                     position: absolute;
                     display: inline-block;
                     width: 10px;
-                    height: 10px;
+                    height: 9px;
                     right: 5px;
                 }
                 .to-top{
@@ -143,7 +194,7 @@
                     background: url(../assets/img/pages/shang.png) no-repeat center;
                 }
                 .to-bottom{
-                    top: 7px;
+                    top: 10px;
                     background: url(../assets/img/pages/xia.png) no-repeat center;
                 }
             }
