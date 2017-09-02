@@ -3,7 +3,7 @@ import { routes } from 'src/router'
 const permission = {
     state: {
         routers: routes,//将路由表放入进去，进行渲染顶部栏
-        rightbars: [],//右边耳机顶部栏
+        rightbars: [],//右边二级顶部栏
         leftbarselected: {//左侧侧边栏选中的在leftbars里面的两个下标
             first: 0,
             second: 0,

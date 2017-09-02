@@ -1,5 +1,5 @@
 <template>
-    <div class="alertSetting">
+    <div class="alertSetting" v-if="firstStepAlert">
         <div class="alertSetting-in">
             <div class="alertSetting-tit">
                 <p class="alertSetting-name"><slot name="name">设置</slot></p>
@@ -29,7 +29,12 @@
         ],
         data(){
             return{
-                fullPage: false,
+
+            }
+        },
+        computed:{
+            firstStepAlert(){
+                return this.$store.getters.firstStepAlert;
             }
         },
         methods:{
@@ -43,7 +48,7 @@
         created(){
         },
         mounted(){
-            document.body.append(this.$el)
+
         }
     }
 </script>
@@ -136,6 +141,7 @@
                 border-radius: 3px;
                 color: #fff;
                 font-size: 14px;
+                line-height: 26px;
                 cursor: pointer;
             }
         }

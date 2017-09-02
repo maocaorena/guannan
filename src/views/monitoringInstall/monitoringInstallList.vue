@@ -87,75 +87,33 @@
         <div class="downpage">
             <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
         </div>
-        <alert-v v-if="aaa" v-on:close="close" v-on:next="next">
-            <span slot="name">增加监控点</span>
-            <div class="" slot="con">
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqw <br>
-                qwqwddddd <br>
-            </div>
-        </alert-v>
+        <firststep-v v-if="firstStepAlert"></firststep-v>
     </div>
 </template>
 
 <script>
 import pages from '../../components/pages.vue';
-import alert from '../../components/alert.vue';
+import firststep from './firstStep.vue';
 export default {
     data() {
         return {
             pageNum: 1,
             pageSize: 10,
             total: 200,
-            aaa: false,
         }
     },
     components:{
         'pages-v' : pages,
-        'alert-v' : alert,
+        'firststep-v' : firststep,
+    },
+    computed:{
+        firstStepAlert(){
+            return this.$store.getters.firstStepAlert;
+        }
     },
     methods:{
-        next(){
-            console.log('下一步')    
-        },
-        close(){
-            this.aaa = false;
-        },
         add(){
-            this.aaa = true;
+            this.$store.dispatch('SetFirstStepAlert',true)
         },
         pagechange(val){
             console.log(val+'页')
