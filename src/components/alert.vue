@@ -1,5 +1,5 @@
 <template>
-    <div class="alertSetting" v-if="firstStepAlert">
+    <div class="alertSetting">
         <div class="alertSetting-in">
             <div class="alertSetting-tit">
                 <p class="alertSetting-name"><slot name="name">设置</slot></p>
@@ -31,11 +31,6 @@
         data(){
             return{
 
-            }
-        },
-        computed:{
-            firstStepAlert(){
-                return this.$store.getters.firstStepAlert;
             }
         },
         methods:{

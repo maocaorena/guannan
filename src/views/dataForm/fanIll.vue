@@ -2,10 +2,13 @@
     <div id="fanIll">
         fanIll
         风机故障
+        <alert-v></alert-v>
     </div>
 </template>
 
 <script>
+import alert from '../../components/alert.vue';
+
 export default {
     data() {
         return {
@@ -13,7 +16,7 @@ export default {
         }
     },
     components:{
-
+        'alert-v' : alert,
     },
     created(){
         let tabs = [

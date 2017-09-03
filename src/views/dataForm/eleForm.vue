@@ -6,13 +6,15 @@
       </div>
       <div class="rt-handle">
         <div class="handle-item">
-          <button type="button" name="button">搜索</button>
+          <select name="" id="">
+              <option value="">公司名称</option>
+          </select>
         </div>
         <div class="handle-item">
           <input type="text" name="" value="">
         </div>
         <div class="handle-item">
-          <button type="button" name="button">批量删除</button>
+          <button type="button" name="button" @click="showDialog">批量删除</button>
         </div>
     
       </div>
@@ -87,10 +89,20 @@
     <div class="downpage">
       <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
     </div>
+
+    <alert-v v-on:close="close" v-on:next="close" :btn="'确定'" v-if="dialog.state">
+        <span slot="name">增加监控点</span>
+        <div class="tep-in" slot="con">
+            
+        </div>
+    </alert-v>
+
   </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
+import alert from '../../components/alert.vue';
+
 export default {
   data() {
     return {
@@ -101,6 +113,12 @@ export default {
   },
   components: {
     'pages-v' : pages,
+    'alert-v' : alert,
+  },
+  computed: {
+    dialog(){
+        return this.$store.getters.dialog;
+    }
   },
   created() {
     let tabs = [{
@@ -113,6 +131,13 @@ export default {
   methods: {
     pagechange(val){
         console.log(val+'页')
+    },
+    showDialog () {
+        console.log(11111);
+        this.$store.dispatch('ChangeDialogState', {state:true});
+    },
+    close() {
+        this.$store.dispatch('ChangeDialogState', {state:false});
     }
   }
 }
