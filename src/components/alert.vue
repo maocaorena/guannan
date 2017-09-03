@@ -17,7 +17,7 @@
                 </div>
             </slot>
             <div class="alertSetting-footer">
-        		<button class="border" @click="next"><span>下一步</span></button>
+        		<button class="border" @click="next"><span>{{btn}}</span></button>
             </div>
         </div>
     </div>
@@ -26,6 +26,7 @@
     export default{
     	props: [
             "type",
+            "btn"
         ],
         data(){
             return{
@@ -125,7 +126,6 @@
         .alertSetting-footer{
             position: absolute;
             bottom: 0;
-            z-index: 999999;
         	width: 100%;
         	height: 50px;
         	background: #F5F5F5;

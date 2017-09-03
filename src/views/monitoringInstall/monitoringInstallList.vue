@@ -67,7 +67,9 @@
                                 {{index}}
 							</td>
 							<td>
-                                <a href="javascript:;" class="mode">1#风机监控点</a>
+                                <router-link to="/monitoringInstall/item">
+                                    1#风机监控点
+                                </router-link>
                             </td>
 							<td>ZT-ROMM50-F</td>
 							<td>313D9313D9313D9313D9</td>
@@ -87,13 +89,13 @@
         <div class="downpage">
             <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
         </div>
-        <firststep-v v-if="firstStepAlert"></firststep-v>
+        <step-v v-if="firstStepAlert > 0"></step-v>
     </div>
 </template>
 
 <script>
 import pages from '../../components/pages.vue';
-import firststep from './firstStep.vue';
+import step from './step.vue';
 export default {
     data() {
         return {
@@ -104,7 +106,7 @@ export default {
     },
     components:{
         'pages-v' : pages,
-        'firststep-v' : firststep,
+        'step-v' : step,
     },
     computed:{
         firstStepAlert(){
@@ -113,7 +115,7 @@ export default {
     },
     methods:{
         add(){
-            this.$store.dispatch('SetFirstStepAlert',true)
+            this.$store.dispatch('SetFirstStepAlert',1)
         },
         pagechange(val){
             console.log(val+'页')
@@ -188,7 +190,7 @@ export default {
         }
         .downpage{
             position: absolute;
-            bottom: 0;
+            bottom: 1px;
             left: 0;
             padding-right: 10px;
             width: 100%;

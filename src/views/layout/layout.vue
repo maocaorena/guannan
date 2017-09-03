@@ -88,6 +88,16 @@ export default {
             height: 35px;
             background: #aaa;
         }
+        .con-right-bottom{
+            position: absolute;
+            top: 35px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: auto;
+            height: auto;
+            overflow: auto;
+        }
         .bottom{
             position: absolute;
             left: 0;

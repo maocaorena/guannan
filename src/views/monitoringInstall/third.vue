@@ -1,0 +1,134 @@
+<template>
+    <div class="tep-bottom">
+        <div class="content">
+			<div class="list-tit">
+				<table class="list" border="1" cellspacing="0" cellpadding="0">
+					<colgroup>
+						<col width="4">
+						<col width="10">
+						<col width="11">
+						<col width="11">
+						<col width="8">
+						<col width="7">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>监控参数</th>
+							<th>数据源</th>
+							<th>数据端口</th>
+							<th>端口状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			<div class="list-container">
+				<table class="list" border="1" cellspacing="0" cellpadding="0">
+					<colgroup>
+                        <col width="4">
+						<col width="10">
+						<col width="11">
+						<col width="11">
+						<col width="8">
+						<col width="7">
+					</colgroup>
+					<tbody class="list-con">
+						<tr v-for="(item,index) of 4" class="list-con-item">
+							<td>
+                                {{index}}
+							</td>
+							<td>
+                                变频器监测模块
+                            </td>
+							<td>风机控制器模块</td>
+							<td>40025-0017h</td>
+							<td>常开</td>
+							<td>
+                                <a href="javascript:;" class="mode">删除</a>
+                                <a href="javascript:;" class="mode" @click="editmodule">编辑</a>
+                            </td>
+						</tr>
+					</tbody>
+				</table>
+                <button class="add-module" type="button" name="button" @click="addmodule">请添加信息</button>
+			</div>
+		</div>
+        <thirdadd-v v-if="thirdAdd.state"></thirdadd-v>
+    </div>
+</template>
+<script type="text/javascript">
+import thirdadd from './thirdAdd.vue'
+export default{
+    data(){
+        return{
+
+        }
+    },
+    computed:{
+        thirdAdd(){
+            return this.$store.getters.thirdAdd;
+        }
+    },
+    components:{
+        "thirdadd-v" : thirdadd,
+    },
+    methods:{
+        addmodule(){//打开新增弹窗
+            this.$store.dispatch('SetThirdAddAlert',{
+                state: true,
+                type: 1,
+            })
+        },
+        editmodule(){
+            this.$store.dispatch('SetThirdAddAlert',{
+                state: true,
+                type: 2,
+            })
+        }
+    },
+    created(){
+        console.log(this.$store.getters.thirdAdd)
+    }
+}
+</script>
+<style lang="scss" scoped>
+    .tep-bottom{
+        position: relative;
+        width: 100%;
+        height: 269px;
+        border: 1px solid #CFDDE7;
+        .content{
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            table{
+                border: 0;
+            }
+            th{
+                border-top: 0;
+            }
+            tr{
+                th:nth-child(1){
+                    border-left: 0;
+                }
+                td:nth-child(1){
+                    border-left: 0;
+                }
+            }
+            .add-module{
+                display: block;
+                margin-left: 7px;
+                margin-top: 12px;
+                padding: 0 15px;
+                height: 26px;
+                background: #FF7800;
+                border-radius: 3px;
+                font-size: 12px;
+                color: #FFFFFF;
+                cursor: pointer;
+            }
+        }
+    }
+</style>
