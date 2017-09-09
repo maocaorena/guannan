@@ -18,6 +18,7 @@ const getters = {
     thirdAdd: state => state.monitorinstall.thirdAdd,
     //第三步编辑或新增的信息
     thirdAddMessage: state => state.monitorinstall.thirdAddMessage,
+    // 新增用弹窗
     dialog: state => state.user.dialog,
 };
 export default getters
