@@ -60,6 +60,12 @@ export default {
     },
     created(){
         console.log(11111)
+        this.api.postN({
+            url : "user/getProvinceList",
+            success: function(res){
+                console.log(res)
+            }
+        })
     }
 }
 </script>
