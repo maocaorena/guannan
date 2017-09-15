@@ -166,51 +166,8 @@ export default {
     addDialog() {
       return this.$store.getters.dialog.status;
     }
-  },
-  methods: {
-    add() {
-      this.$store.dispatch('ChangeDialogState', { status: true })
-    },
-<<<<<<< HEAD
-    components:{
-        'pages-v' : pages,
-=======
-    pagechange(val) {
-      console.log(val + '页')
->>>>>>> 7d685d6d54b9b43b01c5be713d6e581726ea5d44
-    },
-    selectall(val) {
-      console.log(val)
-    },
-<<<<<<< HEAD
-    created(){
-        let tabs = [
-            {
-                isurl : 'clientList',
-                name : '客户列表'
-            }
-        ];
-        this.$store.dispatch('ChangeRightbar',tabs);
-=======
-    close() { //关闭弹窗
-      this.$store.dispatch('ChangeDialogState', { status: false })
-    },
-    next() {
-      this.$store.dispatch('ChangeDialogState', { status: false })
-
->>>>>>> 7d685d6d54b9b43b01c5be713d6e581726ea5d44
-    }
-  },
-  created() {
-    let tabs = [{
-      isurl: 'clientList',
-      name: '客户列表'
-    }];
-    this.$store.dispatch('ChangeRightbar', tabs);
-
   }
 }
-
 </script>
 <style lang="scss" scoped>
 #clientList {
@@ -278,45 +235,46 @@ export default {
   }
 
   .as-item {
-        position: relative;
-        margin-bottom: 5px;
-        width: 100%;
-        min-height: 24px;
-        padding: 1px 0;
-        font-size: 12px;
-        color: #666666;
+    position: relative;
+    margin-bottom: 5px;
+    width: 100%;
+    min-height: 24px;
+    padding: 1px 0;
+    font-size: 12px;
+    color: #666666;
+  }
+  .as-item-tit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 115px;
+    height: 100%;
+    line-height: 24px;
+    text-align: right;
+  }
+  .as-item-con {
+    padding-left: 120px;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    input,
+    select {
+      width: 455px;
+      height: 24px;
+      background: #FFFFFF;
+      border: 1px solid #D3D3D3;
+      border-radius: 2px;
     }
-    .as-item-tit {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 115px;
-        height: 100%;
-        line-height: 24px;
-        text-align: right;
+    button {
+      width: 100px;
+      height: 24px;
+      background: #FF7800;
+      border-radius: 2px;
+      font-size: 12px;
+      color: #fff;
+      cursor: pointer;
     }
-    .as-item-con {
-        padding-left: 120px;
-        width: 100%;
-        height: 100%;
-        text-align: left;
-        input,select{
-            width: 455px;
-            height: 24px;
-            background: #FFFFFF;
-            border: 1px solid #D3D3D3;
-            border-radius: 2px;
-        }
-        button{
-            width: 100px;
-            height: 24px;
-            background: #FF7800;
-            border-radius: 2px;
-            font-size: 12px;
-            color: #fff;
-            cursor: pointer;
-        }
-    }
+  }
 }
 
 </style>
