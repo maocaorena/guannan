@@ -107,7 +107,6 @@ export default {
     },
     components:{
         'pages-v' : pages,
-
     },
     methods: {
         add(){
@@ -128,7 +127,6 @@ export default {
             }
         ];
         this.$store.dispatch('ChangeRightbar',tabs);
-        
     }
 }
 </script>

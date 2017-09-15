@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div class="item">
-			<p class="tit">1#风机监控点</p>
+			<p class="tit">浙江永丰A车间风机</p>
 			<div class="con">
 				<div class="con-item">
 					<p class="con-item-tit">
@@ -44,21 +44,21 @@
 								</div>
 								<div class="bottom-state-item">
 									<p class="left">风机运行时间(h)</p>
-									<p class="right white">12</p>
+									<p class="right white">300.35</p>
 								</div>
 								<div class="bottom-state-item">
 									<p class="left">风机环境温度(℃)</p>
-									<p class="right white">23</p>
+									<p class="right white">35</p>
 								</div>
 							</div>
 							<div class="bottom-state-col">
 								<div class="bottom-state-item">
 									<p class="left">风机故障状态</p>
-									<p class="right allright">开机/停机</p>
+									<p class="right allright">正常</p>
 								</div>
 								<div class="bottom-state-item">
 									<p class="left">主电机热保护</p>
-									<p class="right allright">12</p>
+									<p class="right allright">正常</p>
 								</div>
 								<div class="bottom-state-item">
 									<p class="left">油雾处理电机</p>
@@ -67,29 +67,29 @@
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行状态</p>
-									<p class="right white mr">开机/停机</p>
-									<p class="right bad">开机/停机</p>
+									<p class="left width150">进气滤网铀压值</p>
+									<p class="right white mr">-128</p>
+									<p class="right bad">正常</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行时间(h)</p>
-									<p class="right white mr">开机/停机</p>
-									<p class="right soheight">12</p>
+									<p class="left width150">出气压力</p>
+									<p class="right white mr">0.04</p>
+									<p class="right soheight">正常</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">风机环境温度(℃)</p>
-									<p class="right white mr">开机/停机</p>
-									<p class="right allright">23</p>
+									<p class="left width150">出气温度</p>
+									<p class="right white mr">58</p>
+									<p class="right allright">过高</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行时间(h)</p>
-									<p class="right white mr">开机/停机</p>
-									<p class="right soheight">12</p>
+									<p class="left width150">润滑油油压</p>
+									<p class="right white mr">1.2</p>
+									<p class="right soheight">正常</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">风机环境温度(℃)</p>
-									<p class="right white mr">开机/停机</p>
-									<p class="right allright">23</p>
+									<p class="left width150">润滑油油温</p>
+									<p class="right white mr">79</p>
+									<p class="right allright">正常</p>
 								</div>
 							</div>
 							<div style="clear: both;;"></div>
