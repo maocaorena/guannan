@@ -1,7 +1,7 @@
 const user = {
     state: {    
         dialog:{//第一步编辑或新增
-            state: false,
+            status: false,
             type: 1,//1为新增, 2为编辑
         }
     },
