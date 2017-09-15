@@ -18,7 +18,7 @@
 			</div>
 		</div>
 		<div class="item">
-			<p class="tit">1#风机监控点</p>
+			<p class="tit">浙江永丰A车间风机</p>
 			<div class="con">
 				<div class="con-item">
 					<p class="con-item-tit">
@@ -28,32 +28,45 @@
 						<div class="bottom-state">
 							<div class="bottom-state-col">
 								<div class="bottom-state-item">
-									<p class="left">风机运行状态</p>
-									<p class="right white">开机/停机</p>
+									<p class="left">A相电压</p>
+									<p class="right white">223</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">风机运行时间(h)</p>
-									<p class="right white">12</p>
+									<p class="left">B相电压</p>
+									<p class="right white">235</p>
+								</div>
+								<div class="bottom-state-item">
+									<p class="left">C相电压</p>
+									<p class="right white">238</p>
 								</div>
 							</div>
 							<div class="bottom-state-col">
+								
 								<div class="bottom-state-item">
-									<p class="left">风机故障状态</p>
-									<p class="right white">开机/停机</p>
+									<p class="left">A相电流</p>
+									<p class="right white">89</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">主电机热保护</p>
-									<p class="right white">12</p>
+									<p class="left">B相电流</p>
+									<p class="right white">95</p>
+								</div>
+								<div class="bottom-state-item">
+									<p class="left">C相电流</p>
+									<p class="right white">90</p>
 								</div>
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行状态</p>
-									<p class="right white">开机/停机</p>
+									<p class="left width150">有功功率</p>
+									<p class="right white">138</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行时间(h)</p>
-									<p class="right white">12</p>
+									<p class="left width150">无功功率</p>
+									<p class="right white">54</p>
+								</div>
+								<div class="bottom-state-item">
+									<p class="left width150">C相电流</p>
+									<p class="right white">90</p>
 								</div>
 							</div>
 							<div style="clear: both;;"></div>

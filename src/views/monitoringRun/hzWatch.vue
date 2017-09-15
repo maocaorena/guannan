@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div class="item">
-			<p class="tit">1#风机监控点</p>
+			<p class="tit">浙江永丰A车间风机</p>
 			<div class="con">
 				<div class="con-item">
 					<p class="con-item-tit">
@@ -26,22 +26,22 @@
 						<div class="bottom-state">
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行状态</p>
-									<p class="right white">开机/停机</p>
+									<p class="left width150">变频器运行频率</p>
+									<p class="right white">43</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行时间(h)</p>
-									<p class="right white">12</p>
+									<p class="left width150">变频器运行时间</p>
+									<p class="right white">300.2</p>
 								</div>
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行状态</p>
-									<p class="right white">开机/停机</p>
+									<p class="left width150">变频器运行情况</p>
+									<p class="right white">正常</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">风机运行时间(h)</p>
-									<p class="right white">12</p>
+									<p class="left width150">变频器状态</p>
+									<p class="right white">正常</p>
 								</div>
 							</div>
 							<div style="clear: both;;"></div>

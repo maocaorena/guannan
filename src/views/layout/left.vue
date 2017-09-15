@@ -109,10 +109,10 @@ export default {
                     this.$store.dispatch('ChangeLeftbarType',1);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
-                            tit : '山西',
+                            tit : '浙江省',
                             list : [
                                 {
-                                    tit : '山西东南有限公司',
+                                    tit : '浙江永丰钢业有限公司',
                                     list: [
                                         {
                                             tit : '山西风机监控1',
@@ -126,7 +126,7 @@ export default {
                                     ]
                                 },
                                 {
-                                    tit : '山西西南有限公司',
+                                    tit : '杭州新永丰钢业有限公司',
                                     list: [
                                         {
                                             tit : '风机监控1',
@@ -136,10 +136,10 @@ export default {
                             ]
                         },
                         {
-                            tit : '河南',
+                            tit : '上海市',
                             list : [
                                 {
-                                    tit : '河南东南有限公司',
+                                    tit : '宝山钢铁股份有限公司',
                                     list: [
                                         {
                                             tit : '风机监控1',
@@ -148,15 +148,7 @@ export default {
                                             tit : '风机监控2',
                                         },
                                     ]
-                                },
-                                {
-                                    tit : '河南西南有限公司',
-                                    list: [
-                                        {
-                                            tit : '风机监控1',
-                                        },
-                                    ]
-                                },
+                                }
                             ]
                         },
                     ]);
@@ -169,14 +161,46 @@ export default {
                     this.$store.dispatch('ChangeLeftbarType',1);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
-                            tit : '山西',
+                            tit : '浙江省',
                             list : [
                                 {
-                                    tit : '山西东南有限公司',
+                                    tit : '浙江永丰钢业有限公司',
+                                    list: [
+                                        {
+                                            tit : '山西风机监控1',
+                                        },
+                                        {
+                                            tit : '山西风机监控2',
+                                        },
+                                        {
+                                            tit : '山西风机监控2',
+                                        },
+                                    ]
                                 },
                                 {
-                                    tit : '山西西南有限公司',
+                                    tit : '杭州新永丰钢业有限公司',
+                                    list: [
+                                        {
+                                            tit : '风机监控1',
+                                        },
+                                    ]
                                 },
+                            ]
+                        },
+                        {
+                            tit : '上海市',
+                            list : [
+                                {
+                                    tit : '宝山钢铁股份有限公司',
+                                    list: [
+                                        {
+                                            tit : '风机监控1',
+                                        },
+                                        {
+                                            tit : '风机监控2',
+                                        },
+                                    ]
+                                }
                             ]
                         },
                     ]);
@@ -272,7 +296,7 @@ export default {
         }
         .first-item{
             width: 100%;
-            text-indent: 28px;
+            text-indent: 18px;
             background: #e3e3e3;
             background:-moz-linear-gradient(top, #fdfdfd, rgba(222, 222, 222, 1));
             background:-o-linear-gradient(top, #fdfdfd, rgba(222, 222, 222, 1));
@@ -299,9 +323,10 @@ export default {
             width: 100%;
             height: 32px;
             line-height: 32px;
-            text-indent: 48px;
+            text-indent: 25px;
             border-bottom: 2px dashed #ddd;
             cursor: pointer;
+            font-size: 13px;
         }
         .second-list{
             li:nth-last-child(1){
