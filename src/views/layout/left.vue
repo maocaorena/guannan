@@ -1,29 +1,30 @@
 <template>
     <div class="leftbar">
         <div class="lb-top" v-if="leftbarsType == 1">全部</div>
-        <div class="lb-top" v-if="leftbarsType == 3">
+        <!-- <div class="lb-top" v-if="leftbarsType == 3">
             <select class="selectAdd" name="" v-model="threeSelect" @change="hasSelect">
                 <option v-for="(item,index) of leftbars">{{item.tit}}</option>
             </select>
-        </div>
+        </div> -->
         <!-- 省 公司 -->
-        <div v-if="leftbarsType == 1" class="first-list type1" v-for="(item,index1) of leftbars">
+        <div v-if="leftbarsType == 1" class="first-list type1" v-for="(value,key) of leftbars">
             <p class="first-item">
                 <img class="leftIcon" src="../../assets/img/leftbar/icon_sheng.png" alt="">
-                {{item.tit}}
+                {{key}}
             </p>
             <ul class="second-list">
-                <li class="second-item"
-                    :class="{selected:leftbarselected.first==index1&&leftbarselected.second==index2}"
-                    v-for="(second,index2) of item.list"
-                    @click="clickThis1(index1,index2)">
-                    <img class="leftIcon" src="../../assets/img/leftbar/icon_gongsi.png" alt="">
-                    {{second.tit}}
-                </li>
+                <router-link class="second-item"
+                    :class="{selected:$route.query.clientid==second.clientid}"
+                    :to="{path:'/monitoringInstall/list',query:{clientid: second.clientid}}"
+                    tag="li"
+                    :key="second.clientid"
+                    v-for="(second,index2) of value">
+                    {{second.clientname}}
+                </router-link>
             </ul>
         </div>
         <!-- 风机三级菜单 -->
-        <div v-if="leftbarsType == 3" class="first-list type1" v-for="(item,index1) of leftbars[threeSelectInd].list">
+        <!-- <div v-if="leftbarsType == 3" class="first-list type1" v-for="(item,index1) of leftbars[threeSelectInd].list">
             <p class="first-item">
                 <img class="leftIcon" src="../../assets/img/leftbar/icon_gongsi.png" alt="">
                 {{item.tit}}
@@ -34,7 +35,7 @@
                     v-for="(second,index2) of item.list"
                     @click="clickThis1(index1,index2,threeSelectInd)"><img class="leftIcon" src="../../assets/img/leftbar/icon_fengjikongzhidian.png" alt="">{{second.tit}}</li>
             </ul>
-        </div>
+        </div> -->
         <!-- 菜单 -->
         <div v-if="leftbarsType == 2" class="first-list type2" v-for="(item,index1) of leftbars">
             <router-link class="first-item" tag="p" :to="item.url" :class="{selected : isthis2 == item.url}">
@@ -62,9 +63,8 @@ export default {
         leftbars(){//获取要渲染的侧边栏
             console.log('要渲染的侧边',JSON.parse(JSON.stringify(this.$store.getters.leftbars)))
             let bb = this.$store.getters.leftbars;
-            this.threeSelect = bb[0].tit;
+            // this.threeSelect = bb[0].tit;
             this.threeSelectInd = 0;
-            console.log(bb)
             return bb;
         },
         leftbarselected(){//获取要渲染的侧边栏
@@ -73,8 +73,10 @@ export default {
     },
     watch: {
         '$route' (to, from) {
-            this.leftType();
-        }
+            if(to.path != from.path){
+                this.leftType();
+            };
+        },
     },
     methods:{
         hasSelect(){
@@ -102,7 +104,6 @@ export default {
         },
         leftType(){
             let parentUrl = this.$route.matched[0].path;
-            console.log('111',parentUrl);
             this.isthis2 = this.$route.fullPath;
             switch (parentUrl) {
                 case '/monitoringRun'://运行监控
@@ -159,51 +160,18 @@ export default {
                     break
                 case '/monitoringInstall'://监控接装
                     this.$store.dispatch('ChangeLeftbarType',1);
-                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-                        {
-                            tit : '浙江省',
-                            list : [
-                                {
-                                    tit : '浙江永丰钢业有限公司',
-                                    list: [
-                                        {
-                                            tit : '山西风机监控1',
-                                        },
-                                        {
-                                            tit : '山西风机监控2',
-                                        },
-                                        {
-                                            tit : '山西风机监控2',
-                                        },
-                                    ]
-                                },
-                                {
-                                    tit : '杭州新永丰钢业有限公司',
-                                    list: [
-                                        {
-                                            tit : '风机监控1',
-                                        },
-                                    ]
-                                },
-                            ]
-                        },
-                        {
-                            tit : '上海市',
-                            list : [
-                                {
-                                    tit : '宝山钢铁股份有限公司',
-                                    list: [
-                                        {
-                                            tit : '风机监控1',
-                                        },
-                                        {
-                                            tit : '风机监控2',
-                                        },
-                                    ]
-                                }
-                            ]
-                        },
-                    ]);
+                    let _this = this;
+                    this.api.postN({
+                        url : "/client/findProvinceAndCompanys",
+                        success: function(res){
+                            let _res = res.response;
+                            if(_res.info.code == 100000){
+                                 _this.$store.dispatch('ChangeLeftbar',_res.content);
+                                 console.log(_res.content[0])
+                                //  _this.$router.push({path:'/monitoringInstall/list',query:{clientid: 1}})
+                            }
+                        }
+                    })
                     break
                 case '/dataForm'://数据报表
                     this.$store.dispatch('ChangeLeftbarType',2);

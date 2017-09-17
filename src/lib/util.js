@@ -67,13 +67,19 @@ const Util = {
 		if (!name) return;
 		window.localStorage.removeItem(name);
 	},
-	dateTime(num){
+	dateTime(num,type){
 		let str = num;
 		if(num){
 			let _num = new Date(num);
 			let dateStr = _num.getFullYear() + '-' + this.addZero(_num.getMonth() + 1) + '-' + this.addZero(_num.getDate());
 			let timeStr = this.addZero(_num.getHours()) + ':' + this.addZero(_num.getMinutes()) + ':' + this.addZero(_num.getSeconds());
-			str = dateStr+ ' ' + timeStr;
+			if(type === 'date' ){
+				str = dateStr;
+			}else if(type === 'time'){
+				str = timeStr;
+			}else{
+				str = dateStr+ ' ' + timeStr;
+			}
 		};
 		return str;
 	},

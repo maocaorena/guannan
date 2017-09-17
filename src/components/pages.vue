@@ -1,9 +1,5 @@
 <template>
     <div class="pages">
-        <div class="pages-left">
-            <input type="checkbox" name="" v-model="all" @change="selectAll">
-            全选
-        </div>
         <div class="middle">
             <a href="javascript:;" v-show="pageNums == 1">
                 <img src="../assets/img/pages/Page1.png" alt="">
