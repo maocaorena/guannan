@@ -120,6 +120,7 @@
 </template>
 <script>
 import pages from '../../components/pages.vue';
+
 export default {
   data() {
     return {
@@ -138,6 +139,36 @@ export default {
     }];
     this.$store.dispatch('ChangeRightbar', tabs);
 
+    // this.api.postN({
+    //   url: "/finddata/findElectricUseByCondition",
+    //   params: {
+    //     currentpage: this.pageNum,
+    //     pagesize: this.pageSize,
+    //     clientid: "",
+    //     monitorplaceid: "",
+    //     timedetail: "",
+    //     startTime: "",
+    //     endTime: ""
+    //   },
+    //   success: function(res) {
+
+    //   }
+    // });
+    let url = "/finddata/findElectricUseByCondition";
+    var data = {
+      currentpage: this.pageNum,
+      pagesize: this.pageSize,
+      clientid: 1,
+      monitorplaceid: 1,
+      timedetail: "",
+      startTime: "",
+      endTime: ""
+    }
+    this.api.handleAjax(url,data).done(function(res){
+
+    }).fail(function(res){
+      console.log(res);
+    })
   },
   methods: {
     pagechange(val){
