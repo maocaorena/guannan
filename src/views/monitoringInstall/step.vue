@@ -14,7 +14,7 @@
                         监控参数信息
                     </div>
                 </div>
-                <first-v v-if="firstStepAlert == 1"></first-v>
+                <first-v v-if="firstStepAlert == 1" ref="first" v-on:btntext="changeAlert"></first-v>
                 <second-v v-if="firstStepAlert == 2"></second-v>
                 <third-v v-if="firstStepAlert == 3"></third-v>
             </div>
@@ -48,13 +48,14 @@
                 this.changeAlert(0);
             },
             next(){//下方下一步或者确定按钮点击
-                let ss = this.firstStepAlert;
-                if(ss == 3){
-                    this.close();
-                    return;
-                }
-                ss++;
-                this.changeAlert(ss)
+                this.$refs.first.sunmessage(); // 方法2
+                // let ss = this.firstStepAlert;
+                // if(ss == 3){
+                //     this.close();
+                //     return;
+                // }
+                // ss++;
+                // this.changeAlert(ss)
             },
             changeAlert(step){//改变步数状态
                 if(step == 3){
