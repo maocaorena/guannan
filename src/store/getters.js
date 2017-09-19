@@ -6,6 +6,8 @@ const getters = {
     leftbarsType: state => state.permission.leftbarsType,
     //新增弹窗状态
     firstStepAlert: state => state.monitorinstall.firstStepAlert,
+    //新增之后返回的id
+    addid: state => state.monitorinstall.addid,
     //第一步编辑或新增
     firstAdd: state => state.monitorinstall.firstAdd,
     //第一步编辑或新增的信息

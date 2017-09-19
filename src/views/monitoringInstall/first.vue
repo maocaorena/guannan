@@ -89,6 +89,9 @@ import { Util } from '../../lib/util.js';
         computed:{
             firstAdd(){
                 return this.$store.getters.firstAdd;
+            },
+            firstStepAlert(){//弹窗状态
+                return this.$store.getters.firstStepAlert;
             }
         },
         components:{
@@ -166,7 +169,11 @@ import { Util } from '../../lib/util.js';
                         if(res.response.info.code==100000){
                             _this.loading = false;
                             _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-                            _this.$store.dispatch('SetFirstStepAlert',2);
+                            _this.$store.dispatch('SetAddId',res.response.content.id);
+                            _this.$store.dispatch('SetFirstStepAlert',{
+                                type: _this.firstStepAlert.type,
+                                state: 2,
+                            });
                             _this.$emit('changeAlert','下一步')
                         }
                     }

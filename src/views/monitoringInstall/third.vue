@@ -34,7 +34,7 @@
 						<col width="7">
 					</colgroup>
 					<tbody class="list-con">
-						<tr v-for="(item,index) of 4" class="list-con-item">
+						<tr v-for="(item,index) of list" class="list-con-item">
 							<td>
                                 {{index}}
 							</td>
@@ -58,17 +58,25 @@
     </div>
 </template>
 <script type="text/javascript">
-import thirdadd from './thirdAdd.vue'
+import thirdadd from './thirdAdd.vue';
+import { Util } from '../../lib/util.js';
 export default{
     data(){
         return{
-
+            list: [],
         }
     },
     computed:{
         thirdAdd(){
             return this.$store.getters.thirdAdd;
+        },
+        addid(){
+            return this.$store.getters.addid;
+        },
+        firstStepAlert(){//弹窗状态
+            return this.$store.getters.firstStepAlert;
         }
+
     },
     components:{
         "thirdadd-v" : thirdadd,
@@ -85,10 +93,30 @@ export default{
                 state: true,
                 type: 2,
             })
+        },
+        findMonitornameModelById(){
+            let _this = this;
+            this.api.postN({
+                url: '/monitornamemodel/findMonitornameModelById',
+                params: {
+                    id: _this.addid
+                },
+                success: function(res){
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                        if(res.response.content){
+                            _this.list = res.response.content;
+                        }else{
+                            _this.list = [];
+                        }
+                    }
+                }
+            })
         }
     },
     created(){
-        console.log(this.$store.getters.thirdAdd)
+        this.findMonitornameModelById()
+        console.log('222',this.addid)
     }
 }
 </script>

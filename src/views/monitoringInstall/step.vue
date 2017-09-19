@@ -4,19 +4,19 @@
             <span slot="name">增加监控点</span>
             <div class="tep-in" slot="con">
                 <div class="tep-bar">
-                    <div class="tep-bar-item" :class="{select: firstStepAlert==1}" @click="changeAlert(1)">
+                    <div class="tep-bar-item" :class="{select: firstStepAlert.state==1}">
                         监控点参数
                     </div>
-                    <div class="tep-bar-item" :class="{select: firstStepAlert==2}" @click="changeAlert(2)">
+                    <div class="tep-bar-item" :class="{select: firstStepAlert.state==2}">
                         模块信息列表
                     </div>
-                    <div class="tep-bar-item" :class="{select: firstStepAlert==3}" @click="changeAlert(3)">
+                    <div class="tep-bar-item" :class="{select: firstStepAlert.state==3}">
                         监控参数信息
                     </div>
                 </div>
-                <first-v v-if="firstStepAlert == 1" ref="first" v-on:btntext="changeAlert"></first-v>
-                <second-v v-if="firstStepAlert == 2"></second-v>
-                <third-v v-if="firstStepAlert == 3"></third-v>
+                <first-v v-if="firstStepAlert.state == 1" ref="first" v-on:btntext="changeAlert"></first-v>
+                <second-v v-if="firstStepAlert.state == 2" ref="second" v-on:btntext="changeAlert"></second-v>
+                <third-v v-if="firstStepAlert.state == 3"></third-v>
             </div>
         </alert-v>
     </div>
@@ -48,7 +48,19 @@
                 this.changeAlert(0);
             },
             next(){//下方下一步或者确定按钮点击
-                this.$refs.first.sunmessage(); // 方法2
+                switch (this.firstStepAlert.state) {
+                    case 1:
+                        this.$refs.first.sunmessage(); // 方法2
+                        break;
+                    case 2:
+                        this.$refs.second.sunmessage(); // 方法2
+                        break;
+                    case 3:
+                        this.$refs.first.sunmessage(); // 方法2
+                        break;
+                    default:
+
+                }
                 // let ss = this.firstStepAlert;
                 // if(ss == 3){
                 //     this.close();
@@ -63,7 +75,10 @@
                 }else{
                     this.btn = '下一步';
                 };
-                this.$store.dispatch('SetFirstStepAlert',step);
+                this.$store.dispatch('SetFirstStepAlert',{
+                    type: this.firstStepAlert.type,
+                    state: step,
+                });
             }
         },
         created(){

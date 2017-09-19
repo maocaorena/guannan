@@ -34,7 +34,7 @@
 						<col width="7">
 					</colgroup>
 					<tbody class="list-con">
-						<tr v-for="(item,index) of 4" class="list-con-item">
+						<tr v-for="(item,index) of 3" class="list-con-item">
 							<td>
                                 {{index}}
 							</td>
@@ -58,22 +58,37 @@
     </div>
 </template>
 <script type="text/javascript">
-    import secondadd from './secondAdd.vue'
+    import secondadd from './secondAdd.vue';
+    import { Util } from '../../lib/util.js';
     export default{
         data(){
             return{
-
+                list: [],
             }
         },
         computed:{
             secondAdd(){
                 return this.$store.getters.secondAdd;
+            },
+            addid(){
+                return this.$store.getters.addid;
+            },
+            firstStepAlert(){//弹窗状态
+                return this.$store.getters.firstStepAlert;
             }
         },
         components:{
             "secondadd-v" : secondadd,
         },
         methods:{
+            sunmessage(){
+                console.log('第二步提交');
+                this.$store.dispatch('SetFirstStepAlert',{
+                    type: this.firstStepAlert.type,
+                    state: 3,
+                });
+                this.$emit('changeAlert',3)
+            },
             addmodule(){//打开新增弹窗
                 this.$store.dispatch('SetSecondAddAlert',{
                     state: true,
@@ -85,10 +100,32 @@
                     state: true,
                     type: 2,
                 })
+            },
+
+            findModuleInfoById(){
+                let _this = this;
+                this.api.postN({
+                    url: '/module/findModuleInfoByMonitorplaceId',
+                    params: {
+                        id: _this.addid
+                    },
+                    success: function(res){
+                        console.log(res)
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            if(res.response.content){
+                                _this.list = res.response.content;
+                            }else{
+                                _this.list = [];
+                            }
+                        }
+                    }
+                })
             }
         },
         created(){
-
+            this.findModuleInfoById()
+            console.log(this.addid)
         }
     }
 </script>

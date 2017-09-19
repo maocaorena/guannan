@@ -7,18 +7,18 @@
             </select>
         </div> -->
         <!-- 省 公司 -->
-        <div v-if="leftbarsType == 1" class="first-list type1" v-for="(value,key) of leftbars">
+        <div v-if="leftbarsType == 1" class="first-list type1" v-for="(item,index) of leftbars">
             <p class="first-item">
                 <img class="leftIcon" src="../../assets/img/leftbar/icon_sheng.png" alt="">
-                {{key}}
+                {{item.province}}
             </p>
             <ul class="second-list">
                 <router-link class="second-item"
                     :class="{selected:$route.query.clientid==second.clientid}"
-                    :to="{path:'/monitoringInstall/list',query:{clientid: second.clientid}}"
+                    :to="{path:goBaseUrl,query:{clientid: second.clientid}}"
                     tag="li"
                     :key="second.clientid"
-                    v-for="(second,index2) of value">
+                    v-for="(second,index2) of item.clientList">
                     {{second.clientname}}
                 </router-link>
             </ul>
@@ -54,6 +54,7 @@ export default {
             threeUrl : false,
             threeSelect : '',
             threeSelectInd: 0,
+            goBaseUrl: '',
         }
     },
     computed:{
@@ -107,58 +108,27 @@ export default {
             this.isthis2 = this.$route.fullPath;
             switch (parentUrl) {
                 case '/monitoringRun'://运行监控
+                    this.goBaseUrl = '/monitoringRun/list';
                     this.$store.dispatch('ChangeLeftbarType',1);
-                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-                        {
-                            tit : '浙江省',
-                            list : [
-                                {
-                                    tit : '浙江永丰钢业有限公司',
-                                    list: [
-                                        {
-                                            tit : '山西风机监控1',
-                                        },
-                                        {
-                                            tit : '山西风机监控2',
-                                        },
-                                        {
-                                            tit : '山西风机监控2',
-                                        },
-                                    ]
-                                },
-                                {
-                                    tit : '杭州新永丰钢业有限公司',
-                                    list: [
-                                        {
-                                            tit : '风机监控1',
-                                        },
-                                    ]
-                                },
-                            ]
-                        },
-                        {
-                            tit : '上海市',
-                            list : [
-                                {
-                                    tit : '宝山钢铁股份有限公司',
-                                    list: [
-                                        {
-                                            tit : '风机监控1',
-                                        },
-                                        {
-                                            tit : '风机监控2',
-                                        },
-                                    ]
-                                }
-                            ]
-                        },
-                    ]);
+                    let _this1 = this;
+                    this.api.postN({
+                        url : "/client/findProvinceAndCompanys",
+                        success: function(res){
+                            let _res = res.response;
+                            if(_res.info.code == 100000){
+                                _this1.$store.dispatch('ChangeLeftbar',_res.content);
+                                console.log(_res.content[0]);
+                                _this1.$router.push({path:'/monitoringRun/list',query:{clientid: _res.content[0].clientList[0].clientid}})
+                            }
+                        }
+                    });
                     let childurl = this.$route.matched[1].path;
                     if(childurl.indexOf('map')>=0){
                         this.$store.dispatch('ChangeLeftbarType',3);
                     };
                     break
                 case '/monitoringInstall'://监控接装
+                    this.goBaseUrl = '/monitoringInstall/list';
                     this.$store.dispatch('ChangeLeftbarType',1);
                     let _this = this;
                     this.api.postN({
@@ -166,13 +136,13 @@ export default {
                         success: function(res){
                             let _res = res.response;
                             if(_res.info.code == 100000){
-                                 _this.$store.dispatch('ChangeLeftbar',_res.content);
-                                 console.log(_res.content[0])
-                                //  _this.$router.push({path:'/monitoringInstall/list',query:{clientid: 1}})
+                                _this.$store.dispatch('ChangeLeftbar',_res.content);
+                                console.log(_res.content[0])
+                                _this.$router.push({path:'/monitoringInstall/list',query:{clientid: _res.content[0].clientList[0].clientid}})
                             }
                         }
                     })
-                    break
+                    break;
                 case '/dataForm'://数据报表
                     this.$store.dispatch('ChangeLeftbarType',2);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏

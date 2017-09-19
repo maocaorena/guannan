@@ -96,7 +96,7 @@
         <div class="downpage">
             <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
         </div>
-        <step-v v-if="firstStepAlert > 0"></step-v>
+        <step-v v-if="firstStepAlert.state > 0"></step-v>
     </div>
 </template>
 <script>
@@ -111,7 +111,6 @@ export default {
             total: 200,
             list: [],
             loading: false,
-            selectItems: [],
             checkboxModel:[],
             checked: false,
         }
@@ -168,7 +167,10 @@ export default {
             console.log(val)
         },
         add() {
-          this.$store.dispatch('SetFirstStepAlert', 1)
+          this.$store.dispatch('SetFirstStepAlert', {
+              type: 1,
+              state: 1,
+          })
         },
         del(type,item){
             let delname = '';
@@ -216,7 +218,8 @@ export default {
                 url : '/monitorplace/findMonitorplaceByConditions',
                 params: {
                     currentpage: this.pageNum,
-                    pagesize: this.pagesize
+                    pagesize: this.pagesize,
+                    clientid: _this.$route.query.clientid,
                 },
                 success: function(res){
                     console.log(res)
