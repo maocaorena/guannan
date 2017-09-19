@@ -90,7 +90,10 @@
             <col width="9">
           </colgroup>
           <tbody class="list-con">
-            <tr v-for="(item,index) of 40" class="list-con-item">
+            <tr v-if="!ifPage">
+              <td colspan="13">暂无数据</td>
+            </tr>
+            <tr v-for="(item,index) in items" class="list-con-item">
               <td>
                 2017-03-04
               </td>
@@ -113,7 +116,7 @@
         </table>
       </div>
     </div>
-    <div class="downpage">
+    <div class="downpage" v-if="ifPage">
       <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
     </div>
   </div>
@@ -127,33 +130,21 @@ export default {
         pageNum: 1,
         pageSize: 10,
         total: 200,
+        items: [],
+        ifPage: true
     }
   },
   components: {
     'pages-v' : pages,
   },
   created() {
+    var self = this;
     let tabs = [{
       isurl: 'eleForm',
       name: '用电报表'
     }];
     this.$store.dispatch('ChangeRightbar', tabs);
 
-    // this.api.postN({
-    //   url: "/finddata/findElectricUseByCondition",
-    //   params: {
-    //     currentpage: this.pageNum,
-    //     pagesize: this.pageSize,
-    //     clientid: "",
-    //     monitorplaceid: "",
-    //     timedetail: "",
-    //     startTime: "",
-    //     endTime: ""
-    //   },
-    //   success: function(res) {
-
-    //   }
-    // });
     let url = "/finddata/findElectricUseByCondition";
     var data = {
       currentpage: this.pageNum,
@@ -165,7 +156,18 @@ export default {
       endTime: ""
     }
     this.api.handleAjax(url,data).done(function(res){
-
+      // self.total = res.total;
+      // self.pageSize = res.pageSize;
+      // self.pageNum = res.pageNum;
+      if(res.list.length > 0) {
+        self.total = res.total;
+        self.pageSize = res.pageSize;
+        self.pageNum = res.pageNum;
+        self.items = res.list;
+      } else {
+        self.ifPage = false;
+      }
+      console.log(res.pageNum,res.pageSize,res.total)
     }).fail(function(res){
       console.log(res);
     })
