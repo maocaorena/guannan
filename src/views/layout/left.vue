@@ -165,24 +165,20 @@ export default {
                     ]);
                     break
                 case '/clientManage'://客户管理
+                    this.goBaseUrl = '/clientManage/clientList';
                     this.$store.dispatch('ChangeLeftbarType',1);
-                    this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
-                        {
-                            tit : '客户',
-                            list : [
-                                {
-                                    tit : '客户东南有限公司',
-                                },
-                                {
-                                    tit : '客户西北有限公司',
-                                },
-                                {
-                                    tit : '客户西南有限公司',
-                                },
-                            ]
-                        },
-                    ]);
-
+                    let _this2 = this;
+                    this.api.postN({
+                        url : "/client/findProvinceAndCompanys",
+                        success: function(res){
+                            let _res = res.response;
+                            if(_res.info.code == 100000){
+                                _this2.$store.dispatch('ChangeLeftbar',_res.content);
+                                console.log(_res.content[0]);
+                                _this2.$router.push({path:'/clientManage/clientList',query:{clientid: _res.content[0].clientList[0].clientid}})
+                            }
+                        }
+                    });
                     break
                 case '/accountManage'://账号管理
                     this.$store.dispatch('ChangeLeftbarType',2);

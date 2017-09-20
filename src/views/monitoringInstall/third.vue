@@ -82,6 +82,12 @@ export default{
         "thirdadd-v" : thirdadd,
     },
     methods:{
+        sunmessage(){
+            this.$store.dispatch('SetFirstStepAlert',{
+                type: this.firstStepAlert.type,
+                state: 0,
+            });
+        },
         addmodule(){//打开新增弹窗
             this.$store.dispatch('SetThirdAddAlert',{
                 state: true,

@@ -16,7 +16,7 @@
                 </div>
                 <first-v v-if="firstStepAlert.state == 1" ref="first" v-on:btntext="changeAlert"></first-v>
                 <second-v v-if="firstStepAlert.state == 2" ref="second" v-on:btntext="changeAlert"></second-v>
-                <third-v v-if="firstStepAlert.state == 3"></third-v>
+                <third-v v-if="firstStepAlert.state == 3" ref="third"></third-v>
             </div>
         </alert-v>
     </div>
@@ -56,7 +56,7 @@
                         this.$refs.second.sunmessage(); // 方法2
                         break;
                     case 3:
-                        this.$refs.first.sunmessage(); // 方法2
+                        this.$refs.third.sunmessage(); // 方法2
                         break;
                     default:
 

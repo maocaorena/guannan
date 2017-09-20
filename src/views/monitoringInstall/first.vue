@@ -72,119 +72,171 @@
 <script type="text/javascript">
 import firstadd from './firstAdd.vue';
 import { Util } from '../../lib/util.js';
-    export default{
-        data(){
-            return{
-                monitorplacename: '',//监控点名称
-                allMonitorModel:[],//所有监控器型号列表
-                monitorModel: '',//选中的监控器型号id
-                monitoruid: '',//监控器uid 、监控器硬件地址
-                monitorno: '',//监控器出厂编号
-                installname: '',//安装单位
-                deployer: '',//配置人
-                remark: '',//备注
-                loading: false,
-            }
+export default{
+    data(){
+        return{
+            monitorplacename: '',//监控点名称
+            allMonitorModel:[],//所有监控器型号列表
+            monitorModel: '',//选中的监控器型号id
+            monitoruid: '',//监控器uid 、监控器硬件地址
+            monitorno: '',//监控器出厂编号
+            installname: '',//安装单位
+            deployer: '',//配置人
+            remark: '',//备注
+            loading: false,
+        }
+    },
+    computed:{
+        firstAdd(){
+            return this.$store.getters.firstAdd;
         },
-        computed:{
-            firstAdd(){
-                return this.$store.getters.firstAdd;
-            },
-            firstStepAlert(){//弹窗状态
-                return this.$store.getters.firstStepAlert;
-            }
+        firstStepAlert(){//弹窗状态
+            return this.$store.getters.firstStepAlert;
         },
-        components:{
-            "firstadd-v" : firstadd,
+        addid(){
+            return this.$store.getters.addid;
         },
-        methods:{
-            hahah(){
-                console.log(this.monitorModel)
-            },
-            tofirstAdd(){
-                this.$store.dispatch('SetFirstAddAlert',{
-                    state: true
-                })
-            },
-            findAllMonitorModel(){//获取所有监控器型号
-                let _this = this;
-                this.api.postN({
-                    url: '/monitormodel/findAllMonitorModel',
-                    success: function(res){
-                        console.log(res);
-                        let _res = res.response;
-                        if(_res.info.code == 100000){
-                            _this.allMonitorModel = _res.content;
+    },
+    components:{
+        "firstadd-v" : firstadd,
+    },
+    methods:{
+        hahah(){
+            console.log(this.monitorModel)
+        },
+        tofirstAdd(){
+            this.$store.dispatch('SetFirstAddAlert',{
+                state: true
+            })
+        },
+        findAllMonitorModel(){//获取所有监控器型号
+            let _this = this;
+            this.api.postN({
+                url: '/monitormodel/findAllMonitorModel',
+                success: function(res){
+                    console.log(res);
+                    let _res = res.response;
+                    if(_res.info.code == 100000){
+                        _this.allMonitorModel = _res.content;
+                    }else{
+                        alert(_res.info.msg)
+                    };
+                },
+            })
+        },
+        sunmessage () {
+            if(Util.trim(this.monitorplacename).length <= 0){
+                this.$message.warning({message: '请填写监控点名称',duration: Util.time()});
+                return;
+            };
+            if(!this.monitorModel){
+                this.$message.warning({message: '请选择监控器型号',duration: Util.time()});
+                return;
+            };
+            if(Util.trim(this.monitoruid).length <= 0){
+                this.$message.warning({message: '请填写监控器UID',duration: Util.time()});
+                return;
+            };
+            if(Util.trim(this.monitorno).length <= 0){
+                this.$message.warning({message: '请填写监控器出厂编号',duration: Util.time()});
+                return;
+            };
+            if(Util.trim(this.installname).length <= 0){
+                this.$message.warning({message: '请填写安装单位',duration: Util.time()});
+                return;
+            };
+            if(Util.trim(this.deployer).length <= 0){
+                this.$message.warning({message: '请填写配置人',duration: Util.time()});
+                return;
+            };
+            let params = {
+                clientid: this.$route.query.clientid,//客户公司id
+                monitorplacename: Util.trim(this.monitorplacename),
+                monitorModel: this.monitorModel,
+                monitoruid: Util.trim(this.monitoruid),
+                monitorno: Util.trim(this.monitorno),
+                installname: Util.trim(this.installname),
+                deployer: Util.trim(this.deployer),
+                remark: Util.trim(this.remark),
+                latitude: 1111,
+                longtitude: 11111,
+                address: 'qqqq',
+            };
+            let _this = this;
+            let url = '';
+            if(this.firstStepAlert.type==2){
+                url = '/monitorplace/updateMonitorPlaceById';
+                params.id = this.addid;
+            }else{
+                url = '/monitorplace/addMonitorPlaceByClient';
+            };
+            this.loading = true;
+            this.api.postN({
+                url: url,
+                params: params,
+                success: function(res){
+                    console.log(res)
+                    _this.loading = false;
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                        if(_this.firstStepAlert.type==2){
+                            _this.$store.dispatch('SetAddId', _this.addid);
                         }else{
-                            alert(_res.info.msg)
-                        };
-                    },
-                })
-            },
-            sunmessage () {
-                if(Util.trim(this.monitorplacename).length <= 0){
-					this.$message.warning({message: '请填写监控点名称',duration: Util.time()});
-					return;
-                };
-                if(!this.monitorModel){
-					this.$message.warning({message: '请选择监控器型号',duration: Util.time()});
-					return;
-                };
-                if(Util.trim(this.monitoruid).length <= 0){
-					this.$message.warning({message: '请填写监控器UID',duration: Util.time()});
-					return;
-                };
-                if(Util.trim(this.monitorno).length <= 0){
-					this.$message.warning({message: '请填写监控器出厂编号',duration: Util.time()});
-					return;
-                };
-                if(Util.trim(this.installname).length <= 0){
-					this.$message.warning({message: '请填写安装单位',duration: Util.time()});
-					return;
-                };
-                if(Util.trim(this.deployer).length <= 0){
-					this.$message.warning({message: '请填写配置人',duration: Util.time()});
-					return;
-                };
-                let params = {
-                    clientid: 1,//客户公司id
-                    monitorplacename: Util.trim(this.monitorplacename),
-                    monitorModel: this.monitorModel,
-                    monitoruid: Util.trim(this.monitoruid),
-                    monitorno: Util.trim(this.monitorno),
-                    installname: Util.trim(this.installname),
-                    deployer: Util.trim(this.deployer),
-                    remark: Util.trim(this.remark),
-                    latitude: 1111,
-                    longtitude: 11111,
-                    address: 'qqqq',
-                };
-                let _this = this;
-                this.loading = true;
-                this.api.postN({
-                    url: '/monitorplace/addMonitorPlaceByClient',
-                    params: params,
-                    success: function(res){
-                        console.log(res)
-                        if(res.response.info.code==100000){
-                            _this.loading = false;
-                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
                             _this.$store.dispatch('SetAddId',res.response.content.id);
-                            _this.$store.dispatch('SetFirstStepAlert',{
-                                type: _this.firstStepAlert.type,
-                                state: 2,
-                            });
-                            _this.$emit('changeAlert','下一步')
-                        }
+                        };
+                        _this.$store.dispatch('SetFirstStepAlert',{
+                            type: _this.firstStepAlert.type,
+                            state: 2,
+                        });
+                        _this.$emit('changeAlert','下一步')
+                    }else{
+                        _this.$message.error({message: res.response.info.msg,duration: Util.time()});
                     }
-                })
-              console.log('调用成功1')
-            }
+                }
+            })
+            console.log('调用成功1')
         },
-        created(){
-            this.findAllMonitorModel();
+        findMonitorplaceById(){
+            let _this = this;
+            this.loading = true;
+            this.api.postN({
+                url: '/monitorplace/findMonitorplaceById',
+                params: {
+                    id: _this.addid
+                },
+                success: function(res){
+                    _this.loading = false;
+                    console.log(res);
+                    if(res.response.info.code==100000){
+                        // monitorplacename: '',//监控点名称
+                        // allMonitorModel:[],//所有监控器型号列表
+                        // monitorModel: '',//选中的监控器型号id
+                        // monitoruid: '',//监控器uid 、监控器硬件地址
+                        // monitorno: '',//监控器出厂编号
+                        // installname: '',//安装单位
+                        // deployer: '',//配置人
+                        // remark: '',//备注
+                        _this.monitorplacename = res.response.content.monitorplacename;
+                        _this.monitoruid = res.response.content.monitoruid;
+                        _this.monitorno = res.response.content.monitorno;
+                        _this.installname = res.response.content.installname;
+                        _this.deployer = res.response.content.deployer;
+                        _this.remark = res.response.content.remark;
+                        _this.monitormodel = res.response.content.monitormodel;
+                    }else{
+                        _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                    }
+                }
+            })
+        }
+    },
+    created(){
+        this.findAllMonitorModel();
+        if(this.firstStepAlert.type==2){
+            this.findMonitorplaceById();
         }
     }
+}
 </script>
 <style lang="scss" scoped>
 .tep-bottom{

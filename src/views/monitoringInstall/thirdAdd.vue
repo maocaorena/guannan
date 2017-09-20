@@ -3,7 +3,7 @@
         <alert-v v-on:close="close" v-on:next="next" :btn="btn">
             <span slot="name">监控参数信息-{{tittxt}}模块</span>
             <div class="tep-in" slot="con">
-                <div class="content">
+                <div class="content" v-loading.body="loading">
         			<div class="list-tit">
         				<table class="list" border="1" cellspacing="0" cellpadding="0">
         					<colgroup>
@@ -50,15 +50,15 @@
                                         {{item.name}}
         							</td>
         							<td>
-                                        <select class="" name="">
-                                            <option value="">D10231</option>
-                                            <option value="">D10242</option>
+                                        <select class="" name="" v-model="item.datasource">
+                                            <option v-for="item2 of dataSourcename" :value="item2.id">{{item2.name}}</option>
                                         </select>
                                     </td>
         							<td>
                                         <select class="" name="" v-model="item.dataport">
                                             <option v-for="item2 of dataPort" :value="item2.id">{{item2.name}}</option>
-                                        </select></td>
+                                        </select>
+                                    </td>
         							<td>
                                         <select class="" name="" v-model="item.portstate">
                                             <option v-for="item1 of portstate" :value="item1.id">{{item1.state}}</option>
@@ -86,6 +86,8 @@
                 checked: false,//全选的状态
                 dataPort: [],//数据端口下拉列表
                 portstate: [],//端口状态下拉
+                dataSourcename: [],//数据源下拉框
+                loading: false,
             }
         },
         computed:{
@@ -132,10 +134,20 @@
                 let subMessage = [];
                 for (let i = 0; i < this.checkboxModel.length; i++) {
                     subMessage.push(this.list[this.checkboxModel[i]]);
-                    console.log(this.list[this.checkboxModel[i]])
                 };
+                console.log(subMessage);
+                this.loading = true;
+                let _this = this;
+                this.api.postN({
+                    url: '/monitornameset/monitornameSet',
+                    params: JSON.stringify(subMessage),
+                    success: function(res){
+                        _this.loading = false;
+                        console.log(res);
+                    }
+                })
                 console.log(subMessage)
-                this.close()
+                // this.close()
             },
             findAllMonitornameModel(){
                 let _this = this;
@@ -162,7 +174,7 @@
                     }
                 })
             },
-            findDataPort(){
+            findDataPort(){//查询数据端口
                 let _this = this;
                 this.api.postN({
                     url: '/dataport/findDataPort',
@@ -178,7 +190,7 @@
                     }
                 })
             },
-            findPortState(){
+            findPortState(){//查询数据端口状态
                 let _this = this;
                 this.api.postN({
                     url: '/portstate/findPortState',
@@ -193,6 +205,22 @@
                         }
                     }
                 })
+            },
+            findAllDataSourcename(){//查询所有的数据源
+                let _this = this;
+                this.api.postN({
+                    url: '/datasourcename/findAllDataSourcename',
+                    success: function(res){
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            if(res.response.content){
+                                _this.dataSourcename = res.response.content;
+                            }else{
+                                _this.dataSourcename = [];
+                            }
+                        }
+                    }
+                })
             }
         },
         created(){
@@ -203,6 +231,7 @@
             this.findAllMonitornameModel();
             this.findDataPort();
             this.findPortState();
+            this.findAllDataSourcename();
             console.log('dddd',this.addid)
         }
     }

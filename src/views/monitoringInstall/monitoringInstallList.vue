@@ -15,7 +15,7 @@
                     <button type="button" name="button" @click="del(2)">批量删除</button>
                 </div>
                 <div class="handle-item">
-                    <button type="button" name="button" @click="add">增加监控点</button>
+                    <button type="button" name="button" @click="add(1)">增加监控点</button>
                 </div>
             </div>
         </div>
@@ -86,7 +86,7 @@
                             <td>{{item.remark}}</td>
                             <td>
                                 <a href="javascript:;" class="mode" @click="del(1,item)">删除</a>
-                                <a href="javascript:;" class="mode">编辑</a>
+                                <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
                             </td>
                         </tr>
                     </tbody>
@@ -166,11 +166,14 @@ export default {
         selectall(val) {
             console.log(val)
         },
-        add() {
-          this.$store.dispatch('SetFirstStepAlert', {
-              type: 1,
-              state: 1,
-          })
+        add(type,item) {//1是新增，2是编辑
+            if(type == 2){
+                this.$store.dispatch('SetAddId',item.id);
+            };
+            this.$store.dispatch('SetFirstStepAlert', {
+                type: type,
+                state: 1,
+            })
         },
         del(type,item){
             let delname = '';

@@ -11,10 +11,10 @@
                     </router-link>
                 </div>
                 <div class="handle-item">
-                    <button type="button" name="button">搜索</button>
+                    <button type="button" name="button" @click="search">搜索</button>
                 </div>
                 <div class="handle-item">
-                    <input type="text" name="" value="">
+                    <input type="text" name="" v-model="monitorplacename">
                 </div>
             </div>
         </div>
@@ -107,6 +107,7 @@ export default {
             loading: false,
             checkboxModel:[],
             checked: false,
+            monitorplacename: '',
         }
     },
     components: {
@@ -128,6 +129,10 @@ export default {
         add() {
             this.$store.dispatch('SetFirstStepAlert', 1)
         },
+        search(){
+            this.pageNum = 1;
+            this.getList();
+        },
         getList(){
             let _this = this;
             this.loading = true;
@@ -137,6 +142,7 @@ export default {
                     currentpage: this.pageNum,
                     pagesize: this.pagesize,
                     clientid: _this.$route.query.clientid,
+                    monitorplacename: this.monitorplacename,
                 },
                 success: function(res){
                     console.log(res)
