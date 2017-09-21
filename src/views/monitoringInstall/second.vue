@@ -34,7 +34,7 @@
 						<col width="7">
 					</colgroup>
 					<tbody class="list-con">
-						<tr v-for="(item,index) of 3" class="list-con-item">
+						<tr v-for="(item,index) of list" class="list-con-item">
 							<td>
                                 {{index}}
 							</td>

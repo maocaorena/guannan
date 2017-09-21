@@ -37,7 +37,7 @@
         						<col width="7">
         					</colgroup>
         					<tbody class="list-con">
-        						<tr v-for="(item,index) of 4" class="list-con-item">
+        						<tr v-for="(item,index) of list" class="list-con-item">
                                     <td v-if="secondAdd.type == 1">
                                         <input type="checkbox" name="" value="">
                                     </td>
@@ -45,9 +45,8 @@
                                         {{index+1}}
         							</td>
         							<td>
-                                        变频器监测模块
+                                        {{item.modulename}}
                                     </td>
-        							<td>变频器</td>
         							<td>
                                         <select class="" name="">
                                             <option value="">D10231</option>
@@ -55,7 +54,10 @@
                                         </select>
                                     </td>
         							<td>
-
+                                        <input style="width:80%;" type="text" name="" value="">
+                                    </td>
+        							<td>
+                                        <input style="width:80%;" type="text" name="" value="">
                                     </td>
         						</tr>
         					</tbody>
@@ -68,11 +70,13 @@
 </template>
 <script type="text/javascript">
     import alert from '../../components/alert.vue';
+    import { Util } from '../../lib/util.js';
     export default{
         data(){
             return{
                 btn: '确定添加',
-                tittxt: '添加'
+                tittxt: '添加',
+                list: [],
             }
         },
         computed:{
@@ -84,6 +88,24 @@
             'alert-v' : alert,
         },
         methods:{
+            findAllModuleModel(){
+                let _this = this;
+                this.api.postN({
+                    url: '/modulemodel/findAllModuleModel',
+                    success: function(res){
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            let _addid = _this.addid;
+                            if(res.response.content){
+                                _this.list = res.response.content;
+                                console.log(_this.list)
+                            }else{
+                                _this.list = [];
+                            }
+                        }
+                    }
+                })
+            },
             close(){
                 this.$store.dispatch('SetSecondAddAlert',{
                     state: false,
@@ -103,6 +125,7 @@
                 this.tittxt = '修改';
                 this.btn = '确定修改';
             };
+            this.findAllModuleModel();
         }
     }
 </script>
