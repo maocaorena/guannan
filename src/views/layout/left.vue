@@ -108,23 +108,43 @@ export default {
             this.isthis2 = this.$route.fullPath;
             switch (parentUrl) {
                 case '/monitoringRun'://运行监控
-                    this.goBaseUrl = '/monitoringRun/list';
-                    this.$store.dispatch('ChangeLeftbarType',1);
-                    let _this1 = this;
-                    this.api.postN({
-                        url : "/client/findProvinceAndCompanys",
-                        success: function(res){
-                            let _res = res.response;
-                            if(_res.info.code == 100000){
-                                _this1.$store.dispatch('ChangeLeftbar',_res.content);
-                                console.log(_res.content[0]);
-                                _this1.$router.push({path:'/monitoringRun/list',query:{clientid: _res.content[0].clientList[0].clientid}})
-                            }
-                        }
-                    });
                     let childurl = this.$route.matched[1].path;
                     if(childurl.indexOf('map')>=0){
                         this.$store.dispatch('ChangeLeftbarType',3);
+                    }else if(childurl.indexOf('item')>=0){
+                        this.goBaseUrl = '/monitoringRun/item';
+                        this.$store.dispatch('ChangeLeftbarType',1);
+                        let _this1 = this;
+                        this.api.postN({
+                            url : "/client/findProvinceAndCompanys",
+                            success: function(res){
+                                let _res = res.response;
+                                if(_res.info.code == 100000){
+                                    _this1.$store.dispatch('ChangeLeftbar',_res.content);
+                                    console.log('11',_this1.$route.query.clientid);
+                                    if(!_this1.$route.query.clientid){
+                                        _this1.$router.push({path:'/monitoringRun/item',query:{clientid: _res.content[0].clientList[0].clientid}})
+                                    }
+                                }
+                            }
+                        });
+                    }else{
+                        this.goBaseUrl = '/monitoringRun/list';
+                        this.$store.dispatch('ChangeLeftbarType',1);
+                        let _this1 = this;
+                        this.api.postN({
+                            url : "/client/findProvinceAndCompanys",
+                            success: function(res){
+                                let _res = res.response;
+                                if(_res.info.code == 100000){
+                                    _this1.$store.dispatch('ChangeLeftbar',_res.content);
+                                    console.log('11',_this1.$route.query.clientid);
+                                    if(!_this1.$route.query.clientid){
+                                        _this1.$router.push({path:'/monitoringRun/list',query:{clientid: _res.content[0].clientList[0].clientid}})
+                                    }
+                                }
+                            }
+                        });
                     };
                     break
                 case '/monitoringInstall'://监控接装
