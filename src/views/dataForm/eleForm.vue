@@ -4,36 +4,7 @@
       <div class="rt-item rtItemSelect">
         用户报表
       </div>
-      <div class="rt-handle">
-
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">公司名称</option>
-          </select>
-        </div>
-
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">监控点</option>
-          </select>
-        </div>
-
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">日报表</option>
-          </select>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">查询</button>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">导出</button>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">自定义报表</button>
-        </div>
-
-      </div>
+      <data-filter v-on:exportExcel="exportExcel"></data-filter>
     </div>
     <div class="content">
       <div class="list-tit">
@@ -95,22 +66,22 @@
             </tr>
             <tr v-for="(item,index) in items" class="list-con-item">
               <td>
-                2017-03-04
+                {{item.timedetail}}
               </td>
               <td>
-                浙江永丰钢业有限公司
+                {{item.clientname}}
               </td>
-              <td>A车间</td>
-              <td>313D9313</td>
-              <td>80小时</td>
-              <td>50</td>
-              <td>140</td>
-              <td>100</td>
-              <td>60</td>
-              <td>60</td>
-              <td>60</td>
-              <td>60</td>
-              <td>60</td>
+              <td>{{item.monitorplacename}}</td>
+              <td>{{item.monitoruid}}</td>
+              <td>{{item.totalenergy}}</td>
+              <td>{{item.posipower}}</td>
+              <td>{{item.negipower}}</td>
+              <td>{{item.Avm}}</td>
+              <td>{{item.Bvm}}</td>
+              <td>{{item.Cvm}}</td>
+              <td>{{item.Aam}}</td>
+              <td>{{item.Bam}}</td>
+              <td>{{item.Cam}}</td>
             </tr>
           </tbody>
         </table>
@@ -123,6 +94,7 @@
 </template>
 <script>
 import pages from '../../components/pages.vue';
+import dataFilter from '../../components/dataFilter.vue';
 
 export default {
   data() {
@@ -131,11 +103,12 @@ export default {
         pageSize: 10,
         total: 200,
         items: [],
-        ifPage: true
+        ifPage: false
     }
   },
   components: {
     'pages-v' : pages,
+    dataFilter
   },
   created() {
     var self = this;
@@ -146,7 +119,7 @@ export default {
     this.$store.dispatch('ChangeRightbar', tabs);
 
     let url = "/finddata/findElectricUseByCondition";
-    var data = {
+    let data = {
       currentpage: this.pageNum,
       pagesize: this.pageSize,
       clientid: 1,
@@ -156,14 +129,12 @@ export default {
       endTime: ""
     }
     this.api.handleAjax(url,data).done(function(res){
-      // self.total = res.total;
-      // self.pageSize = res.pageSize;
-      // self.pageNum = res.pageNum;
       if(res.list.length > 0) {
         self.total = res.total;
         self.pageSize = res.pageSize;
         self.pageNum = res.pageNum;
         self.items = res.list;
+        self.ifPage = true;
       } else {
         self.ifPage = false;
       }
@@ -175,6 +146,15 @@ export default {
   methods: {
     pagechange(val){
         console.log(val+'页')
+    },
+    exportExcel(param) {
+      let url = "/exceldata/excelExportElecricConsume";
+      let data = param;
+      this.api.handleAjax(url,data).done(function(res){
+        
+      }).fail(function(res){
+        console.log(res);
+      })
     }
   }
 }

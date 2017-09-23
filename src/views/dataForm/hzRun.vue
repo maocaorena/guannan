@@ -4,36 +4,7 @@
       <div class="rt-item rtItemSelect">
         变频器运行报表
       </div>
-      <div class="rt-handle">
-        
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">公司名称</option>
-          </select>
-        </div>
-        
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">监控点</option>
-          </select>
-        </div>
-        
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">日报表</option>
-          </select>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">查询</button>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">导出</button>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">自定义报表</button>
-        </div>
-
-      </div>
+      <data-filter v-on:exportExcel="exportExcel"></data-filter>
     </div>
     <div class="content">
       <div class="list-tit">
@@ -75,41 +46,46 @@
             <col width="9">
           </colgroup>
           <tbody class="list-con">
-            <tr v-for="(item,index) of 40" class="list-con-item">
-              <td>
-                2017-03-04
-              </td>
-              <td>
-                浙江永丰钢业有限公司
-              </td>
-              <td>A车间</td>
-              <td>313D9313</td>
-              <td>80小时</td>
-              <td>50</td>
-              <td>140</td>
-              <td>100</td>
+
+            <tr v-if="!ifPage">
+              <td colspan="8">暂无数据</td>
+            </tr>
+            <tr v-for="(item,index) of items" class="list-con-item">
+              <td>{{item.timedetail}}</td>
+              <td>{{item.clientname}}</td>
+              <td>{{item.monitorplacename}}</td>
+              <td>{{item.monitoruid}}</td>
+              <td>{{item.transducerstate}}</td>
+              <td>{{item.tranfrequency}}</td>
+              <td>{{item.trantotaltime}}</td>
+              <td>{{item.tranalert}}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div class="downpage">
+    <div class="downpage" v-if="ifPage">
       <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
     </div>
   </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
+import dataFilter from '../../components/dataFilter.vue';
+
 export default {
   data() {
     return {
         pageNum: 1,
         pageSize: 10,
         total: 200,
+        items: [],
+        ifPage: false
     }
   },
   components: {
     'pages-v' : pages,
+    dataFilter
   },
   created() {
     let tabs = [{
@@ -118,10 +94,44 @@ export default {
     }];
     this.$store.dispatch('ChangeRightbar', tabs);
 
+    let url = "/finddata/findTransducerByCondition";
+    let data = {
+      currentpage: this.pageNum,
+      pagesize: this.pageSize,
+      clientid: 1,
+      monitorplaceid: 1,
+      timedetail: "",
+      startTime: "",
+      endTime: ""
+    }
+    this.api.handleAjax(url,data).done(function(res){
+      if(res.list.length > 0) {
+        self.total = res.total;
+        self.pageSize = res.pageSize;
+        self.pageNum = res.pageNum;
+        self.items = res.list;
+        self.ifPage = true;
+      } else {
+        self.ifPage = false;
+      }
+      console.log(res.pageNum,res.pageSize,res.total)
+    }).fail(function(res){
+      console.log(res);
+    })
+
   },
   methods: {
     pagechange(val){
         console.log(val+'页')
+    },
+    exportExcel(param) {
+      let url = "/exceldata/exportTransducerRun";
+      let data = param;
+      this.api.handleAjax(url,data).done(function(res){
+        
+      }).fail(function(res){
+        console.log(res);
+      })
     }
   }
 }

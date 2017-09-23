@@ -198,19 +198,17 @@ export default {
                     this.$store.dispatch('ChangeLeftbarType',1);
                     this.$store.dispatch('ChangeLeftbar',[//要渲染的左侧侧边栏
                         {
-                            tit : '客户',
-                            list : [
-                                {
-                                    tit : '客户东南有限公司',
-                                },
-                                {
-                                    tit : '客户西北有限公司',
-                                },
-                                {
-                                    tit : '客户西南有限公司',
-                                },
-                            ]
+                            tit: "全部客户",
+                            url: '/accountManage/accountList'
                         },
+                        {
+                            tit : '账号列表',
+                            url : '/accountManage/accountList'
+                        },
+                        {
+                            tit : '角色列表',
+                            url : '/accountManage/roleList'
+                        }
                     ]);
 
                     break

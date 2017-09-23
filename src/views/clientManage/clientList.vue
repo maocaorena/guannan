@@ -15,7 +15,7 @@
           <button type="button" name="button">批量删除</button>
         </div>
         <div class="handle-item">
-          <button type="button" name="button" @click="add">增加客户</button>
+          <button type="button" name="button">增加客户</button>
         </div>
       </div>
     </div>
@@ -67,21 +67,24 @@
             <col width="9">
           </colgroup>
           <tbody class="list-con">
-            <tr v-for="(item,index) of 40" class="list-con-item">
-              <th>
+            <tr v-if="!ifPage">
+              <td colspan="10">暂无数据</td>
+            </tr>
+            <tr v-for="(item,index) of items" class="list-con-item">
+              <td>
                 <input type="checkbox">
-              </th>
+              </td>
               <td>
                 {{index}}
               </td>
               <td>
-                浙江省
+                {{item.province}}
               </td>
-              <td>杭州市</td>
-              <td>浙江永丰钢业有限公司</td>
-              <td>杭州市西湖区199号</td>
-              <td>五六一</td>
-              <td>0571-88991234</td>
+              <td>{{item.city}}</td>
+              <td>{{item.clientName}}</td>
+              <td>{{item.address}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.phone}}</td>
               <td>--</td>
               <td>
                 <a href="javascript:;" class="mode">删除</a>
@@ -92,8 +95,8 @@
         </table>
       </div>
     </div>
-    <div class="downpage">
-      <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
+    <div class="downpage" v-if="ifPage">
+      <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
     </div>
     <alert-v v-on:close="close" :btn="btn" v-on:next="next" v-if="addDialog">
       <span slot="name">添加客户</span>
@@ -156,6 +159,9 @@ export default {
       pageNum: 1,
       pageSize: 10,
       total: 200,
+      keywords: "",
+      items: [],
+      ifPage: false
     }
   },
   components: {
@@ -165,6 +171,57 @@ export default {
   computed: {
     addDialog() {
       return this.$store.getters.dialog.status;
+    }
+  },
+  created() {
+    let tabs = [{
+      isurl: 'eleForm',
+      name: '用电报表'
+    }];
+    this.$store.dispatch('ChangeRightbar', tabs);
+
+    this.getData();
+    
+
+  },
+  methods: {
+    pagechange(val){
+        console.log(val+'页')
+    },
+    exportExcel(param) {
+      let url = "/exceldata/exportexcelFanRun";
+      let data = param;
+      this.api.handleAjax(url,data).done(function(res){
+        
+      }).fail(function(res){
+        console.log(res);
+      })
+    },
+
+    getData() {
+      var self = this;
+      console.log(0)
+      let url = "/client/findClientByConditions";
+      let data = {
+        currentpage: this.pageNum,
+        pagesize: this.pageSize,
+        keywords: this.keywords
+      }
+      this.api.handleAjax(url,data).done(function(res){
+        // console.log(res.list.length);
+        if(res.list.length > 0) {
+          self.total = res.total;
+          self.pageSize = res.pageSize;
+          self.pageNum = res.pageNum;
+          self.items = res.list;
+          console.log(self.items)
+          self.ifPage = true;
+        } else {
+          self.ifPage = false;
+        }
+      }).fail(function(res){
+        console.log(res);
+      })
     }
   }
 }
