@@ -67,7 +67,7 @@
                         <col width="9">
                     </colgroup>
                     <tbody class="list-con">
-                        <tr class="list-con-item" v-for="(item,index) of list">
+                        <tr v-if="total>0" class="list-con-item" v-for="(item,index) of list">
                             <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
                             <td v-else> {{index+1}} </td>
                             <td>
@@ -85,12 +85,14 @@
                             <td> {{item.oiltemp}} </td>
                             <td> {{item.tranfrequency}} </td>
                         </tr>
-
+                        <tr v-if="total==0">
+                            <td colspan="11">暂无数据</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="downpage">
+        <div class="downpage" v-if="total>0">
             <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
         </div>
     </div>
@@ -102,7 +104,7 @@ export default {
         return {
             pageNum: 1,
             pageSize: 10,
-            total: 200,
+            total: 0,
             list: [],
             loading: false,
             checkboxModel:[],
@@ -157,7 +159,10 @@ export default {
         }
     },
     created() {
-        this.getList()
+        console.log(this.$route.query.clientid)
+        if(this.$route.query.clientid){
+            this.getList()
+        };
     }
 }
 

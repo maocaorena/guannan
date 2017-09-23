@@ -3,7 +3,7 @@
         <alert-v v-on:close="close" v-on:next="next" :btn="btn">
             <span slot="name">模块信息列表-{{tittxt}}模块</span>
             <div class="tep-in" slot="con">
-                <div class="content">
+                <div class="content" v-loading.body="loading">
         			<div class="list-tit">
         				<table class="list" border="1" cellspacing="0" cellpadding="0">
         					<colgroup>
@@ -16,7 +16,9 @@
         					</colgroup>
         					<thead>
         						<tr>
-                                    <th v-if="secondAdd.type == 1"></th>
+                                    <th v-if="secondAdd.type == 1">
+                                        <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
+                                    </th>
         							<th>序号</th>
                                     <th>通信模块类型</th>
                                     <th>通信模块型号</th>
@@ -39,7 +41,7 @@
         					<tbody class="list-con">
         						<tr v-for="(item,index) of list" class="list-con-item">
                                     <td v-if="secondAdd.type == 1">
-                                        <input type="checkbox" name="" value="">
+                                        <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.idx">
                                     </td>
         							<td>
                                         {{index+1}}
@@ -48,16 +50,15 @@
                                         {{item.modulename}}
                                     </td>
         							<td>
-                                        <select class="" name="">
-                                            <option value="">D10231</option>
-                                            <option value="">D10242</option>
+                                        <select class="width80" name="" v-if="showSelect">
+                                            <option :value="item1.id" v-for="item1 of module['type' + (index+1)]">{{item1.model}}</option>
                                         </select>
                                     </td>
         							<td>
-                                        <input style="width:80%;" type="text" name="" value="">
+                                        <input class="width80" type="text" v-model="item.communicatename">
                                     </td>
         							<td>
-                                        <input style="width:80%;" type="text" name="" value="">
+                                        <input class="width80" type="text" v-model="item.communicateaddress">
                                     </td>
         						</tr>
         					</tbody>
@@ -77,28 +78,74 @@
                 btn: '确定添加',
                 tittxt: '添加',
                 list: [],
+                module: {},
+                checkboxModel:[],//选中的id
+                checked: false,//全选的状态
+                showSelect: false,
+                showSelectList: [],
+                loading: false,
             }
         },
         computed:{
             secondAdd(){
                 return this.$store.getters.secondAdd;
-            }
+            },
+            addid(){
+                return this.$store.getters.addid;
+            },
         },
         components:{
             'alert-v' : alert,
         },
+        watch:{
+            'checkboxModel': {
+                handler: function (val, oldVal) {
+                    if (this.checkboxModel.length === this.list.length) {
+                        this.checked=true;
+                    }else{
+                        this.checked=false;
+                    };
+                },
+                deep: true
+            },
+            'showSelectList': {
+                handler: function (val, oldVal) {
+                    if(this.showSelectList.length == 5){
+                        this.showSelect = true;
+                    }
+                },
+            }
+        },
         methods:{
+            checkedAll() {
+                let _this = this;
+                if (this.checked) {//实现反选
+                    _this.checkboxModel = [];
+                    _this.list.forEach(function(item) {
+                        _this.checkboxModel.push(item.idx);
+                    });
+                }else{//实现全选
+                    _this.checkboxModel = [];
+                }
+            },
             findAllModuleModel(){
                 let _this = this;
+                this.loading = true;
                 this.api.postN({
                     url: '/modulemodel/findAllModuleModel',
                     success: function(res){
                         if(res.response.info.code==100000){
+                            _this.loading = false;
                             _this.$message.success({message: res.response.info.msg,duration: Util.time()});
                             let _addid = _this.addid;
                             if(res.response.content){
+                                for (let i = 0; i < res.response.content.length; i++) {
+                                    res.response.content[i].idx = i;
+                                    res.response.content[i].monitorplaceid = _addid;
+                                    res.response.content[i].communicatename = '';
+                                    res.response.content[i].communicateaddress = '';
+                                };
                                 _this.list = res.response.content;
-                                console.log(_this.list)
                             }else{
                                 _this.list = [];
                             }
@@ -112,12 +159,45 @@
                 });
             },
             next(){
-                console.log(22222);
                 //提交编辑或者新增的信息到vuex
-                this.$store.dispatch('SetSecondAddMessage',{
+                let subList = [];
+                let _this = this;
+                for (let i = 0; i < this.checkboxModel.length; i++) {
+                    subList.push(this.list[this.checkboxModel[i]])
+                };
+                console.log(JSON.stringify(subList));
+                this.loading = true;
+                this.api.postN({
+                    url: '/setmodule/setModuleInfo',
+                    params: JSON.stringify(subList),
+                    success: function(res){
+                        _this.loading = false;
+                        console.log(res)
+                        if(res.response.info.code==100000){
 
-                });
-                this.close()
+                        }
+                    },
+                    error: function(){
+                        _this.loading = false;
+                    }
+                })
+                // this.close()
+            },
+            getModuleById(type){
+                let _this = this;
+                this.api.postN({
+                    url: "/modulemodel/findModuleModelByModuleId",
+                    params: {
+                        moduleid: type
+                    },
+                    success: function(res){
+                        console.log(res)
+                        if(res.response.info.code==100000){
+                            _this.module['type' + type] = res.response.content;
+                            _this.showSelectList.push(type);
+                        }
+                    }
+                })
             },
         },
         created(){
@@ -126,6 +206,9 @@
                 this.btn = '确定修改';
             };
             this.findAllModuleModel();
+            for (let i = 0; i < 5; i++) {
+                this.getModuleById(i+1);
+            }
         }
     }
 </script>
@@ -137,6 +220,9 @@
             width: 100%;
             padding-top: 7px;
 
+        }
+        .width80{
+            width: 80%;
         }
         .content{
             top: 7px;
