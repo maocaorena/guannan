@@ -72,45 +72,47 @@
                         </thead>
                     </table>
                 </div>
-                <div class="list-container">
-                    <table class="list" border="1" cellspacing="0" cellpadding="0">
-                        <colgroup>
-                            <col width="4">
-                            <col width="14">
-                            <col width="11">
-                            <col width="11">
-                            <col width="7">
-                            <col width="11">
-                            <col width="7">
-                            <col width="9">
-                            <col width="9">
-                            <col width="9">
-                            <col width="9">
-                        </colgroup>
-                        <tbody class="list-con">
-                            <tr v-if="total>0" class="list-con-item" v-for="(item,index) of list">
-                                <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
-                                <td v-else> {{index+1}} </td>
-                                <td> {{item.clientname}} </td>
-                                <td>
-                                    <router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid}}">
-                                        {{item.monitorplacename}}
-                                    </router-link>
-                                </td>
-                                <td> {{item.monitoruid}} </td>
-                                <td> {{item.temp}} </td>
-                                <td> {{item.infilnegpressure}} </td>
-                                <td> {{item.outairpressure}} </td>
-                                <td> {{item.outairtemp}} </td>
-                                <td> {{item.oilpressure}} </td>
-                                <td> {{item.oiltemp}} </td>
-                                <td> {{item.tranfrequency}} </td>
-                            </tr>
-                            <tr v-if="total==0">
-                                <td colspan="11">暂无数据</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="list-container" ref="list">
+                    <div class="">
+                        <table class="list" border="1" cellspacing="0" cellpadding="0" :style="{width: width+'px'}">
+                            <colgroup>
+                                <col width="4">
+                                <col width="14">
+                                <col width="11">
+                                <col width="11">
+                                <col width="7">
+                                <col width="11">
+                                <col width="7">
+                                <col width="9">
+                                <col width="9">
+                                <col width="9">
+                                <col width="9">
+                            </colgroup>
+                            <tbody class="list-con">
+                                <tr v-if="total>0" class="list-con-item" v-for="(item,index) of list">
+                                    <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
+                                    <td v-else> {{index+1}} </td>
+                                    <td> {{item.clientname}} </td>
+                                    <td>
+                                        <router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid}}">
+                                            {{item.monitorplacename}}
+                                        </router-link>
+                                    </td>
+                                    <td> {{item.monitoruid}} </td>
+                                    <td> {{item.temp}} </td>
+                                    <td> {{item.infilnegpressure}} </td>
+                                    <td> {{item.outairpressure}} </td>
+                                    <td> {{item.outairtemp}} </td>
+                                    <td> {{item.oilpressure}} </td>
+                                    <td> {{item.oiltemp}} </td>
+                                    <td> {{item.tranfrequency}} </td>
+                                </tr>
+                                <tr v-if="total==0">
+                                    <td colspan="11">暂无数据</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="downpage" v-if="total>0 && $route.path.indexOf('item')<0">
@@ -133,6 +135,7 @@ export default {
             checked: false,
             monitorplacename: '',
             leftbars: [],
+            width: '',
         }
     },
     components: {
@@ -205,6 +208,14 @@ export default {
         if(this.$route.query.clientid){
             this.getList()
         };
+    },
+    mounted(){
+        console.log('asas',this.$refs.list.getBoundingClientRect().width);
+        this.width = this.$refs.list.getBoundingClientRect().width - 17;
+        let _this = this;
+        window.onresize = function(){
+            _this.width = _this.$refs.list.getBoundingClientRect().width - 17;
+        }
     }
 }
 

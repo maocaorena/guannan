@@ -75,8 +75,9 @@
                         </thead>
                     </table>
                 </div>
-                <div class="list-container">
-                    <table class="list" border="1" cellspacing="0" cellpadding="0">
+                <div class="list-container" ref="list">
+                    <div class="">
+                        <table class="list" border="1" cellspacing="0" cellpadding="0" :style="{width: width+'px'}">
                         <colgroup>
                             <col width="4">
                             <col width="4">
@@ -114,6 +115,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
             <div class="downpage">
@@ -139,6 +141,7 @@ export default {
             checked: false,
             keyWords: '',
             leftbars: [],
+            width: '',
         }
     },
     components: {
@@ -293,7 +296,11 @@ export default {
         };
     },
     mounted() {
-
+        this.width = this.$refs.list.getBoundingClientRect().width - 17;
+        let _this = this;
+        window.onresize = function(){
+            _this.width = _this.$refs.list.getBoundingClientRect().width - 17;
+        }
     }
 }
 </script>

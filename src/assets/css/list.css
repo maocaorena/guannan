@@ -26,7 +26,7 @@
 	bottom: 0;
 	margin: auto;
 	height: auto;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 table {
