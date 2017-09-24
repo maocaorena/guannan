@@ -148,7 +148,7 @@ export const routes = [
             },
         ]
     },
-    // { path: '*', redirect: '/login' }
+    { path: '*', redirect: '/login' }
 ];
 
 export default new Router({
