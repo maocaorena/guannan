@@ -164,7 +164,7 @@ export default {
             this.api.postN({
                 url: '/monitorplace/findMonitorplaceById',
                 params: {
-                    id: 1,
+                    id: this.$route.query.id,
                 },
                 success: function(res){
                     if(res.response.info.code==100000){

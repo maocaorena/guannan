@@ -44,14 +44,6 @@
         </div>
         <div class="as-item">
             <p class="as-item-tit">
-                配置人：
-            </p>
-            <div class="as-item-con">
-                <input type="text" v-model="deployer" name="" value="">
-            </div>
-        </div>
-        <div class="as-item">
-            <p class="as-item-tit">
                 备注：
             </p>
             <div class="as-item-con">
@@ -81,7 +73,6 @@ export default{
             monitoruid: '',//监控器uid 、监控器硬件地址
             monitorno: '',//监控器出厂编号
             installname: '',//安装单位
-            deployer: '',//配置人
             remark: '',//备注
             loading: false,
         }
@@ -129,7 +120,8 @@ export default{
                 this.$message.warning({message: '请填写监控点名称',duration: Util.time()});
                 return;
             };
-            if(!this.monitorModel){
+            console.log(this.monitormodel);
+            if(!this.monitormodel){
                 this.$message.warning({message: '请选择监控器型号',duration: Util.time()});
                 return;
             };
@@ -145,18 +137,13 @@ export default{
                 this.$message.warning({message: '请填写安装单位',duration: Util.time()});
                 return;
             };
-            if(Util.trim(this.deployer).length <= 0){
-                this.$message.warning({message: '请填写配置人',duration: Util.time()});
-                return;
-            };
             let params = {
                 clientid: this.$route.query.clientid,//客户公司id
                 monitorplacename: Util.trim(this.monitorplacename),
-                monitorModel: this.monitorModel,
+                monitormodel: this.monitormodel,
                 monitoruid: Util.trim(this.monitoruid),
                 monitorno: Util.trim(this.monitorno),
                 installname: Util.trim(this.installname),
-                deployer: Util.trim(this.deployer),
                 remark: Util.trim(this.remark),
                 latitude: 1111,
                 longtitude: 11111,
@@ -170,30 +157,36 @@ export default{
             }else{
                 url = '/monitorplace/addMonitorPlaceByClient';
             };
-            this.loading = true;
-            this.api.postN({
-                url: url,
-                params: params,
-                success: function(res){
-                    console.log(res)
-                    _this.loading = false;
-                    if(res.response.info.code==100000){
-                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-                        if(_this.firstStepAlert.type==2){
-                            _this.$store.dispatch('SetAddId', _this.addid);
-                        }else{
-                            _this.$store.dispatch('SetAddId',res.response.content.id);
-                        };
-                        _this.$store.dispatch('SetFirstStepAlert',{
-                            type: _this.firstStepAlert.type,
-                            state: 2,
-                        });
-                        _this.$emit('changeAlert','下一步')
-                    }else{
-                        _this.$message.error({message: res.response.info.msg,duration: Util.time()});
-                    }
-                }
-            })
+            _this.$store.dispatch('SetAddId', _this.addid);
+            _this.$emit('changeAlert','下一步');
+            _this.$store.dispatch('SetFirstStepAlert',{
+                type: _this.firstStepAlert.type,
+                state: 2,
+            });
+            // this.loading = true;
+            // this.api.postN({
+            //     url: url,
+            //     params: params,
+            //     success: function(res){
+            //         console.log(res)
+            //         _this.loading = false;
+            //         if(res.response.info.code==100000){
+            //             _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+            //             if(_this.firstStepAlert.type==2){
+            //                 _this.$store.dispatch('SetAddId', _this.addid);
+            //             }else{
+            //                 _this.$store.dispatch('SetAddId',res.response.content.id);
+            //             };
+            //             _this.$emit('changeAlert','下一步')
+            //             _this.$store.dispatch('SetFirstStepAlert',{
+            //                 type: _this.firstStepAlert.type,
+            //                 state: 2,
+            //             });
+            //         }else{
+            //             _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+            //         }
+            //     }
+            // })
             console.log('调用成功1')
         },
         findMonitorplaceById(){

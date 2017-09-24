@@ -103,7 +103,7 @@ export default{
         findMonitornameModelById(){
             let _this = this;
             this.api.postN({
-                url: '/monitornamemodel/findMonitornameModelById',
+                url: '/monitornameset/findMonitornameById',
                 params: {
                     id: _this.addid
                 },

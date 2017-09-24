@@ -169,7 +169,9 @@
                 this.loading = true;
                 this.api.postN({
                     url: '/setmodule/setModuleInfo',
-                    params: JSON.stringify(subList),
+                    params: {
+                        moduleinfos: JSON.stringify(subList)
+                    },
                     success: function(res){
                         _this.loading = false;
                         console.log(res)

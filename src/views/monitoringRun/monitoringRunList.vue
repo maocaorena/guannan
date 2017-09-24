@@ -140,8 +140,10 @@ export default {
     },
     watch:{
         '$route' (to, from) {
-            this.pageNum = 1;
-            this.getList();
+            if(to.path.indexOf('item')<0){
+                this.pageNum = 1;
+                this.getList();
+            }
         },
     },
     methods: {

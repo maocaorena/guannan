@@ -140,7 +140,9 @@
                 let _this = this;
                 this.api.postN({
                     url: '/monitornameset/monitornameSet',
-                    params: JSON.stringify(subMessage),
+                    params: {
+                        Monitornameset: JSON.stringify(subMessage)
+                    },
                     success: function(res){
                         _this.loading = false;
                         console.log(res);

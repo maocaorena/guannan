@@ -97,7 +97,7 @@
                                 <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
                                 <td v-else>{{index+1}} </td>
                                 <td>
-                                    <router-link :to="{path:'/monitoringInstall/list/item',query:{clientid:$route.query.clientid}}">
+                                    <router-link :to="{path:'/monitoringInstall/list/item',query:{clientid:$route.query.clientid,id:item.id}}">
                                         {{item.monitorplacename}}
                                     </router-link>
                                 </td>
@@ -157,8 +157,11 @@ export default {
     },
     watch: {
         '$route' (to, from) {
-            this.pageNum = 1;
-            this.getList();
+            console.log(to)
+            if(to.path.indexOf('item')<0){
+                this.pageNum = 1;
+                this.getList();
+            }
         },
         'checkboxModel': {
             handler: function (val, oldVal) {
@@ -285,7 +288,9 @@ export default {
     },
     created() {
         this.getBar();
-        this.getList();
+        if(this.$route.query.clientid){
+            this.getList()
+        };
     },
     mounted() {
 
