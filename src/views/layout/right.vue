@@ -23,6 +23,8 @@ export default {
 
 <style lang="scss">
     .rightbar{
-        padding: 4px 10px 10px 10px;
+        width: 100%;
+        height: 100%;
+        padding: 4px 10px 0 0;
     }
 </style>

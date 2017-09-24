@@ -12,8 +12,8 @@
             <p class="as-item-tit">
                 监控器型号：
             </p>
-            <div class="as-item-con">
-                <select class="" name="" v-model="monitorModel" @change="hahah">
+            <div class="as-item-con" :data="monitormodel">
+                <select class="" name="" v-model="monitormodel" @change="hahah">
                     <option v-for="item of allMonitorModel" :value="item.id">{{item.name}}</option>
                 </select>
             </div>
@@ -77,7 +77,7 @@ export default{
         return{
             monitorplacename: '',//监控点名称
             allMonitorModel:[],//所有监控器型号列表
-            monitorModel: '',//选中的监控器型号id
+            monitormodel: '',//选中的监控器型号id
             monitoruid: '',//监控器uid 、监控器硬件地址
             monitorno: '',//监控器出厂编号
             installname: '',//安装单位
@@ -208,14 +208,6 @@ export default{
                     _this.loading = false;
                     console.log(res);
                     if(res.response.info.code==100000){
-                        // monitorplacename: '',//监控点名称
-                        // allMonitorModel:[],//所有监控器型号列表
-                        // monitorModel: '',//选中的监控器型号id
-                        // monitoruid: '',//监控器uid 、监控器硬件地址
-                        // monitorno: '',//监控器出厂编号
-                        // installname: '',//安装单位
-                        // deployer: '',//配置人
-                        // remark: '',//备注
                         _this.monitorplacename = res.response.content.monitorplacename;
                         _this.monitoruid = res.response.content.monitoruid;
                         _this.monitorno = res.response.content.monitorno;
@@ -223,6 +215,7 @@ export default{
                         _this.deployer = res.response.content.deployer;
                         _this.remark = res.response.content.remark;
                         _this.monitormodel = res.response.content.monitormodel;
+                        console.log(res.response.content.monitormodel);
                     }else{
                         _this.$message.error({message: res.response.info.msg,duration: Util.time()});
                     }

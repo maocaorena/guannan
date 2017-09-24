@@ -42,26 +42,28 @@ export const routes = [
             {//运行监控列表
                 path: '/monitoringRun/list',
                 component: monitoringRunList,
-            },
-            {//运行监控详情
-                path: '/monitoringRun/item',
-                component: monitoringRunItem,
-                redirect: '/monitoringRun/item/fanRunwatch',
-                children: [
-                    {//风机运行监测
-                        path: 'fanRunwatch',
-                        component: fanRunwatch,
-                        name: '风机运行监测'
-                    },
-                    {//智能电表
-                        path: 'smartMeters',
-                        component: smartMeters,
-                        name: '智能电表'
-                    },
-                    {//变频器运行监测
-                        path: 'hzWatch',
-                        component: hzWatch,
-                        name: '变频器运行监测'
+                children:[
+                    {//运行监控详情
+                        path: '/monitoringRun/list/item',
+                        component: monitoringRunItem,
+                        redirect: '/monitoringRun/list/item/fanRunwatch',
+                        children: [
+                            {//风机运行监测
+                                path: '/monitoringRun/list/item/fanRunwatch',
+                                component: fanRunwatch,
+                                name: '风机运行监测'
+                            },
+                            {//智能电表
+                                path: '/monitoringRun/list/item/smartMeters',
+                                component: smartMeters,
+                                name: '智能电表'
+                            },
+                            {//变频器运行监测
+                                path: '/monitoringRun/list/item/hzWatch',
+                                component: hzWatch,
+                                name: '变频器运行监测'
+                            },
+                        ]
                     },
                 ]
             },
@@ -82,10 +84,12 @@ export const routes = [
             {// 监控接装列表
                 path: '/monitoringInstall/list',
                 component: monitoringInstallList,
-            },
-            {// 监控接装详情
-                path: '/monitoringInstall/item',
-                component:monitoringInstallItem,
+                children:[
+                    {// 监控接装详情
+                        path: '/monitoringInstall/list/item',
+                        component:monitoringInstallItem,
+                    },
+                ]
             },
         ]
     },
@@ -144,7 +148,7 @@ export const routes = [
             },
         ]
     },
-    { path: '*', redirect: '/login' }
+    // { path: '*', redirect: '/login' }
 ];
 
 export default new Router({

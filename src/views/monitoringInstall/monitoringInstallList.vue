@@ -1,102 +1,126 @@
 <template>
-    <div id="monitoringRunList">
-        <div class="rightTabbar">
-            <div class="rt-item rtItemSelect">
-                监控列表
-            </div>
-            <div class="rt-handle">
-                <div class="handle-item">
-                    <button type="button" name="button">搜索</button>
-                </div>
-                <div class="handle-item">
-                    <input type="text" name="" value="">
-                </div>
-                <div class="handle-item">
-                    <button type="button" name="button" @click="del(2)">批量删除</button>
-                </div>
-                <div class="handle-item">
-                    <button type="button" name="button" @click="add(1)">增加监控点</button>
-                </div>
-            </div>
-        </div>
-        <div class="content" v-loading.body="loading">
-            <div class="list-tit">
-                <table class="list" border="1" cellspacing="0" cellpadding="0">
-                    <colgroup>
-                        <col width="4">
-                        <col width="4">
-                        <col width="10">
-                        <col width="11">
-                        <col width="7">
-                        <col width="11">
-                        <col width="17">
-                        <col width="9">
-                        <col width="9">
-                        <col width="9">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>
-                                <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
-                            </th>
-                            <th>序号</th>
-                            <th>监控点名称</th>
-                            <th>监控器型号</th>
-                            <th>监控器UID</th>
-                            <th>监控器出厂编号</th>
-                            <th>安装单位</th>
-                            <th>安装日期</th>
-                            <th>备注</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="list-container">
-                <table class="list" border="1" cellspacing="0" cellpadding="0">
-                    <colgroup>
-                        <col width="4">
-                        <col width="4">
-                        <col width="10">
-                        <col width="11">
-                        <col width="7">
-                        <col width="11">
-                        <col width="17">
-                        <col width="9">
-                        <col width="9">
-                        <col width="9">
-                    </colgroup>
-                    <tbody class="list-con">
-                        <tr class="list-con-item" v-for="(item,index) of list">
-                            <td>
-                                <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.id">
-                            </td>
-                            <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
-                            <td v-else>{{index+1}} </td>
-                            <td>
-                                <router-link to="/monitoringInstall/item">
-                                    {{item.monitorplacename}}
-                                </router-link>
-                            </td>
-                            <td>{{item.monitormodel}}</td>
-                            <td>{{item.monitoruid}}</td>
-                            <td>{{item.monitorno}}</td>
-                            <td>{{item.installname}}</td>
-                            <td>{{item.createtime | cutTime}}</td>
-                            <td>{{item.remark}}</td>
-                            <td>
-                                <a href="javascript:;" class="mode" @click="del(1,item)">删除</a>
-                                <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div id="monitoringRunList" class="wrapper">
+        <div class="leftBlock">
+            <div class="first-list type1" v-for="(item,index) of leftbars">
+                <p class="first-item">
+                    <img class="leftIcon" src="../../assets/img/leftbar/icon_sheng.png" alt="">
+                    {{item.province}}
+                </p>
+                <ul class="second-list">
+                    <router-link class="second-item"
+                        :class="{selected:$route.query.clientid==second.clientid}"
+                        :to="{path:'/monitoringInstall/list',query:{clientid: second.clientid}}"
+                        tag="li"
+                        :key="second.clientid"
+                        v-for="(second,index2) of item.clientList">
+                        <img class="leftIcon" src="../../assets/img/leftbar/icon_gongsi.png" alt="">
+                        {{second.clientname}}
+                    </router-link>
+                </ul>
             </div>
         </div>
-        <div class="downpage">
-            <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
+        <div class="rightBlock" v-if="$route.path.indexOf('item')>0">
+            <router-view></router-view>
         </div>
-        <step-v v-if="firstStepAlert.state > 0"></step-v>
+        <div class="rightBlock" v-if="$route.path.indexOf('item')<0">
+            <div class="rightTabbar">
+                <div class="rt-item rtItemSelect">
+                    监控列表
+                </div>
+                <div class="rt-handle">
+                    <div class="handle-item">
+                        <button type="button" name="button" @click="search">搜索</button>
+                    </div>
+                    <div class="handle-item">
+                        <input type="text" placeholder="监控点或安装单位名称" v-model="keyWords">
+                    </div>
+                    <div class="handle-item">
+                        <button type="button" name="button" @click="del(2)">批量删除</button>
+                    </div>
+                    <div class="handle-item">
+                        <button type="button" name="button" @click="add(1)">增加监控点</button>
+                    </div>
+                </div>
+            </div>
+            <div class="content" v-loading.body="loading">
+                <div class="list-tit">
+                    <table class="list" border="1" cellspacing="0" cellpadding="0">
+                        <colgroup>
+                            <col width="4">
+                            <col width="4">
+                            <col width="10">
+                            <col width="11">
+                            <col width="7">
+                            <col width="11">
+                            <col width="17">
+                            <col width="9">
+                            <col width="9">
+                            <col width="9">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
+                                </th>
+                                <th>序号</th>
+                                <th>监控点名称</th>
+                                <th>监控器型号</th>
+                                <th>监控器UID</th>
+                                <th>监控器出厂编号</th>
+                                <th>安装单位</th>
+                                <th>安装日期</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="list-container">
+                    <table class="list" border="1" cellspacing="0" cellpadding="0">
+                        <colgroup>
+                            <col width="4">
+                            <col width="4">
+                            <col width="10">
+                            <col width="11">
+                            <col width="7">
+                            <col width="11">
+                            <col width="17">
+                            <col width="9">
+                            <col width="9">
+                            <col width="9">
+                        </colgroup>
+                        <tbody class="list-con">
+                            <tr class="list-con-item" v-for="(item,index) of list">
+                                <td>
+                                    <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.id">
+                                </td>
+                                <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
+                                <td v-else>{{index+1}} </td>
+                                <td>
+                                    <router-link :to="{path:'/monitoringInstall/list/item',query:{clientid:$route.query.clientid}}">
+                                        {{item.monitorplacename}}
+                                    </router-link>
+                                </td>
+                                <td>{{item.monitormodel}}</td>
+                                <td>{{item.monitoruid}}</td>
+                                <td>{{item.monitorno}}</td>
+                                <td>{{item.installname}}</td>
+                                <td>{{item.createtime | cutTime}}</td>
+                                <td>{{item.remark}}</td>
+                                <td>
+                                    <a href="javascript:;" class="mode" @click="del(1,item)">删除</a>
+                                    <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="downpage">
+                <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
+            </div>
+            <step-v v-if="firstStepAlert.state > 0"></step-v>
+        </div>
     </div>
 </template>
 <script>
@@ -113,6 +137,8 @@ export default {
             loading: false,
             checkboxModel:[],
             checked: false,
+            keyWords: '',
+            leftbars: [],
         }
     },
     components: {
@@ -147,6 +173,10 @@ export default {
         }
     },
     methods: {
+        search(){
+            this.pageNum = 1;
+            this.getList();
+        },
         checkedAll() {
             let _this = this;
             if (this.checked) {//实现反选
@@ -223,6 +253,7 @@ export default {
                     currentpage: this.pageNum,
                     pagesize: this.pagesize,
                     clientid: _this.$route.query.clientid,
+                    monitorplacenameorinstallname: this.keyWords,
                 },
                 success: function(res){
                     console.log(res)
@@ -234,9 +265,26 @@ export default {
                     }
                 }
             })
+        },
+        getBar(){
+            let _this1 = this;
+            this.api.postN({
+                url : "/client/findProvinceAndCompanys",
+                success: function(res){
+                    let _res = res.response;
+                    if(_res.info.code == 100000){
+                        _this1.leftbars = _res.content;
+                        console.log(_this1.$route.path.indexOf('item'))
+                        if(!_this1.$route.query.clientid && _this1.$route.path.indexOf('item')<0){
+                            _this1.$router.replace({path:'/monitoringInstall/list',query:{clientid: _res.content[0].clientList[0].clientid}})
+                        }
+                    }
+                }
+            });
         }
     },
     created() {
+        this.getBar();
         this.getList();
     },
     mounted() {

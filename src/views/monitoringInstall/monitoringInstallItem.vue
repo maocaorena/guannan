@@ -15,7 +15,7 @@
                         监控点名称：
                     </p>
                     <p class="right">
-                        1#风机监控点名称
+                        {{canshu.monitorplacename}}
                     </p>
                 </div>
                 <div class="con-item">
@@ -23,7 +23,7 @@
                         安装单位：
                     </p>
                     <p class="right">
-                        浙江冠南能源科技有限公司
+                        {{canshu.installname}}
                     </p>
                 </div>
                 <div class="con-item">
@@ -31,7 +31,7 @@
                         监控器型号：
                     </p>
                     <p class="right">
-                        ZT-ROM50-F
+                        {{canshu.monitormodel}}
                     </p>
                 </div>
                 <div class="con-item">
@@ -39,7 +39,7 @@
                         安装日期：
                     </p>
                     <p class="right">
-                        2017.07.10
+                        {{canshu.createtime | cuttime}}
                     </p>
                 </div>
                 <div class="con-item">
@@ -47,7 +47,7 @@
                         监控器UID：
                     </p>
                     <p class="right">
-                        313D9
+                        {{canshu.monitoruid}}
                     </p>
                 </div>
                 <div class="con-item">
@@ -55,7 +55,7 @@
                         配置人：
                     </p>
                     <p class="right">
-                        admin
+                        {{canshu.deployer}}
                     </p>
                 </div>
                 <div class="con-item">
@@ -63,7 +63,7 @@
                         监控器出厂编号：
                     </p>
                     <p class="right">
-                        20170701039
+                        {{canshu.monitorno}}
                     </p>
                 </div>
                 <div class="con-item">
@@ -71,7 +71,7 @@
                         地图定位：
                     </p>
                     <p class="right">
-                        浙江省杭州市
+                        {{canshu.address}}
                     </p>
                 </div>
                 <div style="clear:both;">
@@ -143,14 +143,38 @@
 </template>
 
 <script>
+import { Util } from '../../lib/util.js'
 export default {
     data() {
         return {
-
+            canshu: {},
         }
     },
     components:{
 
+    },
+    filters:{
+        cuttime(val){
+            return Util.dateTime(val, 'date')
+        }
+    },
+    methods:{
+        findMonitorplaceById(){
+            let _this = this;
+            this.api.postN({
+                url: '/monitorplace/findMonitorplaceById',
+                params: {
+                    id: 1,
+                },
+                success: function(res){
+                    if(res.response.info.code==100000){
+                        _this.canshu = res.response.content;
+                    }else{
+                        _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                    }
+                }
+            })
+        }
     },
     created(){
         let tabs = [
@@ -160,6 +184,7 @@ export default {
             }
         ];
         this.$store.dispatch('ChangeRightbar',tabs)
+        this.findMonitorplaceById();
     }
 }
 </script>

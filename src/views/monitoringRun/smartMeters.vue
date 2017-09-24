@@ -2,7 +2,7 @@
 	<div id="smartMeters">
 		<div class="rightTabbar">
 			<div class="rt-item">
-				<router-link to="/monitoringRun/item/fanRunwatch">
+				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid}}">
 					风机运行监测
 				</router-link>
 			</div>
@@ -12,7 +12,7 @@
 				</router-link>
 			</div>
 			<div class="rt-item">
-				<router-link to="/monitoringRun/item/hzWatch">
+				<router-link :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid}}">
 					变频器运行监测
 				</router-link>
 			</div>
@@ -41,7 +41,7 @@
 								</div>
 							</div>
 							<div class="bottom-state-col">
-								
+
 								<div class="bottom-state-item">
 									<p class="left">A相电流</p>
 									<p class="right white">89</p>

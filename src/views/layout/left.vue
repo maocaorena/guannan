@@ -148,20 +148,40 @@ export default {
                     };
                     break
                 case '/monitoringInstall'://监控接装
-                    this.goBaseUrl = '/monitoringInstall/list';
-                    this.$store.dispatch('ChangeLeftbarType',1);
+                    let childurl1 = this.$route.matched[1].path;
                     let _this = this;
-                    this.api.postN({
-                        url : "/client/findProvinceAndCompanys",
-                        success: function(res){
-                            let _res = res.response;
-                            if(_res.info.code == 100000){
-                                _this.$store.dispatch('ChangeLeftbar',_res.content);
-                                console.log(_res.content[0])
-                                _this.$router.push({path:'/monitoringInstall/list',query:{clientid: _res.content[0].clientList[0].clientid}})
+                    console.log(childurl1)
+                    if(childurl1.indexOf('item')>=0){
+                        console.log(1111)
+                        // this.goBaseUrl = '/monitoringInstall/list';
+                        // this.$store.dispatch('ChangeLeftbarType',1);
+                        // this.api.postN({
+                        //     url : "/client/findProvinceAndCompanys",
+                        //     success: function(res){
+                        //         let _res = res.response;
+                        //         if(_res.info.code == 100000){
+                        //             _this.$store.dispatch('ChangeLeftbar',_res.content);
+                        //             console.log(_res.content[0])
+                        //             _this.$router.push({path:'/monitoringInstall/item',query:{clientid: _res.content[0].clientList[0].clientid}})
+                        //         }
+                        //     }
+                        // })
+                    }else{
+                        console.log(2222)
+                        this.goBaseUrl = '/monitoringInstall/list';
+                        this.$store.dispatch('ChangeLeftbarType',1);
+                        this.api.postN({
+                            url : "/client/findProvinceAndCompanys",
+                            success: function(res){
+                                let _res = res.response;
+                                if(_res.info.code == 100000){
+                                    _this.$store.dispatch('ChangeLeftbar',_res.content);
+                                    console.log(_res.content[0])
+                                    _this.$router.push({path:'/monitoringInstall/list',query:{clientid: _res.content[0].clientList[0].clientid}})
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
                     break;
                 case '/dataForm'://数据报表
                     this.$store.dispatch('ChangeLeftbarType',2);
