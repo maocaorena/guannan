@@ -23,7 +23,7 @@
 					</thead>
 				</table>
 			</div>
-			<div class="list-container">
+			<div class="list-container" style="right: 17px;">
 				<table class="list" border="1" cellspacing="0" cellpadding="0">
 					<colgroup>
                         <col width="4">
@@ -39,14 +39,14 @@
                                 {{index}}
 							</td>
 							<td>
-                                <a href="javascript:;" class="mode">变频器监测模块</a>
+                                {{item.communicatename}}
                             </td>
-							<td>变频器</td>
-							<td>ACS580</td>
-							<td>58</td>
+							<td>{{item.communicatetype}}</td>
+							<td>{{item.communicatemodel}}</td>
+							<td>{{item.communicateaddress}}</td>
 							<td>
-                                <a href="javascript:;" class="mode">删除</a>
-                                <a href="javascript:;" class="mode" @click="editmodule">编辑</a>
+                                <a href="javascript:;" class="mode" @click="dele(item)">删除</a>
+                                <a href="javascript:;" class="mode" @click="editmodule(item)">编辑</a>
                             </td>
 						</tr>
 					</tbody>
@@ -54,7 +54,7 @@
                 <button class="add-module" type="button" name="button" @click="addmodule">请添加信息</button>
 			</div>
 		</div>
-        <secondadd-v v-if="secondAdd.state"></secondadd-v>
+        <secondadd-v v-if="secondAdd.state" v-on:addsuccess="findModuleInfoById"></secondadd-v>
     </div>
 </template>
 <script type="text/javascript">
@@ -81,6 +81,7 @@
             "secondadd-v" : secondadd,
         },
         methods:{
+
             sunmessage(){
                 console.log('第二步提交');
                 this.$store.dispatch('SetFirstStepAlert',{
@@ -95,22 +96,45 @@
                     type: 1,
                 })
             },
-            editmodule(){
+            editmodule(item){
+                this.$store.dispatch('SetSecondAddMessage',{
+                    message: item,
+                })
                 this.$store.dispatch('SetSecondAddAlert',{
                     state: true,
                     type: 2,
                 })
             },
-
+            dele(item){
+                console.log('dele')
+                let _this = this;
+                this.loading = true
+                this.api.postN({
+                    url: '/module/deleteModuleInfo',
+                    params: {
+                        ids: item.id,
+                    },
+                    success: function(res){
+                        _this.loading = false;
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            _this.findModuleInfoById();
+                        }else{
+                            _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                        }
+                    }
+                })
+            },
             findModuleInfoById(){
                 let _this = this;
+                this.loading = true
                 this.api.postN({
                     url: '/module/findModuleInfoByMonitorplaceId',
                     params: {
-                        id: _this.addid
+                        monitorplaceid: _this.addid
                     },
                     success: function(res){
-                        console.log(res)
+                        _this.loading = false;
                         if(res.response.info.code==100000){
                             _this.$message.success({message: res.response.info.msg,duration: Util.time()});
                             if(res.response.content){
@@ -118,6 +142,8 @@
                             }else{
                                 _this.list = [];
                             }
+                        }else{
+                            _this.$message.error({message: res.response.info.msg,duration: Util.time()});
                         }
                     }
                 })

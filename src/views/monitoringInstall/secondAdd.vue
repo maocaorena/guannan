@@ -28,7 +28,7 @@
         					</thead>
         				</table>
         			</div>
-        			<div class="list-container">
+        			<div class="list-container" style="right:17px">
         				<table class="list" border="1" cellspacing="0" cellpadding="0">
         					<colgroup>
                                 <col width="2" v-if="secondAdd.type == 1">
@@ -47,11 +47,14 @@
                                         {{index+1}}
         							</td>
         							<td>
-                                        {{item.modulename}}
+                                        {{item.modulename||item.communicatetype}}
                                     </td>
         							<td>
-                                        <select class="width80" name="" v-if="showSelect">
-                                            <option :value="item1.id" v-for="item1 of module['type' + (index+1)]">{{item1.model}}</option>
+                                        <select class="width80" name="" v-model="item.communicatemodel" v-if="showSelect">
+                                            <option :value="item1.model" v-for="item1 of module['type' + (index+1)]">{{item1.model}}</option>
+                                        </select>
+                                        <select class="width80" name="" v-model="item.communicatemodel" v-if="showSelect1">
+                                            <option :value="item1.model" v-for="item1 of editmoduleList">{{item1.model}}</option>
                                         </select>
                                     </td>
         							<td>
@@ -82,8 +85,10 @@
                 checkboxModel:[],//选中的id
                 checked: false,//全选的状态
                 showSelect: false,
+                showSelect1: false,
                 showSelectList: [],
                 loading: false,
+                editmoduleList: [],
             }
         },
         computed:{
@@ -93,6 +98,9 @@
             addid(){
                 return this.$store.getters.addid;
             },
+            secondAddMessage(){
+                return this.$store.getters.secondAddMessage;
+            }
         },
         components:{
             'alert-v' : alert,
@@ -144,6 +152,7 @@
                                     res.response.content[i].monitorplaceid = _addid;
                                     res.response.content[i].communicatename = '';
                                     res.response.content[i].communicateaddress = '';
+                                    res.response.content[i].communicatemodel = '';
                                 };
                                 _this.list = res.response.content;
                             }else{
@@ -162,28 +171,57 @@
                 //提交编辑或者新增的信息到vuex
                 let subList = [];
                 let _this = this;
-                for (let i = 0; i < this.checkboxModel.length; i++) {
-                    subList.push(this.list[this.checkboxModel[i]])
+                if(this.secondAdd.type == 1){
+                    for (let i = 0; i < this.checkboxModel.length; i++) {
+                        this.list[this.checkboxModel[i]].communicatetype = this.list[this.checkboxModel[i]].modulename;
+                        let bb = JSON.parse(JSON.stringify(this.list[this.checkboxModel[i]]))
+                        delete bb.id;
+                        subList.push(bb);
+                    };
+                    this.loading = true;
+                    this.api.postN({
+                        url: '/module/setModuleInfo',
+                        params: {
+                            moduleinfos: JSON.stringify(subList)
+                        },
+                        success: function(res){
+                            _this.loading = false;
+                            if(res.response.info.code==100000){
+                                _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                                _this.$emit("addsuccess",'');
+                                _this.close();
+                            }else{
+                                _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                            }
+                        },
+                        error: function(){
+                            _this.loading = false;
+                        }
+                    })
+                }else{
+                    subList = this.list;
+                    this.loading = true;
+                    this.api.postN({
+                        url: '/module/updateModuleInfo',
+                        params: {
+                            moduleinfos: JSON.stringify(subList)
+                        },
+                        success: function(res){
+                            _this.loading = false;
+                            if(res.response.info.code==100000){
+                                _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                                _this.$emit("addsuccess",'');
+                                _this.close();
+                            }else{
+                                _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                            }
+                        },
+                        error: function(){
+                            _this.loading = false;
+                        }
+                    })
                 };
                 console.log(JSON.stringify(subList));
-                this.loading = true;
-                this.api.postN({
-                    url: '/setmodule/setModuleInfo',
-                    params: {
-                        moduleinfos: JSON.stringify(subList)
-                    },
-                    success: function(res){
-                        _this.loading = false;
-                        console.log(res)
-                        if(res.response.info.code==100000){
-
-                        }
-                    },
-                    error: function(){
-                        _this.loading = false;
-                    }
-                })
-                // this.close()
             },
             getModuleById(type){
                 let _this = this;
@@ -195,22 +233,36 @@
                     success: function(res){
                         console.log(res)
                         if(res.response.info.code==100000){
-                            _this.module['type' + type] = res.response.content;
-                            _this.showSelectList.push(type);
+                            if(_this.secondAdd.type == 2){
+                                _this.showSelect1 = true;
+                                _this.editmoduleList = res.response.content
+                            }else{
+                                _this.module['type' + type] = res.response.content;
+                                _this.showSelectList.push(type);
+
+                            }
                         }
                     }
                 })
             },
         },
         created(){
+            console.log('1111',this.secondAdd.type)
             if(this.secondAdd.type == 2){
+                let _list = JSON.parse(JSON.stringify(this.secondAddMessage.message));
                 this.tittxt = '修改';
                 this.btn = '确定修改';
+                console.log(_list);
+                _list.monitorplaceid = this.addid;
+                this.checkboxModel.push(0);
+                this.list.push(_list);
+                this.getModuleById(_list.id);
+            }else{
+                this.findAllModuleModel();
+                for (let i = 0; i < 5; i++) {
+                    this.getModuleById(i+1);
+                }
             };
-            this.findAllModuleModel();
-            for (let i = 0; i < 5; i++) {
-                this.getModuleById(i+1);
-            }
         }
     }
 </script>

@@ -23,7 +23,7 @@
 					</thead>
 				</table>
 			</div>
-			<div class="list-container">
+			<div class="list-container" style="right:17px;">
 				<table class="list" border="1" cellspacing="0" cellpadding="0">
 					<colgroup>
                         <col width="4">
@@ -34,19 +34,19 @@
 						<col width="7">
 					</colgroup>
 					<tbody class="list-con">
-						<tr v-for="(item,index) of list" class="list-con-item">
+						<tr v-for="item of list" class="list-con-item">
 							<td>
                                 {{index}}
 							</td>
 							<td>
-                                变频器监测模块
+                                {{item.name}}
                             </td>
 							<td>风机控制器模块</td>
 							<td>40025-0017h</td>
 							<td>常开</td>
 							<td>
-                                <a href="javascript:;" class="mode">删除</a>
-                                <a href="javascript:;" class="mode" @click="editmodule">编辑</a>
+                                <a href="javascript:;" class="mode" @click="dele(item)">删除</a>
+                                <a href="javascript:;" class="mode" @click="editmodule(item)">编辑</a>
                             </td>
 						</tr>
 					</tbody>
@@ -54,7 +54,7 @@
                 <button class="add-module" type="button" name="button" @click="addmodule">请添加信息</button>
 			</div>
 		</div>
-        <thirdadd-v v-if="thirdAdd.state"></thirdadd-v>
+        <thirdadd-v v-if="thirdAdd.state" v-on:addsuccess="findMonitornameModelById"></thirdadd-v>
     </div>
 </template>
 <script type="text/javascript">
@@ -103,15 +103,16 @@ export default{
         findMonitornameModelById(){
             let _this = this;
             this.api.postN({
-                url: '/monitornameset/findMonitornameById',
+                url: '/monitornameset/findMonitornameByMonitorplaceId',
                 params: {
-                    id: _this.addid
+                    monitorplaceid: _this.addid
                 },
                 success: function(res){
                     if(res.response.info.code==100000){
                         _this.$message.success({message: res.response.info.msg,duration: Util.time()});
                         if(res.response.content){
                             _this.list = res.response.content;
+                            console.log(_this.list)
                         }else{
                             _this.list = [];
                         }

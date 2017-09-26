@@ -133,7 +133,9 @@
             next(){
                 let subMessage = [];
                 for (let i = 0; i < this.checkboxModel.length; i++) {
-                    subMessage.push(this.list[this.checkboxModel[i]]);
+                    let bb = JSON.parse(JSON.stringify(this.list[this.checkboxModel[i]]));
+                    delete bb.id;
+                    subMessage.push(bb);
                 };
                 console.log(subMessage);
                 this.loading = true;
@@ -141,15 +143,21 @@
                 this.api.postN({
                     url: '/monitornameset/monitornameSet',
                     params: {
-                        Monitornameset: JSON.stringify(subMessage)
+                        monitornamesets: JSON.stringify(subMessage)
                     },
                     success: function(res){
                         _this.loading = false;
                         console.log(res);
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            _this.$emit("addsuccess",'');
+                            _this.close();
+                        }else{
+                            _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                        }
                     }
                 })
                 console.log(subMessage)
-                // this.close()
             },
             findAllMonitornameModel(){
                 let _this = this;
