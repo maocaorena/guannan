@@ -70,15 +70,18 @@
                 // this.changeAlert(ss)
             },
             changeAlert(step){//改变步数状态
+                console.log('step',step)
                 if(step == 3){
                     this.btn = '确定';
                 }else{
                     this.btn = '下一步';
                 };
-                this.$store.dispatch('SetFirstStepAlert',{
-                    type: this.firstStepAlert.type,
-                    state: step,
-                });
+                if(step == 0){
+                    this.$store.dispatch('SetFirstStepAlert',{
+                        type: this.firstStepAlert.type,
+                        state: step,
+                    });
+                }
             }
         },
         created(){

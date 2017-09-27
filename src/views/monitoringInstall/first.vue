@@ -13,7 +13,7 @@
                 监控器型号：
             </p>
             <div class="as-item-con" :data="monitormodel">
-                <select class="" name="" v-model="monitormodel" @change="hahah">
+                <select class="" name="" v-model="monitormodel">
                     <option v-for="item of allMonitorModel" :value="item.id">{{item.name}}</option>
                 </select>
             </div>
@@ -55,6 +55,7 @@
                 位置：
             </p>
             <div class="as-item-con">
+                <span>{{firstAddMessage.addrs}}</span>
                 <button type="button" name="button" @click="tofirstAdd">选择位置</button>
             </div>
         </div>
@@ -87,14 +88,14 @@ export default{
         addid(){
             return this.$store.getters.addid;
         },
+        firstAddMessage(){
+            return this.$store.getters.firstAddMessage;
+        },
     },
     components:{
         "firstadd-v" : firstadd,
     },
     methods:{
-        hahah(){
-            console.log(this.monitorModel)
-        },
         tofirstAdd(){
             this.$store.dispatch('SetFirstAddAlert',{
                 state: true
@@ -145,9 +146,9 @@ export default{
                 monitorno: Util.trim(this.monitorno),
                 installname: Util.trim(this.installname),
                 remark: Util.trim(this.remark),
-                latitude: 1111,
-                longtitude: 11111,
-                address: 'qqqq',
+                latitude: this.firstAddMessage.jingwei.latitude,
+                longtitude: this.firstAddMessage.jingwei.longtitude,
+                address: this.firstAddMessage.addrs,
             };
             let _this = this;
             let url = '';
@@ -163,31 +164,31 @@ export default{
                 type: _this.firstStepAlert.type,
                 state: 2,
             });
-            // this.loading = true;
-            // this.api.postN({
-            //     url: url,
-            //     params: params,
-            //     success: function(res){
-            //         console.log(res)
-            //         _this.loading = false;
-            //         if(res.response.info.code==100000){
-            //             _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-            //             if(_this.firstStepAlert.type==2){
-            //                 _this.$store.dispatch('SetAddId', _this.addid);
-            //             }else{
-            //                 _this.$store.dispatch('SetAddId',res.response.content.id);
-            //             };
-            //             _this.$emit('changeAlert','下一步')
-            //             _this.$store.dispatch('SetFirstStepAlert',{
-            //                 type: _this.firstStepAlert.type,
-            //                 state: 2,
-            //             });
-            //         }else{
-            //             _this.$message.error({message: res.response.info.msg,duration: Util.time()});
-            //         }
-            //     }
-            // })
-            console.log('调用成功1')
+            this.loading = true;
+            this.api.postN({
+                url: url,
+                params: params,
+                success: function(res){
+                    console.log(res)
+                    _this.loading = false;
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                        if(_this.firstStepAlert.type==2){
+                            _this.$store.dispatch('SetAddId', _this.addid);
+                        }else{
+                            _this.$store.dispatch('SetAddId',res.response.content.id);
+                        };
+                        //进入第二步
+                        _this.$emit('changeAlert',2)
+                        _this.$store.dispatch('SetFirstStepAlert',{
+                            type: _this.firstStepAlert.type,
+                            state: 2,
+                        });
+                    }else{
+                        _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                    }
+                }
+            })
         },
         findMonitorplaceById(){
             let _this = this;
@@ -208,6 +209,14 @@ export default{
                         _this.deployer = res.response.content.deployer;
                         _this.remark = res.response.content.remark;
                         _this.monitormodel = res.response.content.monitormodel;
+                        //获取定位信息放入vuex
+                        _this.$store.dispatch('SetFirstAddMessage',{
+                            jingwei: {
+                                latitude: res.response.content.latitude,
+                                longtitude: res.response.content.longtitude,
+                            },
+                            addrs: res.response.content.address,
+                        });
                         console.log(res.response.content.monitormodel);
                     }else{
                         _this.$message.error({message: res.response.info.msg,duration: Util.time()});
@@ -217,6 +226,13 @@ export default{
         }
     },
     created(){
+        //初始化地图信息
+        this.$store.dispatch('SetFirstAddMessage',{
+            jingwei: {
+                latitude: 40.0958,
+                longtitude: 116.480983,
+            },
+        });
         this.findAllMonitorModel();
         if(this.firstStepAlert.type==2){
             this.findMonitorplaceById();

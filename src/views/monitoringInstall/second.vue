@@ -83,12 +83,11 @@
         methods:{
 
             sunmessage(){
-                console.log('第二步提交');
+                this.$emit('btntext',3)
                 this.$store.dispatch('SetFirstStepAlert',{
                     type: this.firstStepAlert.type,
                     state: 3,
                 });
-                this.$emit('changeAlert',3)
             },
             addmodule(){//打开新增弹窗
                 this.$store.dispatch('SetSecondAddAlert',{
@@ -96,7 +95,7 @@
                     type: 1,
                 })
             },
-            editmodule(item){
+            editmodule(item){//编辑模块
                 this.$store.dispatch('SetSecondAddMessage',{
                     message: item,
                 })
@@ -105,8 +104,7 @@
                     type: 2,
                 })
             },
-            dele(item){
-                console.log('dele')
+            dele(item){//删除模块
                 let _this = this;
                 this.loading = true
                 this.api.postN({
@@ -125,7 +123,7 @@
                     }
                 })
             },
-            findModuleInfoById(){
+            findModuleInfoById(){//根据监控点id查找所有的模块
                 let _this = this;
                 this.loading = true
                 this.api.postN({
@@ -151,7 +149,6 @@
         },
         created(){
             this.findModuleInfoById()
-            console.log(this.addid)
         }
     }
 </script>

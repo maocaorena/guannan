@@ -35,7 +35,7 @@
                         <button type="button" name="button" @click="search">搜索</button>
                     </div>
                     <div class="handle-item">
-                        <input type="text" name="" v-model="monitorplacename">
+                        <input type="text" name="" placeholder="监控点名称" v-model="clientnameormonitorplacename">
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@ export default {
             loading: false,
             checkboxModel:[],
             checked: false,
-            monitorplacename: '',
+            clientnameormonitorplacename: '',
             leftbars: [],
             width: '',
         }
@@ -172,7 +172,7 @@ export default {
                     currentpage: this.pageNum,
                     pagesize: this.pagesize,
                     clientid: _this.$route.query.clientid,
-                    monitorplacename: this.monitorplacename,
+                    clientnameormonitorplacename: this.clientnameormonitorplacename,
                 },
                 success: function(res){
                     console.log(res)

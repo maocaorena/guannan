@@ -9,7 +9,13 @@ const monitorinstall = {
             type: 1,//1为新增, 2为编辑
         },
         addid: '',//新增之后返回的id
-        firstAddMessage:{},//第一步编辑或新增的信息
+        firstAddMessage:{
+            jingwei: {
+                latitude: 116.480983,
+                longtitude: 40.0958,
+            },
+            addrs: '',
+        },//第一步编辑或新增的信息
         secondAdd:{//第二步编辑或新增
             state: false,
             type: 1,//1为新增, 2为编辑
@@ -29,6 +35,10 @@ const monitorinstall = {
         //新增之后返回的id
         SET_ADDID: (state, data) => {
             state.addid = data
+        },
+        //第一步编辑或新增
+        SET_FIRSTADD_ALERT: (state, data) => {
+            state.firstAdd = data
         },
         //第一步编辑或新增的信息
         SET_FIRSTADDMESSAGE: (state, data) => {

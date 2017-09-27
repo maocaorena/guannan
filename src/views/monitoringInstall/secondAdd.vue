@@ -178,6 +178,7 @@
                         delete bb.id;
                         subList.push(bb);
                     };
+                    console.log(subList)
                     this.loading = true;
                     this.api.postN({
                         url: '/module/setModuleInfo',
@@ -252,11 +253,10 @@
                 let _list = JSON.parse(JSON.stringify(this.secondAddMessage.message));
                 this.tittxt = '修改';
                 this.btn = '确定修改';
-                console.log(_list);
                 _list.monitorplaceid = this.addid;
                 this.checkboxModel.push(0);
                 this.list.push(_list);
-                this.getModuleById(_list.id);
+                this.getModuleById(_list.moduleid);
             }else{
                 this.findAllModuleModel();
                 for (let i = 0; i < 5; i++) {
