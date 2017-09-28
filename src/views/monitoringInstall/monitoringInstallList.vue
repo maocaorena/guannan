@@ -91,7 +91,7 @@
                             <col width="9">
                         </colgroup>
                         <tbody class="list-con">
-                            <tr class="list-con-item" v-for="(item,index) of list">
+                            <tr v-if="list.length>0" class="list-con-item" v-for="(item,index) of list">
                                 <td>
                                     <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.id">
                                 </td>
@@ -112,6 +112,9 @@
                                     <a href="javascript:;" class="mode" @click="del(1,item)">删除</a>
                                     <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
                                 </td>
+                            </tr>
+                            <tr v-if="list.length==0">
+                                <td colspan="10">暂无数据</td>
                             </tr>
                         </tbody>
                     </table>

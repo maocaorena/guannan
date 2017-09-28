@@ -5,7 +5,7 @@
                 监控详情
             </div>
         </div>
-        <div class="item">
+        <div class="item" v-loading.body="loading1">
             <p class="tit">
                 监控点参数
             </p>
@@ -78,7 +78,7 @@
                 </div>
             </div>
         </div>
-        <div class="item">
+        <div class="item" v-loading.body="loading2">
             <p class="tit">
                 模块信息
             </p>
@@ -109,33 +109,63 @@
                         </tr>
                     </thead>
 					<tbody class="list-con">
-						<tr v-for="(item,index) of 10" class="list-con-item">
-							<td>
-                                {{index}}
-							</td>
-							<td>
-                                风机控制器模块
-                            </td>
-							<td>风机控制器模块</td>
-							<td>AERZEN TB25-0.8S</td>
-							<td>128</td>
-							<td>admin</td>
-                            <td>2017-05-05</td>
-							<td>admin</td>
-							<td>
-                                2017-05-05
-                            </td>
+						<tr v-if="moduleList.length>0" v-for="(item,index) of moduleList" class="list-con-item">
+							<td> {{index+1}} </td>
+							<td> {{item.communicatename}} </td>
+							<td> {{item.communicatetype}} </td>
+							<td> {{item.communicatemodel}} </td>
+							<td> {{item.communicateaddress}} </td>
+							<td> {{item.deployer}} </td>
+                            <td> {{item.deploytime}} </td>
+							<td> {{item.lastdeployer}} </td>
+							<td> {{item.lastdeploytime}} </td>
 						</tr>
+						<tr v-if="moduleList.length==0">
+                            <td colspan="9">暂无数据</td>
+                        </tr>
 					</tbody>
 				</table>
             </div>
         </div>
-        <div class="item">
+        <div class="item" v-loading.body="loading3">
             <p class="tit">
                 监控参数信息
             </p>
             <div class="con">
-                <br><br><br><br><br><br><br><br><br><br><br><br>
+                <table class="list" border="1" cellspacing="0" cellpadding="0">
+					<colgroup>
+						<col width="4">
+						<col width="10">
+						<col width="11">
+						<col width="11">
+						<col width="8">
+					</colgroup>
+                    <thead>
+                        <tr>
+							<th>序号</th>
+							<th>监控参数</th>
+							<th>数据源</th>
+							<th>数据端口</th>
+							<th>端口状态</th>
+						</tr>
+                    </thead>
+					<tbody class="list-con">
+						<tr v-if="monitorList.length>0" v-for="(item,index) of monitorList" class="list-con-item">
+							<td>
+                                {{index}}
+							</td>
+							<td>
+                                {{item.name}}
+                            </td>
+							<td>{{item.datasource}}</td>
+							<td>{{item.dataport}}</td>
+							<td>{{item.portstate}}</td>
+						</tr>
+						<tr v-if="monitorList.length==0">
+                            <td colspan="5">暂无数据</td>
+                        </tr>
+					</tbody>
+				</table>
             </div>
 
         </div>
@@ -148,6 +178,11 @@ export default {
     data() {
         return {
             canshu: {},
+            moduleList: [],
+            monitorList: [],
+            loading1: false,
+            loading2: false,
+            loading3: false,
         }
     },
     components:{
@@ -159,14 +194,16 @@ export default {
         }
     },
     methods:{
-        findMonitorplaceById(){
+        findMonitorplaceById(){//根据id查找监控详情
             let _this = this;
+            this.loading1 = true;
             this.api.postN({
                 url: '/monitorplace/findMonitorplaceById',
                 params: {
                     id: this.$route.query.id,
                 },
                 success: function(res){
+                	_this.loading1 = false;
                     if(res.response.info.code==100000){
                         _this.canshu = res.response.content;
                     }else{
@@ -174,17 +211,56 @@ export default {
                     }
                 }
             })
+        },
+        findModuleInfoById(){//根据监控点id查找所有的模块
+            let _this = this;
+           	this.loading2 = true;
+            this.api.postN({
+                url: '/module/findModuleInfoByMonitorplaceId',
+                params: {
+                    monitorplaceid: this.$route.query.id,
+                },
+                success: function(res){
+                    _this.loading2 = false;
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                        if(res.response.content){
+                            _this.moduleList = res.response.content;
+                        }else{
+                            _this.moduleList = [];
+                        }
+                    }else{
+                        _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                    }
+                }
+            })
+        },
+        findMonitornameModelById(){//根据监控点id查找所有的监控参数
+            let _this = this;
+            this.loading3 = true;
+            this.api.postN({
+                url: '/monitornameset/findMonitornameByMonitorplaceId',
+                params: {
+                    monitorplaceid: this.$route.query.id,
+                },
+                success: function(res){
+                    _this.loading3 = false;
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                        if(res.response.content){
+                            _this.monitorList = res.response.content;
+                        }else{
+                            _this.monitorList = [];
+                        }
+                    }
+                }
+            })
         }
     },
     created(){
-        let tabs = [
-            {
-                isurl : 'item',
-                name : '监控详情'
-            }
-        ];
-        this.$store.dispatch('ChangeRightbar',tabs)
         this.findMonitorplaceById();
+        this.findModuleInfoById();
+        this.findMonitornameModelById();
     }
 }
 </script>

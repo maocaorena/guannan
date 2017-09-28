@@ -23,7 +23,7 @@
 					</thead>
 				</table>
 			</div>
-			<div class="list-container" style="right: 17px;">
+			<div class="list-container" style="overflow-y: scroll;">
 				<table class="list" border="1" cellspacing="0" cellpadding="0">
 					<colgroup>
                         <col width="4">
