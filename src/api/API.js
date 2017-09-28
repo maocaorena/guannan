@@ -83,5 +83,29 @@ class API {
 		});
 	};
 
+
+    ajax(url, param, type, async) {
+        return $.ajax({
+            url: config.baseUrl+url,
+            data: param || {},
+            type: type || 'POST',
+            async: async || false
+        });
+
+    };
+    // 根据项目业务二次封装ajax方法
+    handleAjax(url, param, type, async) {
+        return this.ajax(url, param, type, async).then(function(res) {
+            // 成功回调
+            if (res.response.info.code == 100000) {
+                return res.response.content; // 直接返回要处理的数据，作为默认参数传入之后done()方法的回调
+            } else {
+                return $.Deferred().reject(res.response.info.msg); // 返回一个失败状态的deferred对象，把错误代码作为默认参数传入之后fail()方法的回调
+            }
+        }, function(err) {
+            // 失败回调
+            // alert("网络异常，请稍后重试！")
+        });
+    };
 }
 export default API;
