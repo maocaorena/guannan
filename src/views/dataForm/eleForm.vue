@@ -117,35 +117,38 @@ export default {
       name: '用电报表'
     }];
     this.$store.dispatch('ChangeRightbar', tabs);
-
-    let url = "/finddata/findElectricUseByCondition";
-    let data = {
-      currentpage: this.pageNum,
-      pagesize: this.pageSize,
-      clientid: 1,
-      monitorplaceid: 1,
-      timedetail: "",
-      startTime: "",
-      endTime: ""
-    }
-    this.api.handleAjax(url,data).done(function(res){
-      if(res.list.length > 0) {
-        self.total = res.total;
-        self.pageSize = res.pageSize;
-        self.pageNum = res.pageNum;
-        self.items = res.list;
-        self.ifPage = true;
-      } else {
-        self.ifPage = false;
-      }
-      console.log(res.pageNum,res.pageSize,res.total)
-    }).fail(function(res){
-      console.log(res);
-    })
+    this.getData();
+    
   },
   methods: {
     pagechange(val){
         console.log(val+'页')
+    },
+    getData() {
+      let url = "/finddata/findElectricUseByCondition";
+      let data = {
+        currentpage: this.pageNum,
+        pagesize: this.pageSize,
+        clientid: 1,
+        monitorplaceid: 1,
+        timedetail: "",
+        startTime: "",
+        endTime: ""
+      }
+      this.api.handleAjax(url,data).done(function(res){
+        if(res.list.length > 0) {
+          self.total = res.total;
+          self.pageSize = res.pageSize;
+          self.pageNum = res.pageNum;
+          self.items = res.list;
+          self.ifPage = true;
+        } else {
+          self.ifPage = false;
+        }
+        console.log(res.pageNum,res.pageSize,res.total)
+      }).fail(function(res){
+        console.log(res);
+      })
     },
     exportExcel(param) {
       let url = "/exceldata/excelExportElecricConsume";
@@ -156,6 +159,12 @@ export default {
         console.log(res);
       })
     }
+  },
+  watch: {
+        '$route' (to, from) {
+            this.pageNum = 1;
+            this.getList();
+        }
   }
 }
 

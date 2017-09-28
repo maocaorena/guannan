@@ -15,7 +15,7 @@
           <button type="button" name="button">批量删除</button>
         </div>
         <div class="handle-item">
-          <button type="button" name="button">增加客户</button>
+          <button type="button" name="button" @click="add(1)">增加客户</button>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
           <thead>
             <tr>
               <th>
-                <input type="checkbox">
+                <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
               </th>
               <th>序号</th>
               <th>所在省份</th>
@@ -72,7 +72,7 @@
             </tr>
             <tr v-for="(item,index) of items" class="list-con-item">
               <td>
-                <input type="checkbox">
+                <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.clientid">
               </td>
               <td>
                 {{index}}
@@ -87,7 +87,7 @@
               <td>{{item.phone}}</td>
               <td>--</td>
               <td>
-                <a href="javascript:;" class="mode">删除</a>
+                <a href="javascript:;" @click="deleteData(item.clientid,1)" class="mode">删除</a>
                 <a href="javascript:;" class="mode">编辑</a>
               </td>
             </tr>
@@ -161,6 +161,8 @@ export default {
       total: 200,
       keywords: "",
       items: [],
+      checkboxModel:[],
+      checked: false,
       ifPage: false
     }
   },
@@ -170,32 +172,55 @@ export default {
   },
   computed: {
     addDialog() {
-      return this.$store.getters.dialog.status;
+      return this.$store.getters.dialog.state;
     }
   },
   created() {
-    let tabs = [{
-      isurl: 'eleForm',
-      name: '用电报表'
-    }];
-    this.$store.dispatch('ChangeRightbar', tabs);
-
     this.getData();
-    
-
   },
   methods: {
+    checkedAll() {
+            let _this = this;
+            if (this.checked) {//实现反选
+                _this.checkboxModel = [];
+                _this.items.forEach(function(item) {
+                    _this.checkboxModel.push(item.clientid);
+                });
+            }else{//实现全选
+                _this.checkboxModel = [];
+            }
+    },
+    deleteData(ids,type){
+            if(type == 1) {
+              this.checkboxModel.push(ids);
+            }
+            this.$confirm('您确定要删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.loading = true;
+                let _this = this;
+                let url = "client/deleteClientById";
+                let data = {
+                  ids: this.checkboxModel.join(',')
+                }
+                this.api.handleAjax(url,data).done(function(res){
+                  _this.$message.success({message: "删除成功！",duration: Util.time()});
+                    _this.getData();
+                }).fail(function(res){
+                  console.log(res);
+                })
+               
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
     pagechange(val){
         console.log(val+'页')
-    },
-    exportExcel(param) {
-      let url = "/exceldata/exportexcelFanRun";
-      let data = param;
-      this.api.handleAjax(url,data).done(function(res){
-        
-      }).fail(function(res){
-        console.log(res);
-      })
     },
 
     getData() {
@@ -222,8 +247,59 @@ export default {
       }).fail(function(res){
         console.log(res);
       })
+    },
+
+    add(type,id) {
+      console.log(0)
+      this.$store.dispatch('ChangeDialogState', {
+          type: type,
+          state: true,
+      })
+    },
+
+    close() {
+      this.$store.dispatch('ChangeDialogState', {
+          state: false,
+      })
+    },
+
+    next() {
+      let url = "/client/addClientByCity";
+      let data = {
+        clientname: "小小",
+        address: "杭州",
+        name: "baba",
+        phone: "13340594495",
+        email: "zzy@ma.com",
+        remark: "supper",
+        cityid: 130100,
+        provinceid: 130000,
+      };
+      this.api.handleAjax(url,data).done(function(res){
+
+      }).fail(function(res){
+        console.log(res)
+      })
+      this.close();
     }
-  }
+  },
+  watch: {
+        '$route' (to, from) {
+            this.pageNum = 1;
+            this.getList();
+        },
+        'checkboxModel': {
+            handler: function (val, oldVal) {
+                console.log(this.checkboxModel)
+                if (this.checkboxModel.length === this.items.length) {
+                    this.checked=true;
+                }else{
+                    this.checked=false;
+                };
+            },
+            deep: true
+        }
+    }
 }
 </script>
 <style lang="scss" scoped>

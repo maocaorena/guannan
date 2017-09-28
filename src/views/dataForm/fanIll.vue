@@ -125,6 +125,23 @@ export default {
     }];
     this.$store.dispatch('ChangeRightbar', tabs);
 
+    this.getData();
+
+  },
+  methods: {
+    pagechange(val){
+        console.log(val+'页')
+    },
+    exportExcel(param) {
+      let url = "/exceldata/exportexcelFanFalult";
+      let data = param;
+      this.api.handleAjax(url,data).done(function(res){
+        
+      }).fail(function(res){
+        console.log(res);
+      })
+    },
+    getData() {
     let url = "/finddata/findFanFaultByCondition";
     let data = {
       currentpage: this.pageNum,
@@ -149,22 +166,15 @@ export default {
     }).fail(function(res){
       console.log(res);
     })
-
-  },
-  methods: {
-    pagechange(val){
-        console.log(val+'页')
-    },
-    exportExcel(param) {
-      let url = "/exceldata/exportexcelFanFalult";
-      let data = param;
-      this.api.handleAjax(url,data).done(function(res){
-        
-      }).fail(function(res){
-        console.log(res);
-      })
-    }
   }
+  },
+  watch: {
+        '$route' (to, from) {
+            this.pageNum = 1;
+            this.getList();
+        }
+  }
+  
 }
 
 </script>

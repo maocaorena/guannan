@@ -39,7 +39,11 @@ class API {
 			timeout: config.timeout,
 			success: dd.success,
 			error: function(xhr,status,error){
-				alert('服务器错误')
+				if(dd.error){
+					dd.error();
+				}else{
+					alert('服务器错误')
+				}
 			}
 		})
 	};
