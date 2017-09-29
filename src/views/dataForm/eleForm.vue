@@ -1,154 +1,222 @@
 <template>
-  <div id="eleForm">
-    <div class="rightTabbar">
-      <div class="rt-item rtItemSelect">
-        用户报表
-      </div>
-      <div class="rt-handle">
-
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">公司名称</option>
-          </select>
-        </div>
-
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">监控点</option>
-          </select>
-        </div>
-
-        <div class="handle-item">
-          <select name="" id="">
-            <option value="">日报表</option>
-          </select>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">查询</button>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">导出</button>
-        </div>
-        <div class="handle-item">
-          <button type="button" name="button">自定义报表</button>
-        </div>
-
-      </div>
+  <div id="eleForm" class="wrapper">
+    <div class="leftBlock">
+      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" v-for="(item,index) of leftbars">
+        <p class="first-item">
+          {{item.tit}}
+        </p>
+      </router-link>
     </div>
-    <div class="content">
-      <div class="list-tit">
-        <table class="list" border="1" cellspacing="0" cellpadding="0">
-          <colgroup>
-            <col width="8">
-            <col width="11">
-            <col width="8">
-            <col width="7">
-            <col width="11">
-            <col width="8">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>时间</th>
-              <th>单位名称</th>
-              <th>监控点名称</th>
-              <th>监控点UID</th>
-              <th>累计电能</th>
-              <th>有功功率</th>
-              <th>无功功率</th>
-              <th>A相电压</th>
-              <th>B相电压</th>
-              <th>C相电压</th>
-              <th>A相电流</th>
-              <th>B相电流</th>
-              <th>C相电流</th>
-            </tr>
-          </thead>
-        </table>
+    <div class="rightBlock">
+      <div class="rightTabbar">
+        <div class="rt-item rtItemSelect">
+          用户报表
+        </div>
+        <data-filter v-on:exportExcel="exportExcel"></data-filter>
       </div>
-      <div class="list-container">
-        <table class="list" border="1" cellspacing="0" cellpadding="0">
-          <colgroup>
-            <col width="8">
-            <col width="11">
-            <col width="8">
-            <col width="7">
-            <col width="11">
-            <col width="8">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-          </colgroup>
-          <tbody class="list-con">
-            <tr v-for="(item,index) of 40" class="list-con-item">
-              <td>
-                2017-03-04
-              </td>
-              <td>
-                浙江永丰钢业有限公司
-              </td>
-              <td>A车间</td>
-              <td>313D9313</td>
-              <td>80小时</td>
-              <td>50</td>
-              <td>140</td>
-              <td>100</td>
-              <td>60</td>
-              <td>60</td>
-              <td>60</td>
-              <td>60</td>
-              <td>60</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="content">
+        <div class="list-tit">
+          <table class="list" border="1" cellspacing="0" cellpadding="0">
+            <colgroup>
+              <col width="8">
+              <col width="11">
+              <col width="8">
+              <col width="7">
+              <col width="11">
+              <col width="8">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>单位名称</th>
+                <th>监控点名称</th>
+                <th>监控点UID</th>
+                <th>累计电能</th>
+                <th>有功功率</th>
+                <th>无功功率</th>
+                <th>A相电压</th>
+                <th>B相电压</th>
+                <th>C相电压</th>
+                <th>A相电流</th>
+                <th>B相电流</th>
+                <th>C相电流</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="list-container" ref="list">
+          <table class="list" border="1" cellspacing="0" cellpadding="0" :style="{width: width+'px'}">
+            <colgroup>
+              <col width="8">
+              <col width="11">
+              <col width="8">
+              <col width="7">
+              <col width="11">
+              <col width="8">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+            </colgroup>
+            <tbody class="list-con">
+              <tr v-if="!ifPage">
+                <td colspan="13">暂无数据</td>
+              </tr>
+              <tr v-for="(item,index) in items" class="list-con-item">
+                <td>
+                  {{item.timedetail}}
+                </td>
+                <td>
+                  {{item.clientname}}
+                </td>
+                <td>{{item.monitorplacename}}</td>
+                <td>{{item.monitoruid}}</td>
+                <td>{{item.totalenergy}}</td>
+                <td>{{item.posipower}}</td>
+                <td>{{item.negipower}}</td>
+                <td>{{item.Avm}}</td>
+                <td>{{item.Bvm}}</td>
+                <td>{{item.Cvm}}</td>
+                <td>{{item.Aam}}</td>
+                <td>{{item.Bam}}</td>
+                <td>{{item.Cam}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    <div class="downpage">
-      <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
+      <div class="downpage" v-if="ifPage">
+        <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
+import dataFilter from '../../components/dataFilter.vue';
+
 export default {
   data() {
     return {
-        pageNum: 1,
-        pageSize: 10,
-        total: 200,
+      pageNum: 1,
+      pageSize: 10,
+      total: 200,
+      items: [],
+      leftbars: [{
+          tit: '用电报表',
+          url: '/dataForm/eleForm'
+        },
+        {
+          tit: '风机运行报表',
+          url: '/dataForm/fanRun'
+        },
+        {
+          tit: '风机故障报表',
+          url: '/dataForm/fanIll'
+        },
+        {
+          tit: '变频器运行报表',
+          url: '/dataForm/hzRun'
+        }
+      ],
+      width: '',
+      ifPage: false
     }
   },
   components: {
-    'pages-v' : pages,
+    'pages-v': pages,
+    dataFilter
   },
   created() {
+
+    var self = this;
     let tabs = [{
       isurl: 'eleForm',
       name: '用电报表'
     }];
     this.$store.dispatch('ChangeRightbar', tabs);
-
+    this.getData();
   },
   methods: {
-    pagechange(val){
-        console.log(val+'页')
+    pagechange(val) {
+      console.log(val + '页')
+    },
+    getData() {
+      let url = "/finddata/findElectricUseByCondition";
+      let data = {
+        currentpage: this.pageNum,
+        pagesize: this.pageSize,
+        clientid: 1,
+        monitorplaceid: 1,
+        timedetail: "",
+        startTime: "",
+        endTime: ""
+      }
+      this.api.handleAjax(url, data).done(function(res) {
+        if (res.list.length > 0) {
+          self.total = res.total;
+          self.pageSize = res.pageSize;
+          self.pageNum = res.pageNum;
+          self.items = res.list;
+          self.ifPage = true;
+        } else {
+          self.ifPage = false;
+        }
+        console.log(res.pageNum, res.pageSize, res.total)
+      }).fail(function(res) {
+        console.log(res);
+      })
+    },
+    exportExcel(param) {
+      let url = "/exceldata/excelExportElecricConsume";
+      let data = param;
+      this.api.handleAjax(url, data).done(function(res) {
+
+      }).fail(function(res) {
+        console.log(res);
+      })
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.pageNum = 1;
+      this.getList();
+    }
+  },
+    mounted() {
+      this.width = this.$refs.list.getBoundingClientRect().width - 17;
+      let _this = this;
+      window.onresize = function() {
+        _this.width = _this.$refs.list.getBoundingClientRect().width - 17;
+      }
     }
   }
-}
 
 </script>
 <style lang="scss" scoped>
 #eleForm {
+  .leftBlock {
+    .first-list {
+      cursor: pointer;
+    }
+    .router-link-active {
+      .first-item {
+        border: 1px solid #2899ee;
+        color: #fff;
+        background: #2899ee;
+      }
+    }
+  }
   .rightTabbar {
     width: 100%;
     height: 30px;

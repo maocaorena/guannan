@@ -8,7 +8,6 @@ const user = {
     mutations: {
         //改变新增弹窗状态
         SET_SHOW_ALERT: (state, data) => {
-            console.log("1"+data);
             state.dialog = data
         }
        

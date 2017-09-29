@@ -4,7 +4,7 @@ export default {
 	//请求的接口，在请求的时候，如axios.get(url,config);这里的url会覆盖掉config中的url
 	url: '',
 	// 基础url前缀
-	baseURL: 'bb/',
+	baseURL: 'http://120.26.222.27:10003/',
 	// 请求方法同上
 	method: 'POST', // default
 

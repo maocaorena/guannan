@@ -87,7 +87,7 @@ export default {
             width: 100%;
             height: 35px;
             background: #2899ee;
-            padding-left: 20px;
+            padding-left: 194px;
         }
         .con-right-bottom{
             position: absolute;

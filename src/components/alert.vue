@@ -1,6 +1,6 @@
 <template>
     <div class="alertSetting">
-        <div class="alertSetting-in">
+        <div class="alertSetting-in" :style="{height:height}">
             <div class="alertSetting-tit">
                 <p class="alertSetting-name"><slot name="name">设置</slot></p>
                 <div class="alertSetting-handle">
@@ -26,7 +26,8 @@
     export default{
     	props: [
             "type",
-            "btn"
+            "btn",
+            "height"
         ],
         data(){
             return{
@@ -42,6 +43,7 @@
             },
         },
         created(){
+            // console.log(this.height)
         },
         mounted(){
 
