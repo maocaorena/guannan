@@ -95,14 +95,14 @@
                   {{item.province}}
                 </td>
                 <td>{{item.city}}</td>
-                <td>{{item.clientName}}</td>
+                <td>{{item.clientname}}</td>
                 <td>{{item.address}}</td>
                 <td>{{item.name}}</td>
                 <td>{{item.phone}}</td>
-                <td>--</td>
+                <td>{{item.remark}}</td>
                 <td>
                   <a href="javascript:;" @click="deleteData(item.clientid,2)" class="mode">删除</a>
-                  <a href="javascript:;" class="mode">编辑</a>
+                  <a href="javascript:;" class="mode" @click="add(2,item.clientid)">编辑</a>
                 </td>
               </tr>
             </tbody>
@@ -113,51 +113,73 @@
         <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
       </div>
     </div>
-    <alert-v v-on:close="close" :btn="btn" v-on:next="next" v-if="addDialog
+    <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
 ">
       <span slot="name">添加客户</span>
       <div class="tep-in" slot="con">
-        <div class="as-item">
+        <input type="hidden" v-model="clientid">
+        <div class="as-item" style="margin-top: 15px">
           <p class="as-item-tit">
-            监控器型号：
+            客户姓名：
           </p>
           <div class="as-item-con">
-            <select class="" name="">
-              <option value="">zh-12312</option>
-              <option value="">zh-345345</option>
+            <input type="text" name="" value="" v-model="clientname">
+          </div>
+        </div>
+        <div class="as-item">
+          <p class="as-item-tit">
+            联系人：
+          </p>
+          <div class="as-item-con">
+            <input type="text" name="" value="" v-model="name">
+          </div>
+        </div>
+        <div class="as-item">
+          <p class="as-item-tit">
+            联系电话：
+          </p>
+          <div class="as-item-con">
+            <input type="text" name="" value="" v-model="phone">
+          </div>
+        </div>
+        <div class="as-item">
+          <p class="as-item-tit">
+            所在省份：
+          </p>
+          <div class="as-item-con">
+            <select name="" id="" v-model="provinceid">
+              <option value="">请选择</option>
+              <option :value="item.provinceid" v-for="(item,index) in provincesArr">{{item.province}}</option>
             </select>
           </div>
         </div>
         <div class="as-item">
           <p class="as-item-tit">
-            监控器UID：
+            所在地市：
           </p>
           <div class="as-item-con">
-            <input type="text" name="" value="">
+            <select name="" id="" v-model="cityid">
+              <option value="">请选择</option>
+              <option :value="item.cityid" v-for="(item,index) in citysArr">{{item.city}}</option>
+            </select>
           </div>
         </div>
+
         <div class="as-item">
           <p class="as-item-tit">
-            监控器出厂编号：
+            单位地址：
           </p>
           <div class="as-item-con">
-            <input type="text" name="" value="">
+            <input type="text" name="" value="" v-model="address">
           </div>
         </div>
+
         <div class="as-item">
           <p class="as-item-tit">
-            所属单位：
+            备注：
           </p>
           <div class="as-item-con">
-            <input type="text" name="" value="">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            安装单位：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="">
+            <input type="text" name="" value="" v-model="remark">
           </div>
         </div>
       </div>
@@ -181,7 +203,20 @@ export default {
       checked: false,
       leftbars: [],
       width: '',
-      ifPage: false
+      ifPage: false,
+      provincesArr: [],
+      citysArr: [],
+      // 增加相关
+      clientname: "",
+      address: "",
+      name: "",
+      phone: "",
+      email: "ali@alibaba.com",
+      remark: "",
+      cityid: "",
+      provinceid: "",
+      // 添加1 or 更新2
+      addType: 1
     }
   },
   components: {
@@ -283,11 +318,30 @@ export default {
       });
     },
     add(type, id) {
-      console.log(0)
+      var self = this;
       this.$store.dispatch('ChangeDialogState', {
         type: type,
         state: true,
-      })
+      });
+      this._getProvices();
+      if(type == 2) {
+        self.addType = 2;
+        let url = "client/findClientById";
+        let data = {
+          clientid: id
+        };
+        this.api.handleAjax(url,data).done(function(res){
+          // console.log(res);
+          self.clientid = res.clientid;
+          self.clientname = res.clientname;
+          self.address = res.address;
+          self.name = res.name;
+          self.phone = res.phone;
+          self.remark = res.remark;
+          self.cityid = res.cityid;
+          self.provinceid = res.provinceid;
+        })
+      }
     },
 
     close() {
@@ -297,25 +351,84 @@ export default {
     },
 
     next() {
+      if(!this.clientname) {
+        this.$message("客户名称不能为空");
+        return;
+      }
+      if(!this.name) {
+        this.$message("联系人不能为空");
+        return;
+      }
+      if(!this.phone) {
+        this.$message("联系电话不能为空");
+        return;
+      }
+      if(!this.provinceid) {
+        this.$message("所在省份不能为空");
+        return;
+      }
+      if(!this.cityid) {
+        this.$message("所在地市不能为空");
+        return;
+      }
+      if(!this.address) {
+        this.$message("单位地址不能为空");
+        return;
+      }
+      var self = this;
       let url = "/client/addClientByCity";
       let data = {
-        clientname: "小小",
-        address: "杭州",
-        name: "baba",
-        phone: "13340594495",
-        email: "zzy@ma.com",
-        remark: "supper",
-        cityid: 130100,
-        provinceid: 130000,
+        clientid: this.clientid,
+        clientname: this.clientname,
+        address: this.address,
+        name: this.name,
+        phone: this.phone,
+        email: this.email,
+        remark: this.remark,
+        cityid: this.cityid,
+        provinceid: this.provinceid,
       };
+      if(self.addType == 2) {
+        url = "client/updateClientById"
+      }
       this.api.handleAjax(url, data).done(function(res) {
-
-      }).fail(function(res) {
-        console.log(res)
+         self.close();
+         self.getData();
+      }).fail(function(res) {``
+        this.$message(res)
+        // console.log(res)
       })
-      this.close();
-    }
+    },
 
+    _getProvices() {
+      let self = this;
+      let url = "user/getProvinceList";
+      this.api.handleAjax(url).done(function(res){
+        self.provincesArr = res;
+      })
+    },
+    _getCitys() {
+      let self = this;
+      let url = "user/getCitiesByPid";
+      let data = {
+        provinceid: this.provinceid
+      }
+      this.api.handleAjax(url,data).done(function(res){
+        self.citysArr = res;
+      })
+
+    },
+    _getAreas() {
+      let self = this;
+      let url = "user/getAreasByCid";
+      let data = {
+        cityid: this.cityid
+      }
+      this.api.handleAjax(url,data).done(function(res){
+        self.areasArr = res;
+      })
+
+    }
   },
 
   watch: {
@@ -333,7 +446,8 @@ export default {
         };
       },
       deep: true
-    }
+    },
+    provinceid:'_getCitys'
   },
   mounted() {
     this.width = this.$refs.list.getBoundingClientRect().width - 17;
