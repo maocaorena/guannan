@@ -16,7 +16,7 @@
         					</colgroup>
         					<thead>
         						<tr>
-                                    <th>
+                                    <th  v-if="thirdAdd.type == 1">
                                         <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
                                     </th>
                                     <th>序号</th>
@@ -28,10 +28,10 @@
         					</thead>
         				</table>
         			</div>
-        			<div class="list-container">
+        			<div class="list-container" style="overflow-y:scroll;">
         				<table class="list" border="1" cellspacing="0" cellpadding="0">
         					<colgroup>
-                                <col width="2">
+                                <col width="2" v-if="thirdAdd.type == 1">
                                 <col width="3">
                                 <col width="10">
         						<col width="10">
@@ -40,7 +40,7 @@
         					</colgroup>
         					<tbody class="list-con">
         						<tr v-for="(item,index) of list" class="list-con-item">
-                                    <td>
+                                    <td v-if="thirdAdd.type == 1">
                                         <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.idx">
                                     </td>
                                     <td>
@@ -51,17 +51,17 @@
         							</td>
         							<td>
                                         <select class="" name="" v-model="item.datasource">
-                                            <option v-for="item2 of dataSourcename" :value="item2.id">{{item2.name}}</option>
+                                            <option v-for="item2 of dataSourcename" :value="item2.name">{{item2.name}}</option>
                                         </select>
                                     </td>
         							<td>
                                         <select class="" name="" v-model="item.dataport">
-                                            <option v-for="item2 of dataPort" :value="item2.id">{{item2.name}}</option>
+                                            <option v-for="item2 of dataPort" :value="item2.name">{{item2.name}}</option>
                                         </select>
                                     </td>
         							<td>
                                         <select class="" name="" v-model="item.portstate">
-                                            <option v-for="item1 of portstate" :value="item1.id">{{item1.state}}</option>
+                                            <option v-for="item1 of portstate" :value="item1.state">{{item1.state}}</option>
                                         </select>
                                     </td>
         						</tr>
@@ -96,6 +96,9 @@
             },
             addid(){
                 return this.$store.getters.addid;
+            },
+            thirdAddMessage(){
+                return this.$store.getters.thirdAddMessage;
             },
         },
         components:{
@@ -132,22 +135,51 @@
             },
             next(){
                 let subMessage = [];
-                for (let i = 0; i < this.checkboxModel.length; i++) {
-                    subMessage.push(this.list[this.checkboxModel[i]]);
-                };
-                console.log(subMessage);
-                this.loading = true;
                 let _this = this;
-                this.api.postN({
-                    url: '/monitornameset/monitornameSet',
-                    params: JSON.stringify(subMessage),
-                    success: function(res){
-                        _this.loading = false;
-                        console.log(res);
-                    }
-                })
-                console.log(subMessage)
-                // this.close()
+                if(this.thirdAdd.type == 1){
+                    for (let i = 0; i < this.checkboxModel.length; i++) {
+                        let bb = JSON.parse(JSON.stringify(this.list[this.checkboxModel[i]]));
+                        delete bb.id;
+                        delete bb.idx;
+                        subMessage.push(bb);
+                    };
+                    this.loading = true;
+                    this.api.postN({
+                        url: '/monitornameset/monitornameSet',
+                        params: {
+                            monitornamesets: JSON.stringify(subMessage)
+                        },
+                        success: function(res){
+                            _this.loading = false;
+                            if(res.response.info.code==100000){
+                                _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                                _this.$emit("addsuccess",'');
+                                _this.close();
+                            }else{
+                                _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                            }
+                        }
+                    })
+                }else{
+                    subMessage = JSON.parse(JSON.stringify(this.list));
+                    this.loading = true;
+                    this.api.postN({
+                        url: '/monitornameset/updateMonitornameById',
+                        params: {
+                            monitornamesets: JSON.stringify(subMessage)
+                        },
+                        success: function(res){
+                            _this.loading = false;
+                            if(res.response.info.code==100000){
+                                _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                                _this.$emit("addsuccess",'');
+                                _this.close();
+                            }else{
+                                _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                            }
+                        }
+                    })
+                }
             },
             findAllMonitornameModel(){
                 let _this = this;
@@ -166,7 +198,6 @@
                                     res.response.content[i].monitorplaceid = _addid;
                                 };
                                 _this.list = res.response.content;
-                                console.log(_this.list)
                             }else{
                                 _this.list = [];
                             }
@@ -221,18 +252,38 @@
                         }
                     }
                 })
+            },
+            findMonitornameById(){
+                let _this = this;
+                this.loading = true;
+                this.api.postN({
+                    url: '/monitornameset/findMonitornameById',
+                    params:{
+                        id: this.thirdAddMessage.message.id
+                    },
+                    success: function(res){
+                        _this.loading = false;
+                        if(res.response.info.code==100000){
+                            _this.list.push(res.response.content);
+                        }
+                    }
+                })
             }
         },
         created(){
             if(this.thirdAdd.type == 2){
                 this.tittxt = '修改';
                 this.btn = '确定修改';
+                this.findMonitornameById();
+                this.findDataPort();
+                this.findPortState();
+                this.findAllDataSourcename();
+            }else{
+                this.findAllMonitornameModel();
+                this.findDataPort();
+                this.findPortState();
+                this.findAllDataSourcename();
             };
-            this.findAllMonitornameModel();
-            this.findDataPort();
-            this.findPortState();
-            this.findAllDataSourcename();
-            console.log('dddd',this.addid)
         }
     }
 </script>

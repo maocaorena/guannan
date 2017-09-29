@@ -4,9 +4,9 @@
             <top></top>
         </div>
         <div class="container">
-            <div class="con-left">
+            <!-- <div class="con-left">
                 <left></left>
-            </div>
+            </div> -->
             <div class="con-right">
                 <div class="con-right-top">
                     <tabbar></tabbar>
@@ -75,7 +75,7 @@ export default {
         }
         .con-right{
             position: absolute;
-            left: 195px;
+            left: 0;
             top: 0;
             right: 0;
             bottom: 0;
@@ -86,7 +86,8 @@ export default {
         .con-right-top{
             width: 100%;
             height: 35px;
-            background: #aaa;
+            background: #2899ee;
+            padding-left: 194px;
         }
         .con-right-bottom{
             position: absolute;

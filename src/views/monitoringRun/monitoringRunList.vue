@@ -1,99 +1,123 @@
 <template>
-    <div id="monitoringRunList">
-        <div class="rightTabbar">
-            <div class="rt-item rtItemSelect">
-                监控列表
-            </div>
-            <div class="rt-handle">
-                <div class="handle-item">
-                    <router-link to="/monitoringRun/map">
-                        <button type="button" name="button">地图模式</button>
+    <div id="monitoringRunList" class="wrapper">
+        <div class="leftBlock">
+            <div class="first-list type1" v-for="(item,index) of leftbars">
+                <p class="first-item">
+                    <img class="leftIcon" src="../../assets/img/leftbar/icon_sheng.png" alt="">
+                    {{item.province}}
+                </p>
+                <ul class="second-list">
+                    <router-link class="second-item"
+                        :class="{selected:$route.query.clientid==second.clientid}"
+                        :to="{path:'/monitoringRun/list',query:{clientid: second.clientid}}"
+                        tag="li"
+                        :key="second.clientid"
+                        v-for="(second,index2) of item.clientList">
+                        <img class="leftIcon" src="../../assets/img/leftbar/icon_gongsi.png" alt="">
+                        {{second.clientname}}
                     </router-link>
-                </div>
-                <div class="handle-item">
-                    <button type="button" name="button" @click="search">搜索</button>
-                </div>
-                <div class="handle-item">
-                    <input type="text" name="" v-model="monitorplacename">
-                </div>
+                </ul>
             </div>
         </div>
-        <div class="content" v-loading.body="loading">
-            <div class="list-tit">
-                <table class="list" border="1" cellspacing="0" cellpadding="0">
-                    <colgroup>
-                        <col width="4">
-                        <col width="14">
-                        <col width="11">
-                        <col width="11">
-                        <col width="7">
-                        <col width="11">
-                        <col width="7">
-                        <col width="9">
-                        <col width="9">
-                        <col width="9">
-                        <col width="9">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>公司名称</th>
-                            <th>监控点名称</th>
-                            <th>监控点UID</th>
-                            <th>环境温度</th>
-                            <th>进气滤网负压</th>
-                            <th>出气压力</th>
-                            <th>出气温度</th>
-                            <th>润滑油油压</th>
-                            <th>润滑油油温</th>
-                            <th>变频器频率</th>
-                        </tr>
-                    </thead>
-                </table>
+        <div class="rightBlock">
+            <router-view v-if="$route.path.indexOf('item')>0"></router-view>
+            <div class="rightTabbar" v-if="$route.path.indexOf('item')<0">
+                <div class="rt-item rtItemSelect">
+                    监控列表
+                </div>
+                <div class="rt-handle">
+                    <div class="handle-item">
+                        <router-link to="/monitoringRun/map">
+                            <button type="button" name="button">地图模式</button>
+                        </router-link>
+                    </div>
+                    <div class="handle-item">
+                        <button type="button" name="button" @click="search">搜索</button>
+                    </div>
+                    <div class="handle-item">
+                        <input type="text" name="" placeholder="监控点名称" v-model="clientnameormonitorplacename">
+                    </div>
+                </div>
             </div>
-            <div class="list-container">
-                <table class="list" border="1" cellspacing="0" cellpadding="0">
-                    <colgroup>
-                        <col width="4">
-                        <col width="14">
-                        <col width="11">
-                        <col width="11">
-                        <col width="7">
-                        <col width="11">
-                        <col width="7">
-                        <col width="9">
-                        <col width="9">
-                        <col width="9">
-                        <col width="9">
-                    </colgroup>
-                    <tbody class="list-con">
-                        <tr v-if="total>0" class="list-con-item" v-for="(item,index) of list">
-                            <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
-                            <td v-else> {{index+1}} </td>
-                            <td>
-                                <router-link to="/monitoringRun/item">
-                                     {{item.clientname}}
-                                </router-link>
-                            </td>
-                            <td> {{item.monitorplacename}} </td>
-                            <td> {{item.monitoruid}} </td>
-                            <td> {{item.temp}} </td>
-                            <td> {{item.infilnegpressure}} </td>
-                            <td> {{item.outairpressure}} </td>
-                            <td> {{item.outairtemp}} </td>
-                            <td> {{item.oilpressure}} </td>
-                            <td> {{item.oiltemp}} </td>
-                            <td> {{item.tranfrequency}} </td>
-                        </tr>
-                        <tr v-if="total==0">
-                            <td colspan="11">暂无数据</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="content" v-loading.body="loading" v-if="$route.path.indexOf('item')<0">
+                <div class="list-tit">
+                    <table class="list" border="1" cellspacing="0" cellpadding="0">
+                        <colgroup>
+                            <col width="4">
+                            <col width="14">
+                            <col width="11">
+                            <col width="11">
+                            <col width="7">
+                            <col width="11">
+                            <col width="7">
+                            <col width="9">
+                            <col width="9">
+                            <col width="9">
+                            <col width="9">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>公司名称</th>
+                                <th>监控点名称</th>
+                                <th>监控点UID</th>
+                                <th>环境温度</th>
+                                <th>进气滤网负压</th>
+                                <th>出气压力</th>
+                                <th>出气温度</th>
+                                <th>润滑油油压</th>
+                                <th>润滑油油温</th>
+                                <th>变频器频率</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="list-container" ref="list">
+                    <div class="">
+                        <table class="list" border="1" cellspacing="0" cellpadding="0" :style="{width: width+'px'}">
+                            <colgroup>
+                                <col width="4">
+                                <col width="14">
+                                <col width="11">
+                                <col width="11">
+                                <col width="7">
+                                <col width="11">
+                                <col width="7">
+                                <col width="9">
+                                <col width="9">
+                                <col width="9">
+                                <col width="9">
+                            </colgroup>
+                            <tbody class="list-con">
+                                <tr v-if="total>0" class="list-con-item" v-for="(item,index) of list">
+                                    <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
+                                    <td v-else> {{index+1}} </td>
+                                    <td> {{item.clientname}} </td>
+                                    <td>
+                                        <router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid}}">
+                                            {{item.monitorplacename}}
+                                        </router-link>
+                                    </td>
+                                    <td> {{item.monitoruid}} </td>
+                                    <td> {{item.temp}} </td>
+                                    <td> {{item.infilnegpressure}} </td>
+                                    <td> {{item.outairpressure}} </td>
+                                    <td> {{item.outairtemp}} </td>
+                                    <td> {{item.oilpressure}} </td>
+                                    <td> {{item.oiltemp}} </td>
+                                    <td> {{item.tranfrequency}} </td>
+                                </tr>
+                                <tr v-if="total==0">
+                                    <td colspan="11">暂无数据</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="downpage" v-if="total>0">
-            <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
+            <div class="downpage" v-if="total>0 && $route.path.indexOf('item')<0">
+                <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
+            </div>
         </div>
     </div>
 </template>
@@ -109,7 +133,9 @@ export default {
             loading: false,
             checkboxModel:[],
             checked: false,
-            monitorplacename: '',
+            clientnameormonitorplacename: '',
+            leftbars: [],
+            width: '',
         }
     },
     components: {
@@ -117,8 +143,10 @@ export default {
     },
     watch:{
         '$route' (to, from) {
-            this.pageNum = 1;
-            this.getList();
+            if(to.path.indexOf('item')<0){
+                this.pageNum = 1;
+                this.getList();
+            }
         },
     },
     methods: {
@@ -144,7 +172,7 @@ export default {
                     currentpage: this.pageNum,
                     pagesize: this.pagesize,
                     clientid: _this.$route.query.clientid,
-                    monitorplacename: this.monitorplacename,
+                    clientnameormonitorplacename: this.clientnameormonitorplacename,
                 },
                 success: function(res){
                     console.log(res)
@@ -156,13 +184,38 @@ export default {
                     }
                 }
             })
+        },
+        getBar(){
+            let _this1 = this;
+            this.api.postN({
+                url : "/client/findProvinceAndCompanys",
+                success: function(res){
+                    let _res = res.response;
+                    if(_res.info.code == 100000){
+                        _this1.leftbars = _res.content;
+                        console.log(_this1.$route.path.indexOf('item'))
+                        if(!_this1.$route.query.clientid && _this1.$route.path.indexOf('item')<0){
+                            _this1.$router.replace({path:'/monitoringRun/list',query:{clientid: _res.content[0].clientList[0].clientid}})
+                        }
+                    }
+                }
+            });
         }
     },
     created() {
         console.log(this.$route.query.clientid)
+        this.getBar();
         if(this.$route.query.clientid){
             this.getList()
         };
+    },
+    mounted(){
+        console.log('asas',this.$refs.list.getBoundingClientRect().width);
+        this.width = this.$refs.list.getBoundingClientRect().width - 17;
+        let _this = this;
+        window.onresize = function(){
+            _this.width = _this.$refs.list.getBoundingClientRect().width - 17;
+        }
     }
 }
 

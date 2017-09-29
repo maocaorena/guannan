@@ -23,7 +23,7 @@
 					</thead>
 				</table>
 			</div>
-			<div class="list-container">
+			<div class="list-container" style="overflow-y:scroll;" v-loading.body="loading">
 				<table class="list" border="1" cellspacing="0" cellpadding="0">
 					<colgroup>
                         <col width="4">
@@ -39,14 +39,14 @@
                                 {{index}}
 							</td>
 							<td>
-                                变频器监测模块
+                                {{item.name}}
                             </td>
-							<td>风机控制器模块</td>
-							<td>40025-0017h</td>
-							<td>常开</td>
+							<td>{{item.datasource}}</td>
+							<td>{{item.dataport}}</td>
+							<td>{{item.portstate}}</td>
 							<td>
-                                <a href="javascript:;" class="mode">删除</a>
-                                <a href="javascript:;" class="mode" @click="editmodule">编辑</a>
+                                <a href="javascript:;" class="mode" @click="dele(item)">删除</a>
+                                <a href="javascript:;" class="mode" @click="editmodule(item)">编辑</a>
                             </td>
 						</tr>
 					</tbody>
@@ -54,7 +54,7 @@
                 <button class="add-module" type="button" name="button" @click="addmodule">请添加信息</button>
 			</div>
 		</div>
-        <thirdadd-v v-if="thirdAdd.state"></thirdadd-v>
+        <thirdadd-v v-if="thirdAdd.state" v-on:addsuccess="findMonitornameModelById"></thirdadd-v>
     </div>
 </template>
 <script type="text/javascript">
@@ -64,6 +64,7 @@ export default{
     data(){
         return{
             list: [],
+            loading: false,
         }
     },
     computed:{
@@ -88,26 +89,50 @@ export default{
                 state: 0,
             });
         },
+        dele(item){
+            let _this = this;
+            this.loading = true;
+            this.api.postN({
+                url: '/monitornameset/deleteMonitornameById',
+                params: {
+                    ids: item.id,
+                },
+                success: function(res){
+
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                        _this.findMonitornameModelById();
+                    }else{
+                        _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                    }
+                }
+            })
+        },
         addmodule(){//打开新增弹窗
             this.$store.dispatch('SetThirdAddAlert',{
                 state: true,
                 type: 1,
             })
         },
-        editmodule(){
+        editmodule(item){//编辑、
+            this.$store.dispatch('SetThirdAddMessage',{
+                message: item
+            });
             this.$store.dispatch('SetThirdAddAlert',{
                 state: true,
                 type: 2,
-            })
+            });
         },
         findMonitornameModelById(){
             let _this = this;
+            this.loading = true;
             this.api.postN({
-                url: '/monitornamemodel/findMonitornameModelById',
+                url: '/monitornameset/findMonitornameByMonitorplaceId',
                 params: {
-                    id: _this.addid
+                    monitorplaceid: _this.addid
                 },
                 success: function(res){
+                    _this.loading = false;
                     if(res.response.info.code==100000){
                         _this.$message.success({message: res.response.info.msg,duration: Util.time()});
                         if(res.response.content){
@@ -122,7 +147,6 @@ export default{
     },
     created(){
         this.findMonitornameModelById()
-        console.log('222',this.addid)
     }
 }
 </script>

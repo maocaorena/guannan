@@ -1,84 +1,93 @@
 <template>
-  <div id="eleForm">
-    <div class="rightTabbar">
-      <div class="rt-item rtItemSelect">
-        用机运行报表
-      </div>
-      <data-filter v-on:exportExcel="exportExcel"></data-filter>
+  <div id="eleForm" class="wrapper">
+    <div class="leftBlock">
+      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" v-for="(item,index) of leftbars">
+        <p class="first-item">
+          {{item.tit}}
+        </p>
+      </router-link>
     </div>
-    <div class="content">
-      <div class="list-tit">
-        <table class="list" border="1" cellspacing="0" cellpadding="0">
-          <colgroup>
-            <col width="8">
-            <col width="11">
-            <col width="8">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>时间</th>
-              <th>单位名称</th>
-              <th>监控点名称</th>
-              <th>监控点UID</th>
-              <th>累计运行时间</th>
-              <th>环境温度</th>
-              <th>进气滤网负压</th>
-              <th>出气压力</th>
-              <th>出气温度</th>
-              <th>润滑油油压</th>
-              <th>润滑油油温</th>
-            </tr>
-          </thead>
-        </table>
+    <div class="rightBlock">
+      <div class="rightTabbar">
+        <div class="rt-item rtItemSelect">
+          用机运行报表
+        </div>
+        <data-filter v-on:exportExcel="exportExcel"></data-filter>
       </div>
-      <div class="list-container">
-        <table class="list" border="1" cellspacing="0" cellpadding="0">
-          <colgroup>
-            <col width="8">
-            <col width="11">
-            <col width="8">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-            <col width="9">
-          </colgroup>
-          <tbody class="list-con">
-            <tr v-if="!ifPage">
-              <td colspan="11">暂无数据</td>
-            </tr>
-            <tr v-for="(item,index) of items" class="list-con-item">
-              <td>{{item.timedetail}}</td>
-              <td>
-                {{item.clientname}}
-              </td>
-              <td>{{item.monitorplacename}}</td>
-              <td>{{item.monitoruid}}</td>
-              <td>{{item.totaltime}}</td>
-              <td>{{item.temp}}</td>
-              <td>{{item.infilnegpressure}}</td>
-              <td>{{item.outairpressure}}</td>
-              <td>{{item.outairtemp}}</td>
-              <td>{{item.oilpressure}}</td>
-              <td>{{item.oiltemp}}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="content">
+        <div class="list-tit">
+          <table class="list" border="1" cellspacing="0" cellpadding="0">
+            <colgroup>
+              <col width="8">
+              <col width="11">
+              <col width="8">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>单位名称</th>
+                <th>监控点名称</th>
+                <th>监控点UID</th>
+                <th>累计运行时间</th>
+                <th>环境温度</th>
+                <th>进气滤网负压</th>
+                <th>出气压力</th>
+                <th>出气温度</th>
+                <th>润滑油油压</th>
+                <th>润滑油油温</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="list-container" ref="list">
+          <table class="list" border="1" cellspacing="0" cellpadding="0" :style="{width: width+'px'}">
+            <colgroup>
+              <col width="8">
+              <col width="11">
+              <col width="8">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+              <col width="9">
+            </colgroup>
+            <tbody class="list-con">
+              <tr v-if="!ifPage">
+                <td colspan="11">暂无数据</td>
+              </tr>
+              <tr v-for="(item,index) of items" class="list-con-item">
+                <td>{{item.timedetail}}</td>
+                <td>
+                  {{item.clientname}}
+                </td>
+                <td>{{item.monitorplacename}}</td>
+                <td>{{item.monitoruid}}</td>
+                <td>{{item.totaltime}}</td>
+                <td>{{item.temp}}</td>
+                <td>{{item.infilnegpressure}}</td>
+                <td>{{item.outairpressure}}</td>
+                <td>{{item.outairtemp}}</td>
+                <td>{{item.oilpressure}}</td>
+                <td>{{item.oiltemp}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    <div class="downpage"  v-if="ifPage">
-      <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
+      <div class="downpage" v-if="ifPage">
+        <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
+      </div>
     </div>
   </div>
 </template>
@@ -90,15 +99,33 @@ import dataFilter from '../../components/dataFilter.vue';
 export default {
   data() {
     return {
-        pageNum: 1,
-        pageSize: 10,
-        total: 200,
-        items: [],
-        ifPage: false
+      pageNum: 1,
+      pageSize: 10,
+      total: 200,
+      items: [],
+      ifPage: false,
+      width: '',
+      leftbars: [{
+          tit: '用电报表',
+          url: '/dataForm/eleForm'
+        },
+        {
+          tit: '风机运行报表',
+          url: '/dataForm/fanRun'
+        },
+        {
+          tit: '风机故障报表',
+          url: '/dataForm/fanIll'
+        },
+        {
+          tit: '变频器运行报表',
+          url: '/dataForm/hzRun'
+        }
+      ],
     }
   },
   components: {
-    'pages-v' : pages,
+    'pages-v': pages,
     dataFilter
   },
   created() {
@@ -108,59 +135,78 @@ export default {
     }];
     this.$store.dispatch('ChangeRightbar', tabs);
     this.getData();
-    
+
 
   },
   methods: {
-    pagechange(val){
-        console.log(val+'页')
+    pagechange(val) {
+      console.log(val + '页')
     },
     exportExcel(param) {
       let url = "/exceldata/exportexcelFanRun";
       let data = param;
-      this.api.handleAjax(url,data).done(function(res){
-        
-      }).fail(function(res){
+      this.api.handleAjax(url, data).done(function(res) {
+
+      }).fail(function(res) {
         console.log(res);
       })
     },
     getData() {
       let url = "/finddata/findFandataByCondition";
-    let data = {
-      currentpage: this.pageNum,
-      pagesize: this.pageSize,
-      clientid: 1,
-      monitorplaceid: 1,
-      timedetail: "",
-      startTime: "",
-      endTime: ""
-    }
-    this.api.handleAjax(url,data).done(function(res){
-      if(res.list.length > 0) {
-        self.total = res.total;
-        self.pageSize = res.pageSize;
-        self.pageNum = res.pageNum;
-        self.items = res.list;
-        self.ifPage = true;
-      } else {
-        self.ifPage = false;
+      let data = {
+        currentpage: this.pageNum,
+        pagesize: this.pageSize,
+        clientid: 1,
+        monitorplaceid: 1,
+        timedetail: "",
+        startTime: "",
+        endTime: ""
       }
-    }).fail(function(res){
-      console.log(res);
-    })
+      this.api.handleAjax(url, data).done(function(res) {
+        if (res.list.length > 0) {
+          self.total = res.total;
+          self.pageSize = res.pageSize;
+          self.pageNum = res.pageNum;
+          self.items = res.list;
+          self.ifPage = true;
+        } else {
+          self.ifPage = false;
+        }
+      }).fail(function(res) {
+        console.log(res);
+      })
     }
   },
   watch: {
-        '$route' (to, from) {
-            this.pageNum = 1;
-            this.getList();
-        }
+    '$route' (to, from) {
+      this.pageNum = 1;
+      this.getList();
+    }
+  },
+    mounted() {
+      this.width = this.$refs.list.getBoundingClientRect().width - 17;
+      let _this = this;
+      window.onresize = function() {
+        _this.width = _this.$refs.list.getBoundingClientRect().width - 17;
+      }
+    }
   }
-}
 
 </script>
 <style lang="scss" scoped>
 #eleForm {
+  .leftBlock {
+    .first-list {
+      cursor: pointer;
+    }
+    .router-link-active {
+      .first-item {
+        border: 1px solid #2899ee;
+        color: #fff;
+        background: #2899ee;
+      }
+    }
+  }
   .rightTabbar {
     width: 100%;
     height: 30px;
@@ -235,15 +281,6 @@ export default {
     width: 100%;
     height: 30px;
     background: #fff;
-  }
-  th {
-    /*height: 44px;*/
-    text-align: left;
-    padding: 0 4px;
-    background-color: #f8f8f8;
-  }
-  .list-container {
-    /*top: 44px;*/
   }
 }
 

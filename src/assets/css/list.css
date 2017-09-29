@@ -26,7 +26,7 @@
 	bottom: 0;
 	margin: auto;
 	height: auto;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 table {
@@ -55,6 +55,7 @@ th {
 	border-color: #cfdde7;
 	font-size: 12px;
 	word-wrap:break-word;
+
 }
 
 th {
@@ -62,6 +63,12 @@ th {
 	color: #2899ee;
 	text-align: center;
 	border-bottom: none;
+	white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+
 }
 
 td {

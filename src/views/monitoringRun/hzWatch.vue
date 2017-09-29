@@ -2,12 +2,12 @@
 	<div id="hzWatch">
 		<div class="rightTabbar">
 			<div class="rt-item">
-				<router-link to="/monitoringRun/item/fanRunwatch">
+				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid}}">
 					风机运行监测
 				</router-link>
 			</div>
 			<div class="rt-item">
-				<router-link to="/monitoringRun/item/smartMeters">
+				<router-link :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid}}">
 					智能电表
 				</router-link>
 			</div>

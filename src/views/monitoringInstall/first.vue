@@ -12,8 +12,8 @@
             <p class="as-item-tit">
                 监控器型号：
             </p>
-            <div class="as-item-con">
-                <select class="" name="" v-model="monitorModel" @change="hahah">
+            <div class="as-item-con" :data="monitormodel">
+                <select class="" name="" v-model="monitormodel">
                     <option v-for="item of allMonitorModel" :value="item.id">{{item.name}}</option>
                 </select>
             </div>
@@ -44,14 +44,6 @@
         </div>
         <div class="as-item">
             <p class="as-item-tit">
-                配置人：
-            </p>
-            <div class="as-item-con">
-                <input type="text" v-model="deployer" name="" value="">
-            </div>
-        </div>
-        <div class="as-item">
-            <p class="as-item-tit">
                 备注：
             </p>
             <div class="as-item-con">
@@ -63,6 +55,7 @@
                 位置：
             </p>
             <div class="as-item-con">
+                <span>{{firstAddMessage.addrs}}</span>
                 <button type="button" name="button" @click="tofirstAdd">选择位置</button>
             </div>
         </div>
@@ -77,11 +70,10 @@ export default{
         return{
             monitorplacename: '',//监控点名称
             allMonitorModel:[],//所有监控器型号列表
-            monitorModel: '',//选中的监控器型号id
+            monitormodel: '',//选中的监控器型号id
             monitoruid: '',//监控器uid 、监控器硬件地址
             monitorno: '',//监控器出厂编号
             installname: '',//安装单位
-            deployer: '',//配置人
             remark: '',//备注
             loading: false,
         }
@@ -96,14 +88,14 @@ export default{
         addid(){
             return this.$store.getters.addid;
         },
+        firstAddMessage(){
+            return this.$store.getters.firstAddMessage;
+        },
     },
     components:{
         "firstadd-v" : firstadd,
     },
     methods:{
-        hahah(){
-            console.log(this.monitorModel)
-        },
         tofirstAdd(){
             this.$store.dispatch('SetFirstAddAlert',{
                 state: true
@@ -129,7 +121,8 @@ export default{
                 this.$message.warning({message: '请填写监控点名称',duration: Util.time()});
                 return;
             };
-            if(!this.monitorModel){
+            console.log(this.monitormodel);
+            if(!this.monitormodel){
                 this.$message.warning({message: '请选择监控器型号',duration: Util.time()});
                 return;
             };
@@ -145,22 +138,17 @@ export default{
                 this.$message.warning({message: '请填写安装单位',duration: Util.time()});
                 return;
             };
-            if(Util.trim(this.deployer).length <= 0){
-                this.$message.warning({message: '请填写配置人',duration: Util.time()});
-                return;
-            };
             let params = {
                 clientid: this.$route.query.clientid,//客户公司id
                 monitorplacename: Util.trim(this.monitorplacename),
-                monitorModel: this.monitorModel,
+                monitormodel: this.monitormodel,
                 monitoruid: Util.trim(this.monitoruid),
                 monitorno: Util.trim(this.monitorno),
                 installname: Util.trim(this.installname),
-                deployer: Util.trim(this.deployer),
                 remark: Util.trim(this.remark),
-                latitude: 1111,
-                longtitude: 11111,
-                address: 'qqqq',
+                latitude: this.firstAddMessage.jingwei.latitude,
+                longtitude: this.firstAddMessage.jingwei.longtitude,
+                address: this.firstAddMessage.addrs,
             };
             let _this = this;
             let url = '';
@@ -170,6 +158,12 @@ export default{
             }else{
                 url = '/monitorplace/addMonitorPlaceByClient';
             };
+            _this.$store.dispatch('SetAddId', _this.addid);
+            _this.$emit('changeAlert','下一步');
+            _this.$store.dispatch('SetFirstStepAlert',{
+                type: _this.firstStepAlert.type,
+                state: 2,
+            });
             this.loading = true;
             this.api.postN({
                 url: url,
@@ -184,17 +178,17 @@ export default{
                         }else{
                             _this.$store.dispatch('SetAddId',res.response.content.id);
                         };
+                        //进入第二步
+                        _this.$emit('changeAlert',2)
                         _this.$store.dispatch('SetFirstStepAlert',{
                             type: _this.firstStepAlert.type,
                             state: 2,
                         });
-                        _this.$emit('changeAlert','下一步')
                     }else{
                         _this.$message.error({message: res.response.info.msg,duration: Util.time()});
                     }
                 }
             })
-            console.log('调用成功1')
         },
         findMonitorplaceById(){
             let _this = this;
@@ -208,14 +202,6 @@ export default{
                     _this.loading = false;
                     console.log(res);
                     if(res.response.info.code==100000){
-                        // monitorplacename: '',//监控点名称
-                        // allMonitorModel:[],//所有监控器型号列表
-                        // monitorModel: '',//选中的监控器型号id
-                        // monitoruid: '',//监控器uid 、监控器硬件地址
-                        // monitorno: '',//监控器出厂编号
-                        // installname: '',//安装单位
-                        // deployer: '',//配置人
-                        // remark: '',//备注
                         _this.monitorplacename = res.response.content.monitorplacename;
                         _this.monitoruid = res.response.content.monitoruid;
                         _this.monitorno = res.response.content.monitorno;
@@ -223,6 +209,15 @@ export default{
                         _this.deployer = res.response.content.deployer;
                         _this.remark = res.response.content.remark;
                         _this.monitormodel = res.response.content.monitormodel;
+                        //获取定位信息放入vuex
+                        _this.$store.dispatch('SetFirstAddMessage',{
+                            jingwei: {
+                                latitude: res.response.content.latitude,
+                                longtitude: res.response.content.longtitude,
+                            },
+                            addrs: res.response.content.address,
+                        });
+                        console.log(res.response.content.monitormodel);
                     }else{
                         _this.$message.error({message: res.response.info.msg,duration: Util.time()});
                     }
@@ -231,6 +226,13 @@ export default{
         }
     },
     created(){
+        //初始化地图信息
+        this.$store.dispatch('SetFirstAddMessage',{
+            jingwei: {
+                latitude: 40.0958,
+                longtitude: 116.480983,
+            },
+        });
         this.findAllMonitorModel();
         if(this.firstStepAlert.type==2){
             this.findMonitorplaceById();
