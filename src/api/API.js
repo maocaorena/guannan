@@ -1,7 +1,8 @@
 import $ from 'jquery';
 import { Util } from '../lib/util.js'; //引入Util
 var config = {
-	baseUrl : "/bb",
+	baseUrl : "http://120.26.222.27:10003",//build
+//	baseUrl : "/bb",//dev
 	contentType: "application/json",
 	dataType: "json",
 	timeout: 1800000,
@@ -42,7 +43,7 @@ class API {
 				if(dd.error){
 					dd.error();
 				}else{
-					alert('服务器错误')
+					console.log('服务器错误')
 				}
 			}
 		})
