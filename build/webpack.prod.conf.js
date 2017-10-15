@@ -9,7 +9,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-var env = process.env.NODE_ENV === 'production' ? config.build.prodEnv : config.build.sitEnv
+var env = config.build[process.env.env_config+'Env']
 
 function resolveApp(relativePath) {
   return path.resolve(relativePath);
@@ -25,8 +25,8 @@ var webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].js'),
-    chunkFilename: utils.assetsPath('js/[name].chunk.js'),
+    filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
     publicPath: config.build.assetsPublicPath
   },
   plugins: [
@@ -42,7 +42,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),
     // extract css into its own file
     new ExtractTextPlugin({
-      filename: utils.assetsPath('css/[name].css')
+      filename: utils.assetsPath('css/[name].[contenthash].css')
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
@@ -95,6 +95,14 @@ var webpackConfig = merge(baseWebpackConfig, {
         return context && (context.indexOf('echarts') >= 0 || context.indexOf('zrender') >= 0);
       }
     }),
+    // split xlsx into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'xlsx',
+      minChunks(module) {
+        var context = module.context;
+        return context && (context.indexOf('xlsx') >= 0);
+      }
+    }),
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
@@ -109,8 +117,11 @@ var webpackConfig = merge(baseWebpackConfig, {
     }])
   ]
 })
+
 if (config.build.bundleAnalyzerReport) {
   var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
+
 module.exports = webpackConfig
+
