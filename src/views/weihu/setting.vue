@@ -79,13 +79,11 @@
                                 <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
                                 <td v-else>{{index+1}} </td>
                                 <td>
-                                    <router-link :to="{path:'/monitoringInstall/list/item',query:{clientid:$route.query.clientid,id:item.id}}">
-                                        {{item.monitorplacename}}
-                                    </router-link>
+                                    {{item.isstar==1?'是':'否'}}
                                 </td>
-                                <td>{{item.monitormodel}}</td>
-                                <td>{{item.monitoruid}}</td>
-                                <td>{{item.monitorno}}</td>
+                                <td>{{item.maintainname}}</td>
+                                <td>{{item.maintaincontent}}</td>
+                                <td>{{item.maintainsettime}}</td>
                                 <td>
                                     <a href="javascript:;" class="mode" @click="del(1,item)">删除</a>
                                     <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
@@ -103,10 +101,14 @@
                 <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
             </div>
         </div>
+        <step-v v-if="showStep==1" v-on:close="close" v-on:submitSuccess="submitSuccess"></step-v>
+        <steptwo-v v-if="showStep==2" v-on:close="close"></steptwo-v>
     </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
+import step from './step.vue';
+import step2 from './step2.vue';
 import { Util } from '../../lib/util.js'
 export default {
     data() {
@@ -137,10 +139,13 @@ export default {
                 url: '/weihu/history'
               }
             ],
+            showStep: -1,
         }
     },
     components: {
         'pages-v': pages,
+        'step-v': step,
+        'steptwo-v': step2,
     },
     filters:{
         cutTime(val){
@@ -170,6 +175,14 @@ export default {
         }
     },
     methods: {
+    	close(){
+    		this.showStep = 3;
+    	},
+    	submitSuccess(val){
+    		if(val == 1){
+    			this.showStep = 2;
+    		}
+    	},
         search(){
             this.pageNum = 1;
             this.getList();
@@ -195,12 +208,11 @@ export default {
         },
         add(type,item) {//1是新增，2是编辑
             if(type == 2){
-                this.$store.dispatch('SetAddId',item.id);
+                
+            }else{
+            	this.showStep = 1;
             };
-            this.$store.dispatch('SetFirstStepAlert', {
-                type: type,
-                state: 1,
-            })
+            
         },
         del(type,item){
             let delname = '';
@@ -245,7 +257,7 @@ export default {
             let _this = this;
             this.loading = true;
             this.api.postN({
-                url : '/monitorplace/findMonitorplaceByConditions',
+                url : '/maintain/getMaintainContentList',
                 params: {
                     currentpage: this.pageNum,
                     pagesize: this.pagesize,
@@ -265,7 +277,7 @@ export default {
         },
     },
     created() {
-    	
+    	this.getList()
     },
     mounted() {
         this.width = this.$refs.list.getBoundingClientRect().width - 17;

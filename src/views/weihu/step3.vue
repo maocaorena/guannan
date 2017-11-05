@@ -1,19 +1,11 @@
 <template>
 	<div class="firstStep">
 		<alert-v v-on:close="close" v-on:next="next" :btn="btn">
-			<span slot="name">增加设置</span>
+			<span slot="name">添加周期</span>
 			<div class="tep-in" slot="con">
 				<div class="as-item">
 					<p class="as-item-tit">
-						项目名称：
-					</p>
-					<div class="as-item-con">
-						<input type="text" v-model="message.name" name="" value="">
-					</div>
-				</div>
-				<div class="as-item">
-					<p class="as-item-tit">
-						保养内容：
+						保养计划：
 					</p>
 					<div class="as-item-con">
 						<textarea name="" v-model="message.detail" rows="5" cols="60"></textarea>
@@ -21,11 +13,12 @@
 				</div>
 				<div class="as-item">
 					<p class="as-item-tit">
-						启用：
+						时间来源：
 					</p>
 					<div class="as-item-con flex">
-						<input type="radio" name="haha" id="" value="1" v-model="message.state"/><span>是</span>
-						<input type="radio" name="haha" id="" value="2" v-model="message.state"/><span>否</span>
+						<select name="">
+							<option value="">系统时间</option>
+						</select>
 					</div>
 				</div>
 			</div>
@@ -40,7 +33,6 @@
 			return {
 				btn: '确认添加',
 				message: {
-					name: '',
 					detail: '',
 					state: 2,
 				}
@@ -54,16 +46,10 @@
 				this.$emit('close','')
 			},
 			next(){
-				if(Util.trim(this.message.name).length<1){
-					this.$message.warning({message: '请填写项目名称',duration: Util.time()});
-					return;
-				};
-				
 				if(Util.trim(this.message.detail).length<1){
-					this.$message.warning({message: '请填写项目内容',duration: Util.time()});
+					this.$message.warning({message: '请填写保养计划',duration: Util.time()});
 					return;
 				};
-				
 				this.$message.success({message: '添加成功',duration: Util.time()});
 				this.$emit('submitSuccess','1')
 			}
