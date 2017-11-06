@@ -54,7 +54,7 @@
                                 <th>项目名称</th>
                                 <th>保养内容</th>
                                 <th>保养周期</th>
-                                <th>操作</th>
+                                <th>操作{{showStep}}</th>
                             </tr>
                         </thead>
                     </table>
@@ -102,7 +102,7 @@
             </div>
         </div>
         <step-v v-if="showStep==1" v-on:close="close" v-on:submitSuccess="submitSuccess"></step-v>
-        <steptwo-v v-if="showStep==2" v-on:close="close"></steptwo-v>
+        <steptwo-v v-if="showStep==2" :id="nextid" v-on:close="close" v-on:submitSuccess="submitSuccess"></steptwo-v>
     </div>
 </template>
 <script>
@@ -140,6 +140,7 @@ export default {
               }
             ],
             showStep: -1,
+            nextid: '',//新增或者修改之后把id传入下一个组件
         }
     },
     components: {
@@ -179,8 +180,13 @@ export default {
     		this.showStep = 3;
     	},
     	submitSuccess(val){
-    		if(val == 1){
+    		console
+    		if(val.step == 1){
     			this.showStep = 2;
+    			this.nextid = val.id
+    		}else{
+    			this.showStep = 3;
+    			this.getList()
     		}
     	},
         search(){

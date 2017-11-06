@@ -9,9 +9,6 @@
 				</router-link>
 			</div>
 		</div>
-		<div class="rightBlock" v-if="$route.path.indexOf('item')>0">
-			<router-view></router-view>
-		</div>
 		<div class="rightBlock" v-if="$route.path.indexOf('item')<0">
 			<div class="rightTabbar">
 				<div class="rt-item rtItemSelect">
@@ -88,7 +85,7 @@
 		</div>
 		<alert-v v-if="handleState" v-on:close="close" v-on:next="next" :btn="btn">
 			<span slot="name">处理</span>
-			<div class="tep-in" slot="con">
+			<div class="tep-in" slot="con" v-loading.body="loading">
 				<div class="as-item">
 					<p class="as-item-tit">
 						名称：
@@ -216,7 +213,7 @@
 					}
 				})
 			},
-			handle(type,item){
+			handle(type,item){//处理
 				this.handleState = true;
 				this.handleDetail.id = item.id;
 				this.handleDetail.maintainname = item.maintainname;
@@ -228,9 +225,52 @@
 				console.log(this.handleDetail)
 			},
 			next() {
+				console.log(2222);
+				if(Util.trim(this.handleDetail.maintainname).length<1){
+					this.$message.warning({message: '请填写名称',duration: Util.time()});
+					return;
+				};
+				if(Util.trim(this.handleDetail.maintaincontent).length<1){
+					this.$message.warning({message: '请填写内容',duration: Util.time()});
+					return;
+				};
+				if(Util.trim(this.handleDetail.assign).length<1){
+					this.$message.warning({message: '请填写指派',duration: Util.time()});
+					return;
+				};
+				if(Util.trim(this.handleDetail.advice).length<1){
+					this.$message.warning({message: '请填写处理意见',duration: Util.time()});
+					return;
+				};
 				
+				let params = {};
+				if(this.handleDetail.isdoaction == 1){
+					params.domethod = '处理';
+				}else{
+					params.domethod = '不处理';
+				};
+				params.id = this.handleDetail.id;
+				params.maintainname = this.handleDetail.maintainname;
+				params.maintaincontent = this.handleDetail.maintaincontent;
+				params.assign = this.handleDetail.assign;
+				params.advice = this.handleDetail.advice;
+				console.log(params)
+				let _this = this;
+                this.loading = true;
+                this.api.postN({
+                    url: '/maintain/doAlert',
+                    params: params,
+                    success: function(res){
+                    	_this.loading = false;
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            _this.close();
+                            _this.getList();
+                        }
+                    }
+                })
 			},
-			close() {
+			close() {//关闭处理弹窗
 				this.handleState = false;
 				this.handleDetail = {
 					maintainname: '',

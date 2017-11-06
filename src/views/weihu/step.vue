@@ -63,9 +63,26 @@
 					this.$message.warning({message: '请填写项目内容',duration: Util.time()});
 					return;
 				};
-				
-				this.$message.success({message: '添加成功',duration: Util.time()});
-				this.$emit('submitSuccess','1')
+				let _this = this;
+                this.loading = true;
+                this.api.postN({
+                    url: '/maintain/setMaintain',
+                    params: {
+                    	maintainname: this.message.name,
+                    	maintaincontent: this.message.detail,
+                    	isstar: this.message.state,
+                    },
+                    success: function(res){
+                    	_this.loading = false;
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            _this.$emit('submitSuccess',{
+                            	step: 1,
+                            	id: res.response.content.id
+                            })
+                        }
+                    }
+                })
 			}
 		},
 		created() {

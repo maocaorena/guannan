@@ -9,9 +9,6 @@
 		        </router-link>
         	</div>
         </div>
-        <div class="rightBlock" v-if="$route.path.indexOf('item')>0">
-            <router-view></router-view>
-        </div>
         <div class="rightBlock" v-if="$route.path.indexOf('item')<0">
             <div class="rightTabbar">
                 <div class="rt-item rtItemSelect">
@@ -31,7 +28,7 @@
                     <table class="list" border="1" cellspacing="0" cellpadding="0">
                         <colgroup>
                             <col width="4">
-                            <col width="4">
+                            <col width="10">
                             <col width="10">
                             <col width="11">
                             <col width="7">
@@ -64,7 +61,7 @@
                         <table class="list" border="1" cellspacing="0" cellpadding="0" :style="{width: width+'px'}">
                         <colgroup>
                             <col width="4">
-                            <col width="4">
+                            <col width="10">
                             <col width="10">
                             <col width="11">
                             <col width="7">
@@ -80,18 +77,17 @@
                                 <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
                                 <td v-else>{{index+1}} </td>
                                 <td>
-                                    <router-link :to="{path:'/monitoringInstall/list/item',query:{clientid:$route.query.clientid,id:item.id}}">
-                                        {{item.monitorplacename}}
-                                    </router-link>
+                                    {{item.maintainname}}
                                 </td>
-                                <td>{{item.monitormodel}}</td>
-                                <td>{{item.monitoruid}}</td>
-                                <td>{{item.monitorno}}</td>
-                                <td>{{item.monitormodel}}</td>
-                                <td>{{item.monitoruid}}</td>
-                                <td>{{item.monitorno}}</td>
-                                <td>{{item.monitormodel}}</td>
-                                <td>{{item.monitoruid}}</td>
+                                <td>{{item.maintainsettime}}</td>
+                                <td>{{item.maintaincontent}}</td>
+                                <td>{{item.domethod}}</td>
+                                <td>{{item.assign}}</td>
+                                <td>{{item.advice}}</td>
+                                <td>{{item.doresult}}</td>
+                                <td>{{item.alerttime}}</td>
+                                <td>{{item.dotime}}</td>
+                                <td>{{item.registertime}}</td>
                             </tr>
                             <tr v-if="list.length==0">
                                 <td colspan="11">暂无数据</td>
@@ -102,7 +98,7 @@
                 </div>
             </div>
             <div class="downpage">
-                <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
+                <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange"></pages-v>
             </div>
         </div>
     </div>
@@ -159,100 +155,25 @@ export default {
                 this.getList();
             }
         },
-        'checkboxModel': {
-            handler: function (val, oldVal) {
-                console.log(this.checkboxModel)
-                if (this.checkboxModel.length === this.list.length) {
-                    this.checked=true;
-                }else{
-                    this.checked=false;
-                };
-            },
-            deep: true
-        }
     },
     methods: {
         search(){
             this.pageNum = 1;
             this.getList();
         },
-        checkedAll() {
-            let _this = this;
-            if (this.checked) {//实现反选
-                _this.checkboxModel = [];
-                _this.list.forEach(function(item) {
-                    _this.checkboxModel.push(item.id);
-                });
-            }else{//实现全选
-                _this.checkboxModel = [];
-            }
-        },
         pagechange(val) {
             console.log(val + '页')
             this.pageNum = val;
             this.getList();
         },
-        selectall(val) {
-            console.log(val)
-        },
-        add(type,item) {//1是新增，2是编辑
-            if(type == 2){
-                this.$store.dispatch('SetAddId',item.id);
-            };
-            this.$store.dispatch('SetFirstStepAlert', {
-                type: type,
-                state: 1,
-            })
-        },
-        del(type,item){
-            let delname = '';
-            if(type==1){//1为单个删除，2为删除多个
-                this.checkboxModel = [];
-                this.checkboxModel.push(item.id);
-                delname = item.monitorplacename;
-            }else{
-                delname = '多个';
-                console.log('more',delname)
-            };
-            this.$confirm('是否删除'+delname+'?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.loading = true;
-                let _this = this;
-                let ids = this.checkboxModel.join(',')
-                this.api.postN({
-                    url: '/monitorplace/deleteMonitorPlaceById',
-                    params: {
-                        ids: ids,
-                    },
-                    success: function(res){
-                        console.log(res);
-                        _this.loading = false;
-                        if(res.response.info.code==100000){
-                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-                            _this.getList();
-                        }
-                    }
-                })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
-        },
         getList(){
             let _this = this;
             this.loading = true;
             this.api.postN({
-                url : '/monitorplace/findMonitorplaceByConditions',
+                url : '/maintain/historyDataQuery',
                 params: {
                     currentpage: this.pageNum,
                     pagesize: this.pagesize,
-                    clientid: _this.$route.query.clientid,
-                    monitorplacenameorinstallname: this.keyWords,
                 },
                 success: function(res){
                     console.log(res)
@@ -267,7 +188,7 @@ export default {
         },
     },
     created() {
-    	
+    	this.getList();
     },
     mounted() {
         this.width = this.$refs.list.getBoundingClientRect().width - 17;

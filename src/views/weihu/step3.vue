@@ -1,7 +1,7 @@
 <template>
 	<div class="firstStep">
 		<alert-v v-on:close="close" v-on:next="next" :btn="btn">
-			<span slot="name">添加周期</span>
+			<span slot="name">{{tomessage.type == 2?'修改周期':'添加周期'}}</span>
 			<div class="tep-in" slot="con">
 				<div class="as-item">
 					<p class="as-item-tit">
@@ -16,8 +16,8 @@
 						时间来源：
 					</p>
 					<div class="as-item-con flex">
-						<select name="">
-							<option value="">系统时间</option>
+						<select name="" v-model='selectId'>
+							<option v-for="item of timeList" :value="item.timesource">{{item.timesource}}</option>
 						</select>
 					</div>
 				</div>
@@ -34,10 +34,14 @@
 				btn: '确认添加',
 				message: {
 					detail: '',
-					state: 2,
-				}
+				},
+				timeList: [],
+				selectId: '',
 			}
 		},
+		props:[
+			'tomessage'
+		],
 		components: {
 			'alert-v': alert,
 		},
@@ -45,17 +49,62 @@
 			close() { //关闭弹窗
 				this.$emit('close','')
 			},
+			getTimeList(){//获取时间来源下拉框列表
+				let _this = this;
+                this.api.postN({
+                    url: '/maintain/getTimeSourceList',
+                    success: function(res){
+                        if(res.response.info.code==100000){
+                            if(res.response.content){
+                            	_this.selectId = res.response.content[0].id;
+                                _this.timeList = res.response.content;
+                            }else{
+                                _this.timeList = [];
+                            }
+                        }else{
+                            _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                        }
+                    }
+                })
+			},
 			next(){
 				if(Util.trim(this.message.detail).length<1){
 					this.$message.warning({message: '请填写保养计划',duration: Util.time()});
 					return;
 				};
-				this.$message.success({message: '添加成功',duration: Util.time()});
-				this.$emit('submitSuccess','1')
+				
+				let params = {
+                        maintainid: this.tomessage.id,
+                        maintainplan: Util.trim(this.message.detail),
+                        timesource: this.selectId,
+                   };
+				if(this.tomessage.type == 2){
+					params.id = this.tomessage.item.id
+				};
+				let _this = this;
+                this.api.postN({
+                    url: '/maintain/timePlanSet',
+                    params: params,
+                    success: function(res){
+                    	console.log('rtert')
+                        if(res.response.info.code==100000){
+                        	_this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                        	_this.$emit('submitSuccess','')
+                            	
+                        }else{
+                            _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                        }
+                    }
+                })
 			}
 		},
 		created() {
-
+			this.getTimeList();
+			if(this.tomessage.type == 2){
+				this.message.detail = this.tomessage.item.maintainplan;
+				this.selectId = this.tomessage.item.timesource;
+				console.log(this.selectId)
+			}
 		}
 	}
 </script>

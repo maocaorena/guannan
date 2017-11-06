@@ -31,27 +31,27 @@
 								<col width="7">
 							</colgroup>
 							<tbody class="list-con">
-								<tr v-for="(item,index) of 5" class="list-con-item">
+								<tr v-for="(item,index) of list" class="list-con-item">
 									<td>
 										{{index}}
 									</td>
 									<td>
-										{{item.communicatename}}
+										{{item.maintainplan}}小时
 									</td>
-									<td>{{item.communicatetype}}</td>
+									<td>{{item.timesource}}</td>
 									<td>
 										<a href="javascript:;" class="mode" @click="dele(item)">删除</a>
-										<a href="javascript:;" class="mode" @click="add(item)">编辑</a>
+										<a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
 									</td>
 								</tr>
 							</tbody>
 						</table>
-						<button class="add-module" type="button" name="button" @click="add">请添加信息</button>
+						<button class="add-module" type="button" name="button" @click="add(1)">请添加信息</button>
 					</div>
 				</div>
 			</div>
 		</alert-v>
-		<stepin-v v-if="showAdd" v-on:submitSuccess="submitSuccess" v-on:close="closeAdd"></stepin-v>
+		<stepin-v v-if="showAdd" :tomessage="message" v-on:submitSuccess="submitSuccess" v-on:close="closeAdd"></stepin-v>
 	</div>
 </template>
 <script type="text/javascript">
@@ -68,34 +68,95 @@
 					state: 2,
 				},
 				showAdd: false,
+				list: [],
+				message: {},
 			}
 		},
+		props:[
+			'id'
+		],
 		components: {
 			'alert-v': alert,
 			'stepin-v': step3,
 		},
 		methods: {
+			getList(){//根据id获取保养计划列表
+				let _this = this;
+                this.loading = true
+                this.api.postN({
+                    url: '/maintain/getTimePlan',
+                    params: {
+                        maintainid: _this.id
+                    },
+                    success: function(res){
+                        _this.loading = false;
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            if(res.response.content){
+                                _this.list = res.response.content;
+                            }else{
+                                _this.list = [];
+                            }
+                        }else{
+                            _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                        }
+                    }
+                })
+			},
 			close() { //关闭弹窗
 				this.$emit('close', '')
 			},
 			next() {
-				
+				this.$emit('submitSuccess',{
+                	step: 2,
+                })
 			},
-			add(){
-				this.showAdd = true;
+			add(type,item){
+				if(type==1){//新增
+					this.message = {
+						type: 1,
+						id: this.id,
+					}
+					this.showAdd = true;
+				}else{//编辑
+					this.message = {
+						type: 2,
+						id: this.id,
+						item: item,
+					}
+					this.showAdd = true;
+				}
 			},
-			dele(){
-				
+			dele(item){
+				let _this = this;
+                this.loading = true
+                this.api.postN({
+                    url: '/maintain/deleteTimePlan',
+                    params: {
+                        ids: item.id,
+                    },
+                    success: function(res){
+                        _this.loading = false;
+                        if(res.response.info.code==100000){
+                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                            _this.getList();
+                        }else{
+                            _this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                        }
+                    }
+                })
 			},
 			submitSuccess(){
+				console.log('ffff')
 				this.showAdd = false;
+				this.getList();
 			},
 			closeAdd(){
 				this.showAdd = false;
 			}
 		},
 		created() {
-
+			this.getList();
 		}
 	}
 </script>
