@@ -14,7 +14,8 @@ const user = {
     },
     actions: {
         //改变新增弹窗状态
-        ChangeDialogState({ commit }, data) {
+        ChangeAccountDialogState({ commit }, data) {
+            console.log(data);
             commit('SET_SHOW_ALERT', data);
         },
         

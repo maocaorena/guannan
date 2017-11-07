@@ -22,5 +22,6 @@ const getters = {
     thirdAddMessage: state => state.monitorinstall.thirdAddMessage,
     // 新增用弹窗
     dialog: state => state.user.dialog,
+    accoutDialog: state => state.accout.dialog
 };
 export default getters
