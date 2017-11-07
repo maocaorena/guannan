@@ -50,7 +50,7 @@
             <thead>
               <tr>
                 <th>
-                    <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
+                  <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
                 </th>
                 <th>序号</th>
                 <th>所在省份</th>
@@ -85,8 +85,7 @@
               </tr>
               <tr v-for="(item,index) of items" class="list-con-item">
                 <td>
-                    <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.clientid">
-                  
+                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.systemId">
                 </td>
                 <td>
                   {{index}}
@@ -164,7 +163,6 @@
             </select>
           </div>
         </div>
-
         <div class="as-item">
           <p class="as-item-tit">
             单位地址：
@@ -173,7 +171,6 @@
             <input type="text" name="" value="" v-model="address">
           </div>
         </div>
-
         <div class="as-item">
           <p class="as-item-tit">
             备注：
@@ -207,11 +204,12 @@ export default {
       provincesArr: [],
       citysArr: [],
       // 增加相关
+      clientid: "",
       clientname: "",
       address: "",
       name: "",
       phone: "",
-      email: "ali@alibaba.com",
+      email: "",
       remark: "",
       cityid: "",
       provinceid: "",
@@ -298,8 +296,7 @@ export default {
         } else {
           self.ifPage = false;
         }
-      }).fail(function(res) {
-      })
+      }).fail(function(res) {})
     },
     getBar() {
       let _this1 = this;
@@ -324,13 +321,13 @@ export default {
         state: true,
       });
       this._getProvices();
-      if(type == 2) {
+      if (type == 2) {
         self.addType = 2;
         let url = "client/findClientById";
         let data = {
           clientid: id
         };
-        this.api.handleAjax(url,data).done(function(res){
+        this.api.handleAjax(url, data).done(function(res) {
           // console.log(res);
           self.clientid = res.clientid;
           self.clientname = res.clientname;
@@ -351,27 +348,27 @@ export default {
     },
 
     next() {
-      if(!this.clientname) {
+      if (!this.clientname) {
         this.$message("客户名称不能为空");
         return;
       }
-      if(!this.name) {
+      if (!this.name) {
         this.$message("联系人不能为空");
         return;
       }
-      if(!this.phone) {
+      if (!this.phone) {
         this.$message("联系电话不能为空");
         return;
       }
-      if(!this.provinceid) {
+      if (!this.provinceid) {
         this.$message("所在省份不能为空");
         return;
       }
-      if(!this.cityid) {
+      if (!this.cityid) {
         this.$message("所在地市不能为空");
         return;
       }
-      if(!this.address) {
+      if (!this.address) {
         this.$message("单位地址不能为空");
         return;
       }
@@ -388,13 +385,14 @@ export default {
         cityid: this.cityid,
         provinceid: this.provinceid,
       };
-      if(self.addType == 2) {
+      if (self.addType == 2) {
         url = "client/updateClientById"
       }
       this.api.handleAjax(url, data).done(function(res) {
-         self.close();
-         self.getData();
-      }).fail(function(res) {``
+        self.close();
+        self.getData();
+      }).fail(function(res) {
+        ``
         this.$message(res)
         // console.log(res)
       })
@@ -403,7 +401,7 @@ export default {
     _getProvices() {
       let self = this;
       let url = "user/getProvinceList";
-      this.api.handleAjax(url).done(function(res){
+      this.api.handleAjax(url).done(function(res) {
         self.provincesArr = res;
       })
     },
@@ -413,7 +411,7 @@ export default {
       let data = {
         provinceid: this.provinceid
       }
-      this.api.handleAjax(url,data).done(function(res){
+      this.api.handleAjax(url, data).done(function(res) {
         self.citysArr = res;
       })
 
@@ -424,7 +422,7 @@ export default {
       let data = {
         cityid: this.cityid
       }
-      this.api.handleAjax(url,data).done(function(res){
+      this.api.handleAjax(url, data).done(function(res) {
         self.areasArr = res;
       })
 
@@ -447,7 +445,7 @@ export default {
       },
       deep: true
     },
-    provinceid:'_getCitys'
+    provinceid: '_getCitys'
   },
   mounted() {
     this.width = this.$refs.list.getBoundingClientRect().width - 17;
