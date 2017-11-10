@@ -10,7 +10,7 @@
     <div class="rightBlock">
       <div class="rightTabbar">
         <div class="rt-item rtItemSelect">
-          账号列表
+          角色管理
         </div>
         <div class="rt-handle">
           <div class="handle-item">
@@ -23,7 +23,7 @@
             <button type="button" name="button">批量删除</button>
           </div>
           <div class="handle-item">
-            <button type="button" name="button"  @click="add(1)">增加账号</button>
+            <button type="button" name="button"  @click="add(1)">增加角色</button>
           </div>
         </div>
       </div>
@@ -36,7 +36,6 @@
               <col width="8">
               <col width="18">
               <col width="10">
-              <col width="10">
               <col width="11">
             </colgroup>
             <thead>
@@ -45,10 +44,9 @@
                   <input type='checkbox' v-model='checked' v-on:change='checkedAll'>
                 </th>
                 <th>序号</th>
-                <th>登录名</th>
-                <th>真实姓名</th>
-                <th>联系方式</th>
-                <th>状态</th>
+                <th>角色名称</th>
+                <th>角色类型</th>
+                <th>备注</th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -62,29 +60,25 @@
               <col width="8">
               <col width="18">
               <col width="10">
-              <col width="10">
               <col width="11">
             </colgroup>
             <tbody class="list-con">
               <tr v-if="!ifPage">
-                <td colspan="7">暂无数据</td>
+                <td colspan="6">暂无数据</td>
               </tr>
               <tr v-for="(item,index) of items" class="list-con-item">
                 <!-- 操作 -->
                 <td>
-                  <input type="checkbox">
+                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.roleId">
                 </td>
                 <td>{{index}}</td>
-                <td>{{item.userName}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.phone}}</td>
-                <td v-if="item.isStar == 1">
-                启用</td>
-                <td  v-if="item.isStar == 0">
-                启用</td>
+                <td>{{item.roleName}}</td>
+                <td>{{item.roleType}}</td>
+                <td>{{item.roleRemark}}</td>
+
                 <td>
-                  <a href="javascript:;" class="mode" @click="deleteData(item.systemId,2)">删除</a>
-                  <a href="javascript:;" class="mode" @click="add(2,item.systemId)">编辑</a>
+                  <a href="javascript:;" class="mode" @click="deleteData(item.roleId,2)">删除</a>
+                  <a href="javascript:;" class="mode" @click="add(2,item.roleId)">编辑</a>
                   <a href="javascript:;" class="mode">设置角色</a>
                 </td>
               </tr>
@@ -98,12 +92,12 @@
     </div>
     <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
 ">
-      <span slot="name">添加客户</span>
+      <span slot="name">添加角色</span>
       <div class="tep-in" slot="con">
         <input type="hidden" v-model="systemId">
         <div class="as-item" style="margin-top: 15px">
           <p class="as-item-tit">
-            用户名：
+            角色名称：
           </p>
           <div class="as-item-con">
             <input type="text" name="" value="" v-model="username">
@@ -111,7 +105,7 @@
         </div>
         <div class="as-item">
           <p class="as-item-tit">
-            密码：
+            角色类型：
           </p>
           <div class="as-item-con">
             <input type="password" name="" value="" v-model="password">
@@ -119,26 +113,10 @@
         </div>
         <div class="as-item">
           <p class="as-item-tit">
-            真实姓名：
+            备注：
           </p>
           <div class="as-item-con">
             <input type="text" name="" value="" v-model="name">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            手机号：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="phone">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            邮箱：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="email">
           </div>
         </div>
       </div>
@@ -252,7 +230,7 @@ export default {
     getData() {
       var self = this;
       console.log(0)
-      let url = "selectUserList";
+      let url = "selectRoleList";
       let data = {
         currentpage: this.pageNum,
         pagesize: this.pageSize,
@@ -325,10 +303,7 @@ export default {
         this.$message("密码不能为空");
         return;
       }
-      if (!this.phone) {
-        this.$message("联系电话不能为空");
-        return;
-      }
+      
       
       var self = this;
       let url = "addSystemUser";

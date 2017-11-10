@@ -278,7 +278,6 @@ export default {
     },
     getData() {
       var self = this;
-      console.log(0)
       let url = "/client/findClientByConditions";
       let data = {
         currentpage: this.pageNum,

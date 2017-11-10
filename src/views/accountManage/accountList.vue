@@ -1,7 +1,7 @@
 <template>
   <div id="accountList" class="wrapper">
     <div class="leftBlock">
-      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" v-for="(item,index) of leftbars">
+      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" keys="index" class="first-list type1" v-for="(item,index) of leftbars">
         <p class="first-item">
           {{item.tit}}
         </p>
@@ -23,7 +23,7 @@
             <button type="button" name="button">批量删除</button>
           </div>
           <div class="handle-item">
-            <button type="button" name="button"  @click="add(1)">增加账号</button>
+            <button type="button" name="button" @click="add(1)">增加账号</button>
           </div>
         </div>
       </div>
@@ -79,9 +79,9 @@
                 <td>{{item.name}}</td>
                 <td>{{item.phone}}</td>
                 <td v-if="item.isStar == 1">
-                启用</td>
-                <td  v-if="item.isStar == 0">
-                启用</td>
+                  启用</td>
+                <td v-if="item.isStar == 0">
+                  禁用</td>
                 <td>
                   <a href="javascript:;" class="mode" @click="deleteData(item.systemId,2)">删除</a>
                   <a href="javascript:;" class="mode" @click="add(2,item.systemId)">编辑</a>
@@ -178,7 +178,7 @@ export default {
       password: "",
       name: "",
       phone: "",
-      email: "ali@alibaba.com",
+      email: "",
       // 添加1 or 更新2
       addType: 1
     }
@@ -188,15 +188,7 @@ export default {
     'alert-v': alert
   },
   created() {
-    // let tabs = [
-    //     {
-    //         isurl : 'accountList',
-    //         name : '账号列表'
-    //     }
-    // ];
-    // this.$store.dispatch('ChangeRightbar',tabs)
     this.getData();
-
   },
   computed: {
     addDialog() {
@@ -251,13 +243,12 @@ export default {
     },
     getData() {
       var self = this;
-      console.log(0)
-      let url = "selectUserList";
+      let url = "/selectUserList";
       let data = {
-        currentpage: this.pageNum,
-        pagesize: this.pageSize,
-        keywords: this.keywords
-      }
+        currentpage: self.pageNum,
+        pagesize: self.pageSize,
+        keywords: self.keywords
+      };
       this.api.handleAjax(url, data).done(function(res) {
         // console.log(res.list.length);
         if (res.list.length > 0) {
@@ -329,7 +320,7 @@ export default {
         this.$message("联系电话不能为空");
         return;
       }
-      
+
       var self = this;
       let url = "addSystemUser";
       let data = {

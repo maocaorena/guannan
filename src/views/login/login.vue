@@ -57,7 +57,7 @@ export default {
             };
             this.api.handleAjax(url,data).done(function(res){
                 Util.setItem("info", res)
-                this.$router.push('/monitoringRun')
+                self.$router.push('/monitoringRun')
             }).fail(function(res) {
                 // alert(res);
                 self.$message.error(res);

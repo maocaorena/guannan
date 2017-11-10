@@ -26,6 +26,11 @@ const clientList = r => require.ensure([], () => r(require('../views/clientManag
 const accountList = r => require.ensure([], () => r(require('../views/accountManage/accountList.vue')), 'accountList');//账号列表
 const roleList = r => require.ensure([], () => r(require('../views/accountManage/roleList.vue')), 'roleList');//角色列表
 
+const setting = r => require.ensure([], () => r(require('../views/weihu/setting.vue')), 'setting');//设置
+const warn = r => require.ensure([], () => r(require('../views/weihu/warn.vue')), 'warn');//账号列表
+const dispose = r => require.ensure([], () => r(require('../views/weihu/dispose.vue')), 'dispose');//账号列表
+const his = r => require.ensure([], () => r(require('../views/weihu/history.vue')), 'his');//账号列表
+
 
 export const routes = [
     {
@@ -145,6 +150,31 @@ export const routes = [
             {// 角色列表
                 path: '/accountManage/roleList',
                 component: roleList,
+            },
+        ]
+    },
+    // 维护保养
+    {
+        path: '/weihu',
+        component: layout,
+        name: '维护保养',
+        redirect: '/weihu/setting',
+        children:[
+            {// 设置
+                path: '/weihu/setting',
+                component: setting,
+            },
+            {// 告警处理
+                path: '/weihu/warn',
+                component: warn,
+            },
+            {// 处理登记
+                path: '/weihu/dispose',
+                component: dispose,
+            },
+            {// 历史查询
+                path: '/weihu/history',
+                component: his,
             },
         ]
     },
