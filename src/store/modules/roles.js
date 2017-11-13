@@ -14,11 +14,10 @@ const user = {
     },
     actions: {
         //改变新增弹窗状态
-        ChangeAccountDialogState({ commit }, data) {
+        ChangeRoleDialogState({ commit }, data) {
             console.log(data);
             commit('SET_SHOW_ALERT', data);
-        },
-        
+        }
     }
 };
 

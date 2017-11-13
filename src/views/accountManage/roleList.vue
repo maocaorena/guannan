@@ -78,8 +78,8 @@
 
                 <td>
                   <a href="javascript:;" class="mode" @click="deleteData(item.roleId,2)">删除</a>
-                  <a href="javascript:;" class="mode" @click="add(2,item.roleId)">编辑</a>
-                  <a href="javascript:;" class="mode">设置角色</a>
+                  <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
+                  <a href="javascript:;" class="mode">设置权限</a>
                 </td>
               </tr>
             </tbody>
@@ -92,15 +92,15 @@
     </div>
     <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
 ">
-      <span slot="name">添加角色</span>
+      <span slot="name">{{moduleTitle}}</span>
       <div class="tep-in" slot="con">
-        <input type="hidden" v-model="systemId">
+        <input type="hidden" v-model="roleid">
         <div class="as-item" style="margin-top: 15px">
           <p class="as-item-tit">
             角色名称：
           </p>
           <div class="as-item-con">
-            <input type="text" name="" value="" v-model="username">
+            <input type="text" name="" value="" v-model="rolename">
           </div>
         </div>
         <div class="as-item">
@@ -108,7 +108,7 @@
             角色类型：
           </p>
           <div class="as-item-con">
-            <input type="password" name="" value="" v-model="password">
+            <input type="text" name="" value="" v-model="roletype">
           </div>
         </div>
         <div class="as-item">
@@ -116,7 +116,7 @@
             备注：
           </p>
           <div class="as-item-con">
-            <input type="text" name="" value="" v-model="name">
+            <input type="text" name="" value="" v-model="roleremark">
           </div>
         </div>
       </div>
@@ -141,6 +141,7 @@ export default {
       ],
       width: "",
       btn: '确定',
+      moduleTitle: "添加角色",      
       pageNum: 1,
       pageSize: 10,
       total: 200,
@@ -151,12 +152,10 @@ export default {
       width: '',
       ifPage: false,
       // 增加相关
-      systemId: "",
-      username: "",
-      password: "",
-      name: "",
-      phone: "",
-      email: "ali@alibaba.com",
+      roleid: "",
+      rolename: "",
+      roletype: "",
+      roleremark: "",
       // 添加1 or 更新2
       addType: 1
     }
@@ -178,7 +177,7 @@ export default {
   },
   computed: {
     addDialog() {
-      return this.$store.getters.accoutDialog.state;
+      return this.$store.getters.roleDialog.state;
     }
   },
   methods: {
@@ -193,6 +192,7 @@ export default {
         _this.checkboxModel = [];
       }
     },
+    // 删除数据
     deleteData(ids, type) {
       var self = this;
       var ids = ids;
@@ -206,7 +206,7 @@ export default {
         type: 'warning'
       }).then(() => {
         self.loading = true;
-        let url = "dropUser";
+        let url = "/deleteRole";
         let data = {
           id: ids
         }
@@ -214,7 +214,7 @@ export default {
           self.$message.success({ message: "删除成功！", duration: Util.time() });
           self.getData();
         }).fail(function(res) {
-          console.log(res);
+          // console.log(res);
         })
 
       }).catch(() => {
@@ -230,7 +230,7 @@ export default {
     getData() {
       var self = this;
       console.log(0)
-      let url = "selectRoleList";
+      let url = "/selectRoleList";
       let data = {
         currentpage: this.pageNum,
         pagesize: this.pageSize,
@@ -249,42 +249,28 @@ export default {
         }
       }).fail(function(res) {})
     },
-    getBar() {
-      let _this1 = this;
-      this.api.postN({
-        url: "/client/findProvinceAndCompanys",
-        success: function(res) {
-          let _res = res.response;
-          if (_res.info.code == 100000) {
-            _this1.leftbars = _res.content;
-            console.log(_this1.$route.path.indexOf('item'))
-            if (!_this1.$route.query.clientid && _this1.$route.path.indexOf('item') < 0) {
-              // _this1.$router.replace({path:'/monitoringInstall/list',query:{clientid: _res.content[0].clientList[0].clientid}})
-            }
-          }
-        }
-      });
-    },
-    add(type, id) {
+    add(type, param) {
       var self = this;
-      this.$store.dispatch('ChangeAccountDialogState', {
+      this.$store.dispatch('ChangeRoleDialogState', {
         type: type,
         state: true,
       });
+
       if (type == 2) {
         self.addType = 2;
-        let url = "addSystemUser";
-        let data = {
-          systemId: id
-        };
-        this.api.handleAjax(url, data).done(function(res) {
-          // console.log(res);
-          self.systemId = res.systemId;
-          self.username = res.username;
-          self.password = res.password;
-          self.name = res.name;
-          self.phone = res.phone;
-        })
+        self.roleid = param.roleId;
+        self.rolename = param.roleName;
+        self.roletype = param.roleType;
+        self.roleremark = param.roleRemark;
+        // this.api.handleAjax(url, data).done(function(res) {
+        //   // console.log(res);
+        //   self.roleid = "";
+        //   self.rolename = "";
+        //   self.roletype = "";
+        //   self.roleremark = "";
+        //   self.close();
+        //   self.getData();
+        // })
       }
     },
 
@@ -295,28 +281,26 @@ export default {
     },
 
     next() {
-      if (!this.username) {
-        this.$message("用户名不能为空");
+      if (!this.rolename) {
+        this.$message("角色名称不能为空");
         return;
       }
-      if (!this.password) {
-        this.$message("密码不能为空");
+      if (!this.roletype) {
+        this.$message("角色类型不能为空");
         return;
       }
       
       
       var self = this;
-      let url = "addSystemUser";
+      let url = "/addRole";
       let data = {
-        systemid: this.systemid,
-        username: this.username,
-        password: this.password,
-        name: this.name,
-        phone: this.phone,
-        email: this.email
+        roleid: this.roleid,
+        rolename: this.rolename,
+        roletype: this.roletype,
+        roleremark: this.roleremark,
       };
       if (self.addType == 2) {
-        url = "modifyUser"
+        url = "/modifyRole"
       }
       this.api.handleAjax(url, data).done(function(res) {
         self.close();

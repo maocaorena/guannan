@@ -85,7 +85,7 @@
                 <td>
                   <a href="javascript:;" class="mode" @click="deleteData(item.systemId,2)">删除</a>
                   <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
-                  <a href="javascript:;" class="mode" @click="setRoles(item.systemId)">设置角色</a>
+                  <a href="javascript:;" class="mode">设置角色</a>
                 </td>
               </tr>
             </tbody>
@@ -96,14 +96,58 @@
         <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
       </div>
     </div>
-    <accountDialog :item="accountData" :addType="addType" v-if="addDialog" @getParentData="getData"></accountDialog>
-    <roleDialog :userId="userId" :addType="addType" v-if="roleDialog" @getParentData="getData"></roleDialog>
+    <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
+">
+      <span slot="name">{{moduleTitle}}</span>
+      <div class="tep-in" slot="con">
+        <input type="hidden" v-model="systemId">
+        <div class="as-item" style="margin-top: 15px">
+          <p class="as-item-tit">
+            用户名：
+          </p>
+          <div class="as-item-con">
+            <input type="text" name="" value="" v-model="username">
+          </div>
+        </div>
+        <div class="as-item" v-if="ifModify">
+          <p class="as-item-tit">
+            密码：
+          </p>
+          <div class="as-item-con">
+            <input type="password" name="" value="" v-model="password">
+          </div>
+        </div>
+        <div class="as-item">
+          <p class="as-item-tit">
+            真实姓名：
+          </p>
+          <div class="as-item-con">
+            <input type="text" name="" value="" v-model="name">
+          </div>
+        </div>
+        <div class="as-item">
+          <p class="as-item-tit">
+            手机号：
+          </p>
+          <div class="as-item-con">
+            <input type="text" name="" value="" v-model="phone">
+          </div>
+        </div>
+        <div class="as-item">
+          <p class="as-item-tit">
+            邮箱：
+          </p>
+          <div class="as-item-con">
+            <input type="text" name="" value="" v-model="email">
+          </div>
+        </div>
+      </div>
+    </alert-v>
   </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
-import accountDialog from './accountDialog.vue';
-import roleDialog from './roleDialog.vue';
+import addAccount from './addAccount.vue';
 import alert from '../../components/alert.vue';
 import { Util } from '../../lib/util.js';
 
@@ -132,8 +176,6 @@ export default {
       width: '',
       ifModify: true,
       ifPage: false,
-      accountData: {},
-      userId: "",
       // 增加相关
       systemId: "",
       username: "",
@@ -148,8 +190,7 @@ export default {
   components: {
     'pages-v': pages,
     'alert-v': alert,
-    accountDialog,
-    roleDialog
+    addAccount
   },
   created() {
     this.getData();
@@ -157,10 +198,7 @@ export default {
   computed: {
     addDialog() {
       return this.$store.getters.accountDialog.state;
-    },
-    roleDialog() {
-      return this.$store.getters.roleDialog.state;
-    },
+    }
   },
   methods: {
     checkedAll() {
@@ -236,16 +274,65 @@ export default {
         state: true,
       });
       if (type == 2) {
+        self.moduleTitle = "编辑帐号",
         self.addType = 2;
-        self.accountData = param
+        self.ifModify = false;
+        self.systemId = param.systemId;
+        self.username = param.userName;
+        self.name = param.name;
+        self.phone = param.phone;
+        self.email = param.email;
       }
     },
-    setRoles(id) {
-      this.$store.dispatch('ChangeRoleDialogState', {
-        type: type,
-        state: true,
-      });
-      // this.systemId = id;
+
+    close() {
+      this.$store.dispatch('ChangeDialogState', {
+        state: false,
+      })
+    },
+
+    next() {
+      if (!this.username) {
+        this.$message("用户名不能为空");
+        return;
+      }
+      if (this.addType == 1) {
+        if (!this.password) {
+          this.$message("密码不能为空");
+          return;
+        }
+      }
+      if (!this.phone) {
+        this.$message("联系电话不能为空");
+        return;
+      }
+
+      var self = this;
+      let url = "/addSystemUser";
+      let data = {
+        systemid: this.systemid,
+        username: this.username,
+        // password: this.password,
+        name: this.name,
+        phone: this.phone,
+        email: this.email
+      };
+      if (self.addType == 2) {
+        url = "/modifyUser";
+        data = {
+          systemid: this.systemid,
+          username: this.username,
+          name: this.name,
+          phone: this.phone,
+          email: this.email
+        };
+      }
+      this.api.handleAjax(url, data).done(function(res) {
+        self.close();
+        self.getData();
+      }).fail(function(res) {
+        self.$message(res)
+      })
     }
   },
   mounted() {
