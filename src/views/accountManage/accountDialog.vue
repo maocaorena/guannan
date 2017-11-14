@@ -124,7 +124,7 @@ export default {
       if (self.addType == 2) {
         url = "/modifyUser";
         data = {
-          systemid: this.systemid,
+          systemid: this.systemId,
           username: this.username,
           // password: this.password,
           name: this.name,
