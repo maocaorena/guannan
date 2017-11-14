@@ -22,7 +22,12 @@ const getters = {
     thirdAddMessage: state => state.monitorinstall.thirdAddMessage,
     // 新增用弹窗
     dialog: state => state.user.dialog,
+
     accountDialog: state => state.account.dialog,
-    roleDialog: state => state.account.dialogRole
+    roleDialog: state => state.account.dialogRole,
+
+    // 角色
+    roleListDialog: state => state.roles.dialog,
+    rightDialog: state => state.roles.dialogRight,
 };
 export default getters

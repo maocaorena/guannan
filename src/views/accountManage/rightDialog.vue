@@ -1,12 +1,11 @@
 <template>
   <div class="wrapper">
-    <alert-v v-on:close="close" height="280px" width="400px" :btn="btn" v-on:next="next" v-if="addDialog
-">
+    <alert-v v-on:close="close" height="480px" width="300px" :btn="btn" v-on:next="next" v-if="addDialog">
       <span slot="name">分配角色</span>
       <div class="tep-in" slot="con">
           <div class="items">
             <div class="item" v-for="(item,index) of items">
-              <label><input type="checkbox" v-model='checkboxModel' :value="item.roleId"> {{item.roleName}}</label>
+              <label><input type="checkbox" v-model='checkboxModel' :value="item.permissionId"> {{item.permissionName}}</label>
             </div>
           </div>
       </div>
@@ -28,7 +27,7 @@ export default {
       // 增加相关
     }
   },
-  props: ["userId","addType"],
+  props: ["roleId","addType"],
   components: {
     'alert-v': alert
   },
@@ -38,13 +37,13 @@ export default {
   },
   computed: {
     addDialog() {
-      return this.$store.getters.roleDialog.state;
+      return this.$store.getters.rightDialog.state;
     }
   },
   methods: {
 
     close() {
-      this.$store.dispatch('ChangeRoleDialogState', {
+      this.$store.dispatch('ChangeRightDialogState', {
         state: false,
       })
     },
@@ -52,9 +51,9 @@ export default {
     next() {
 
       var self = this;
-      let url = "/setRole";
+      let url = "/setPermission";
       let data = {
-        id: self.userId,
+        id: self.roleId,
         list: "["+self.checkboxModel.toString()+"]"
       };
 
@@ -69,22 +68,21 @@ export default {
     getSetedData() {
       // console.log(this.userId)
       var self = this;
-      let url = "/getRoleList";
+      let url = "/getPermission";
       let data = {
-        id: self.userId
+        idList: "["+self.roleId+"]"
       }
       this.api.handleAjax(url,data).done(function(res){
           res.list.forEach(function(item){
-            self.checkboxModel.push(item.roleId);
+            self.checkboxModel.push(item.permissionId);
           })
-      })
-     
+      })     
     },
     getData() {
       var self = this;
-      let url = "/selectRoleList";
+      let url = "/selectAllPermission";
       let data = {
-        pagesize: 20,
+        pagesize: 40,
       };
       this.api.handleAjax(url, data).done(function(res) {
         // console.log(res.list.length);
@@ -93,19 +91,6 @@ export default {
         }
       }).fail(function(res) {})
     }
-  },
-  watch: {
-      // 'checkboxModel': {
-      //     handler: function (val, oldVal) {
-      //         console.log(this.checkboxModel)
-      //         if (this.checkboxModel.length === this.list.length) {
-      //             this.checked=true;
-      //         }else{
-      //             this.checked=false;
-      //         };
-      //     },
-      //     deep: true
-      // }
   }
 }
 
@@ -114,9 +99,8 @@ export default {
 .items {
   padding: 20px;
   padding-right: 0;
+  text-align: left;
   .item {
-    display: inline-block;
-    float: left;
     padding-right: 20px;
     margin-bottom: 10px;
   }

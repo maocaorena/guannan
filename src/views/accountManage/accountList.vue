@@ -235,6 +235,7 @@ export default {
         type: type,
         state: true,
       });
+      
       if (type == 2) {
         self.addType = 2;
         self.accountData = param
@@ -242,10 +243,9 @@ export default {
     },
     setRoles(id) {
       this.$store.dispatch('ChangeRoleDialogState', {
-        type: type,
         state: true,
       });
-      // this.systemId = id;
+      this.userId = id;
     }
   },
   mounted() {

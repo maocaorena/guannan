@@ -79,7 +79,7 @@
                 <td>
                   <a href="javascript:;" class="mode" @click="deleteData(item.roleId,2)">删除</a>
                   <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
-                  <a href="javascript:;" class="mode">设置权限</a>
+                  <a href="javascript:;" class="mode" @click = "setRights(item.roleId)">设置权限</a>
                 </td>
               </tr>
             </tbody>
@@ -90,42 +90,17 @@
         <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
       </div>
     </div>
-    <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
-">
-      <span slot="name">{{moduleTitle}}</span>
-      <div class="tep-in" slot="con">
-        <input type="hidden" v-model="roleid">
-        <div class="as-item" style="margin-top: 15px">
-          <p class="as-item-tit">
-            角色名称：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="rolename">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            角色类型：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="roletype">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            备注：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="roleremark">
-          </div>
-        </div>
-      </div>
-    </alert-v>
+    <roleListDialog :item="roleData" :addType="addType" v-if="addDialog" @getParentData="getData"></roleListDialog>
+
+    <rightDialog :roleId="roleModId" :addType="addType" v-if="rightDialog" @getParentData="getData"></rightDialog>
+
   </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
 import alert from '../../components/alert.vue';
+import roleListDialog from './roleListDialog.vue';
+import rightDialog from './rightDialog.vue';
 
 export default {
   data() {
@@ -151,33 +126,27 @@ export default {
       checked: false,
       width: '',
       ifPage: false,
+      roleData: {},
+      roleModId: "",
       // 增加相关
-      roleid: "",
-      rolename: "",
-      roletype: "",
-      roleremark: "",
-      // 添加1 or 更新2
       addType: 1
     }
   },
   components: {
     'pages-v': pages,
-    'alert-v': alert
+    roleListDialog,
+    rightDialog
   },
   created() {
-    // let tabs = [
-    //     {
-    //         isurl : 'accountList',
-    //         name : '账号列表'
-    //     }
-    // ];
-    // this.$store.dispatch('ChangeRightbar',tabs)
     this.getData();
 
   },
   computed: {
     addDialog() {
-      return this.$store.getters.roleDialog.state;
+      return this.$store.getters.roleListDialog.state;
+    },
+    rightDialog() {
+      return this.$store.getters.rightDialog.state;      
     }
   },
   methods: {
@@ -229,7 +198,6 @@ export default {
     },
     getData() {
       var self = this;
-      console.log(0)
       let url = "/selectRoleList";
       let data = {
         currentpage: this.pageNum,
@@ -251,64 +219,30 @@ export default {
     },
     add(type, param) {
       var self = this;
-      this.$store.dispatch('ChangeRoleDialogState', {
+      this.$store.dispatch('ChangeRoleListDialogState', {
         type: type,
         state: true,
       });
 
       if (type == 2) {
         self.addType = 2;
-        self.roleid = param.roleId;
-        self.rolename = param.roleName;
-        self.roletype = param.roleType;
-        self.roleremark = param.roleRemark;
-        // this.api.handleAjax(url, data).done(function(res) {
-        //   // console.log(res);
-        //   self.roleid = "";
-        //   self.rolename = "";
-        //   self.roletype = "";
-        //   self.roleremark = "";
-        //   self.close();
-        //   self.getData();
-        // })
+        self.roleData = param
       }
+      // if (type == 2) {
+      //   self.addType = 2;
+      //   self.roleid = param.roleId;
+      //   self.rolename = param.roleName;
+      //   self.roletype = param.roleType;
+      //   self.roleremark = param.roleRemark;
+      // }
     },
-
-    close() {
-      this.$store.dispatch('ChangeDialogState', {
-        state: false,
-      })
-    },
-
-    next() {
-      if (!this.rolename) {
-        this.$message("角色名称不能为空");
-        return;
-      }
-      if (!this.roletype) {
-        this.$message("角色类型不能为空");
-        return;
-      }
-      
-      
-      var self = this;
-      let url = "/addRole";
-      let data = {
-        roleid: this.roleid,
-        rolename: this.rolename,
-        roletype: this.roletype,
-        roleremark: this.roleremark,
-      };
-      if (self.addType == 2) {
-        url = "/modifyRole"
-      }
-      this.api.handleAjax(url, data).done(function(res) {
-        self.close();
-        self.getData();
-      }).fail(function(res) {
-        this.$message(res)
-      })
+    setRights(id) {
+      this.$store.dispatch('ChangeRightDialogState', {
+        state: true,
+      });
+      this.roleModId = id;
     }
+    
   },
   mounted() {
     this.width = this.$refs.list.getBoundingClientRect().width - 17;
