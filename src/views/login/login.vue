@@ -9,21 +9,13 @@
                     <div class="f-item">
                         <div class="item-left">
                             <img src="../../assets/img/login/user.png" alt="">
-                            <input type="text" placeholder="用户名" name="" value="">
+                            <input type="text" v-model="username"  placeholder="用户名" name="" value="">
                         </div>
                     </div>
                     <div class="f-item">
                         <div class="item-left">
                             <img src="../../assets/img/login/pw.png" alt="">
-                            <input type="password" placeholder="密码" name="" value="">
-                        </div>
-                    </div>
-                    <div class="f-item">
-                        <div class="item-left width1">
-                            <input class="margin20" type="text" placeholder="验证码" name="" value="">
-                        </div>
-                        <div class="code">
-
+                            <input type="password" v-model="password" placeholder="密码" name="" value="">
                         </div>
                     </div>
                     <div class="f-item">
@@ -46,26 +38,40 @@
 </template>
 
 <script>
+import { Util } from '../../lib/util.js';
 
 export default {
     data() {
         return {
-
+            username: "",
+            password: ""
         }
     },
     methods:{
         login(){
-            this.$router.push('/monitoringRun')
+            var self = this;
+            let url = "doLogin";
+            let data = {
+                username: this.username,
+                password: this.password
+            };
+            this.api.handleAjax(url,data).done(function(res){
+                Util.setItem("info", res)
+                self.$router.push('/monitoringRun')
+            }).fail(function(res) {
+                // alert(res);
+                self.$message.error(res);
+            })
         }
     },
     created(){
-        console.log(11111)
-        this.api.postN({
-            url : "/user/getProvinceList",
-            success: function(res){
-                console.log(res)
-            }
-        })
+        // console.log(11111)
+        // this.api.postN({
+        //     url : "/user/getProvinceList",
+        //     success: function(res){
+        //         console.log(res)
+        //     }
+        // })
     }
 }
 </script>
@@ -91,8 +97,8 @@ export default {
             .left{
                 float: left;
                 width: 54%;
-                height: 226px;
                 border-right: 1px solid #fff;
+                padding-top: 10px;
             }
             .right{
                 float: left;
@@ -109,7 +115,7 @@ export default {
             }
         }
         .f-item{
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             width: 330px;
             height: 50px;
             line-height: 50px;

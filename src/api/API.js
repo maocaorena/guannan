@@ -96,6 +96,7 @@ class API {
     };
     // 根据项目业务二次封装ajax方法
     handleAjax(url, param, type, async) {
+
         return this.ajax(url, param, type, async).then(function(res) {
             // 成功回调
             if (res.response.info.code == 100000) {
