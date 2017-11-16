@@ -54,7 +54,7 @@
                                 <th>项目名称</th>
                                 <th>保养内容</th>
                                 <th>保养周期</th>
-                                <th>操作{{showStep}}</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
                     </table>
@@ -153,16 +153,7 @@ export default {
             return Util.dateTime(val,'date')
         }
     },
-    computed: {
-    },
     watch: {
-        '$route' (to, from) {
-            console.log(to)
-            if(to.path.indexOf('item')<0){
-                this.pageNum = 1;
-                this.getList();
-            }
-        },
         'checkboxModel': {
             handler: function (val, oldVal) {
                 console.log(this.checkboxModel)
@@ -213,7 +204,10 @@ export default {
             console.log(val)
         },
         add(type,item) {//1是新增，2是编辑
+        	
             if(type == 2){
+            	console.log(item)
+                this.showStep = 1;
                 
             }else{
             	this.showStep = 1;
@@ -225,7 +219,7 @@ export default {
             if(type==1){//1为单个删除，2为删除多个
                 this.checkboxModel = [];
                 this.checkboxModel.push(item.id);
-                delname = item.monitorplacename;
+                delname = item.maintainname;
             }else{
                 delname = '多个';
                 console.log('more',delname)
