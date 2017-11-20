@@ -1,8 +1,8 @@
 <template>
 	<div class="firstStep">
 		<alert-v v-on:close="close" v-on:next="next" :btn="btn">
-			<span slot="name">增加设置</span>
-			<div class="tep-in" slot="con">
+			<span slot="name">{{tit}}设置</span>
+			<div class="tep-in" slot="con" v-loading.body="loading">
 				<div class="as-item">
 					<p class="as-item-tit">
 						项目名称：
@@ -24,8 +24,8 @@
 						启用：
 					</p>
 					<div class="as-item-con flex">
-						<input type="radio" name="haha" id="" value="1" v-model="message.state"/><span>是</span>
-						<input type="radio" name="haha" id="" value="2" v-model="message.state"/><span>否</span>
+						<input type="radio" name="haha" id="" value="1" v-model="message.state" /><span>是</span>
+						<input type="radio" name="haha" id="" value="2" v-model="message.state" /><span>否</span>
 					</div>
 				</div>
 			</div>
@@ -39,54 +39,101 @@
 		data() {
 			return {
 				btn: '确认添加',
+				tit: '',
 				message: {
 					name: '',
 					detail: '',
 					state: 2,
-				}
+				},
+				loading: false
 			}
 		},
+		props: [
+			'nextMessage'
+		],
 		components: {
 			'alert-v': alert,
 		},
 		methods: {
 			close() { //关闭弹窗
-				this.$emit('close','')
+				this.$emit('close', '')
 			},
-			next(){
-				if(Util.trim(this.message.name).length<1){
-					this.$message.warning({message: '请填写项目名称',duration: Util.time()});
+			next() {
+				if(Util.trim(this.message.name).length < 1) {
+					this.$message.warning({
+						message: '请填写项目名称',
+						duration: Util.time()
+					});
 					return;
 				};
-				
-				if(Util.trim(this.message.detail).length<1){
-					this.$message.warning({message: '请填写项目内容',duration: Util.time()});
+
+				if(Util.trim(this.message.detail).length < 1) {
+					this.$message.warning({
+						message: '请填写项目内容',
+						duration: Util.time()
+					});
 					return;
 				};
 				let _this = this;
-                this.loading = true;
-                this.api.postN({
-                    url: '/maintain/setMaintain',
-                    params: {
-                    	maintainname: this.message.name,
-                    	maintaincontent: this.message.detail,
-                    	isstar: this.message.state,
-                    },
-                    success: function(res){
-                    	_this.loading = false;
-                        if(res.response.info.code==100000){
-                            _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-                            _this.$emit('submitSuccess',{
-                            	step: 1,
-                            	id: res.response.content.id
-                            })
-                        }
-                    }
-                })
+				this.loading = true;
+				this.api.postN({
+					url: '/maintain/setMaintain',
+					params: {
+						maintainname: this.message.name,
+						maintaincontent: this.message.detail,
+						isstar: this.message.state,
+					},
+					success: function(res) {
+						_this.loading = false;
+						if(res.response.info.code == 100000) {
+							_this.$message.success({
+								message: res.response.info.msg,
+								duration: Util.time()
+							});
+							_this.$emit('submitSuccess', {
+								step: 1,
+								id: res.response.content.id,
+								type: _this.nextMessage.type
+							})
+						}
+					}
+				})
+			},
+			getMessageById() {
+				let _this = this;
+				this.loading = true;
+				this.api.postN({
+					url: '/maintain/getMaintainContentById',
+					params: {
+						id: _this.nextMessage.id
+					},
+					success: function(res) {
+						_this.loading = false;
+						console.log(res);
+						if(res.response.info.code == 100000) {
+							
+						} else {
+							_this.$message.error({
+								message: res.response.info.msg,
+								duration: Util.time()
+							});
+						}
+					}
+				})
 			}
 		},
 		created() {
-
+			if(this.nextMessage.type == 1) {
+				this.tit = '增加'
+			} else {
+				this.tit = '修改';
+				this.btn = "确认修改";
+				this.message = {
+					name: this.nextMessage.message.maintainname,
+					detail: this.nextMessage.message.maintaincontent,
+					state: this.nextMessage.message.isstar,
+				};
+			}
 		}
 	}
 </script>
@@ -150,10 +197,10 @@
 				border: 1px solid #D3D3D3;
 				border-radius: 2px;
 			}
-			input[type=radio]{
+			input[type=radio] {
 				width: 20px;
 			}
-			span{
+			span {
 				position: relative;
 				bottom: 8px;
 			}
@@ -167,7 +214,7 @@
 				cursor: pointer;
 			}
 		}
-		textarea{
+		textarea {
 			resize: none;
 		}
 	}

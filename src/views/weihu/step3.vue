@@ -16,7 +16,7 @@
 						时间来源：
 					</p>
 					<div class="as-item-con flex">
-						<select name="" v-model='selectId'>
+						<select name="" v-model='selectId' v-if="showSelect">
 							<option v-for="item of timeList" :value="item.timesource">{{item.timesource}}</option>
 						</select>
 					</div>
@@ -37,6 +37,7 @@
 				},
 				timeList: [],
 				selectId: '',
+				showSelect: false,
 			}
 		},
 		props:[
@@ -56,11 +57,11 @@
                     success: function(res){
                         if(res.response.info.code==100000){
                             if(res.response.content){
-                            	_this.selectId = res.response.content[0].id;
                                 _this.timeList = res.response.content;
                             }else{
                                 _this.timeList = [];
-                            }
+                            };
+                             _this.showSelect = true;
                         }else{
                             _this.$message.error({message: res.response.info.msg,duration: Util.time()});
                         }
@@ -101,6 +102,7 @@
 		created() {
 			this.getTimeList();
 			if(this.tomessage.type == 2){
+				this.btn = '确认修改';
 				this.message.detail = this.tomessage.item.maintainplan;
 				this.selectId = this.tomessage.item.timesource;
 				console.log(this.selectId)

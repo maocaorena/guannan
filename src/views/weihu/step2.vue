@@ -1,7 +1,7 @@
 <template>
 	<div class="firstStep">
 		<alert-v v-on:close="close" v-on:next="next" :btn="btn">
-			<span slot="name">增加设置</span>
+			<span slot="name">{{secondMessage.type == 1?'增加':'修改'}}设置</span>
 			<div class="tep-in" slot="con">
 				<div class="content">
 					<div class="list-tit">
@@ -73,7 +73,7 @@
 			}
 		},
 		props:[
-			'id'
+			'secondMessage'
 		],
 		components: {
 			'alert-v': alert,
@@ -86,7 +86,7 @@
                 this.api.postN({
                     url: '/maintain/getTimePlan',
                     params: {
-                        maintainid: _this.id
+                        maintainid: _this.secondMessage.id
                     },
                     success: function(res){
                         _this.loading = false;
@@ -156,6 +156,7 @@
 			}
 		},
 		created() {
+			console.log(this.secondMessage)
 			this.getList();
 		}
 	}
