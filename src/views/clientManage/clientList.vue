@@ -1,7 +1,7 @@
 <template>
   <div id="clientList" class="wrapper">
     <div class="leftBlock">
-      <div class="first-list type1" v-for="(item,index) of leftbars">
+      <div class="first-list type1" :key="index" v-for="(item,index) of leftbars">
         <p class="first-item">
           <img class="leftIcon" src="../../assets/img/leftbar/icon_sheng.png" alt=""> {{item.province}}
         </p>
@@ -186,6 +186,8 @@
 <script>
 import pages from '../../components/pages.vue';
 import alert from '../../components/alert.vue';
+import { Util } from '../../lib/util.js';
+
 
 export default {
   data() {
@@ -254,12 +256,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        self.loading = true;
-        let url = "client/deleteClientById";
+        // self.loading = true;
+        let url = "/client/deleteClientById";
         let data = {
           ids: ids
-        }
-        this.api.handleAjax(url, data).done(function(res) {
+        };
+        debugger;
+        self.api.handleAjax(url, data).done(function(res) {
+          // debugger;
           self.$message.success({ message: "删除成功！", duration: Util.time() });
           self.getData();
         }).fail(function(res) {
@@ -322,7 +326,7 @@ export default {
       this._getProvices();
       if (type == 2) {
         self.addType = 2;
-        let url = "client/findClientById";
+        let url = "/client/findClientById";
         let data = {
           clientid: id
         };
@@ -385,7 +389,7 @@ export default {
         provinceid: this.provinceid,
       };
       if (self.addType == 2) {
-        url = "client/updateClientById"
+        url = "/client/updateClientById"
       }
       this.api.handleAjax(url, data).done(function(res) {
         self.close();
@@ -399,14 +403,14 @@ export default {
 
     _getProvices() {
       let self = this;
-      let url = "user/getProvinceList";
+      let url = "/user/getProvinceList";
       this.api.handleAjax(url).done(function(res) {
         self.provincesArr = res;
       })
     },
     _getCitys() {
       let self = this;
-      let url = "user/getCitiesByPid";
+      let url = "/user/getCitiesByPid";
       let data = {
         provinceid: this.provinceid
       }
@@ -417,7 +421,7 @@ export default {
     },
     _getAreas() {
       let self = this;
-      let url = "user/getAreasByCid";
+      let url = "/user/getAreasByCid";
       let data = {
         cityid: this.cityid
       }

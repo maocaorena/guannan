@@ -1,7 +1,7 @@
 <template>
   <div id="eleForm" class="wrapper">
     <div class="leftBlock">
-      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" v-for="(item,index) of leftbars">
+      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" :key="index" v-for="(item,index) of leftbars">
         <p class="first-item">
           {{item.tit}}
         </p>
@@ -12,7 +12,7 @@
         <div class="rt-item rtItemSelect">
           用户报表
         </div>
-        <data-filter v-on:exportExcel="exportExcel"></data-filter>
+        <data-filter v-on:exportExcel="exportExcel" v-on:searchFn="getData"></data-filter>
       </div>
       <div class="content">
         <div class="list-tit">
@@ -151,7 +151,7 @@ export default {
     pagechange(val) {
       console.log(val + '页')
     },
-    getData() {
+    getData(param) {
       let url = "/finddata/findElectricUseByCondition";
       let data = {
         currentpage: this.pageNum,
@@ -162,6 +162,7 @@ export default {
         startTime: "",
         endTime: ""
       }
+      Object.assign(data,param);
       this.api.handleAjax(url, data).done(function(res) {
         if (res.list.length > 0) {
           self.total = res.total;

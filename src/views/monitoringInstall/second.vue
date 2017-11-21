@@ -110,7 +110,7 @@
                 this.api.postN({
                     url: '/module/deleteModuleInfo',
                     params: {
-                        ids: item.id,
+                        id: item.id,
                     },
                     success: function(res){
                         _this.loading = false;
