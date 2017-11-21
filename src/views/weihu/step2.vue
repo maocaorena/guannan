@@ -3,7 +3,7 @@
 		<alert-v v-on:close="close" v-on:next="next" :btn="btn">
 			<span slot="name">{{secondMessage.type == 1?'增加':'修改'}}设置</span>
 			<div class="tep-in" slot="con">
-				<div class="content">
+				<div class="content" style="top: 5px;">
 					<div class="list-tit">
 						<table class="list" border="1" cellspacing="0" cellpadding="0">
 							<colgroup>

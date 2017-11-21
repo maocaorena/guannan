@@ -74,18 +74,20 @@
 					return;
 				};
 				
-				let params = {
+				let _params = {
                         maintainid: this.tomessage.id,
                         maintainplan: Util.trim(this.message.detail),
                         timesource: this.selectId,
                    };
+                let _url = '/maintain/timePlanSet';
 				if(this.tomessage.type == 2){
-					params.id = this.tomessage.item.id
+					_params.id = this.tomessage.item.id;
+					_url = '/maintain/modifyTimePlan';
 				};
 				let _this = this;
                 this.api.postN({
-                    url: '/maintain/timePlanSet',
-                    params: params,
+                    'url': _url,
+                    params: _params,
                     success: function(res){
                     	console.log('rtert')
                         if(res.response.info.code==100000){

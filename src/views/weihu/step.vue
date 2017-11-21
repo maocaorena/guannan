@@ -3,6 +3,14 @@
 		<alert-v v-on:close="close" v-on:next="next" :btn="btn">
 			<span slot="name">{{tit}}设置</span>
 			<div class="tep-in" slot="con" v-loading.body="loading">
+				<div class="as-item" v-if="nextMessage.type == 1">
+					<p class="as-item-tit">
+						监控空点选择：
+					</p>
+					<div class="as-item-con">
+						<data-filter v-on:monitorplaceId="getMonId"></data-filter>
+					</div>
+				</div>
 				<div class="as-item">
 					<p class="as-item-tit">
 						项目名称：
@@ -34,6 +42,7 @@
 </template>
 <script type="text/javascript">
 	import alert from '../../components/alert.vue';
+	import dataFilter from './dataFilter.vue';
 	import { Util } from '../../lib/util.js'
 	export default {
 		data() {
@@ -44,6 +53,7 @@
 					name: '',
 					detail: '',
 					state: 2,
+					monitorplaceid: ''
 				},
 				loading: false
 			}
@@ -53,12 +63,26 @@
 		],
 		components: {
 			'alert-v': alert,
+			'dataFilter': dataFilter
 		},
 		methods: {
+			getMonId(id){//三级联动回传id
+				this.message.monitorplaceid = id;
+			},
 			close() { //关闭弹窗
 				this.$emit('close', '')
 			},
 			next() {
+				if(this.nextMessage.type == 1) {//新增
+					if(this.message.monitorplaceid.length < 1 || this.message.monitorplaceid+'' == 'undefined') {
+						this.$message.warning({
+							message: '请选择监控点',
+							duration: Util.time()
+						});
+						return;
+					};
+				};
+				
 				if(Util.trim(this.message.name).length < 1) {
 					this.$message.warning({
 						message: '请填写项目名称',
@@ -69,20 +93,29 @@
 
 				if(Util.trim(this.message.detail).length < 1) {
 					this.$message.warning({
-						message: '请填写项目内容',
+						message: '请填写保养内容',
 						duration: Util.time()
 					});
 					return;
 				};
+				let _url = '';
+				let _params = {
+					maintainname: this.message.name,
+					maintaincontent: this.message.detail,
+					isstar: this.message.state,
+					monitorplaceid: this.message.monitorplaceid
+				};
+				if(this.nextMessage.type == 1) {//新增
+					_url = '/maintain/setMaintain';
+				} else {
+					_url = '/maintain/updateMaintainContentById';
+					_params.id = this.message.id
+				};
 				let _this = this;
 				this.loading = true;
 				this.api.postN({
-					url: '/maintain/setMaintain',
-					params: {
-						maintainname: this.message.name,
-						maintaincontent: this.message.detail,
-						isstar: this.message.state,
-					},
+					url: _url,
+					params: _params,
 					success: function(res) {
 						_this.loading = false;
 						if(res.response.info.code == 100000) {
@@ -90,11 +123,19 @@
 								message: res.response.info.msg,
 								duration: Util.time()
 							});
-							_this.$emit('submitSuccess', {
-								step: 1,
-								id: res.response.content.id,
-								type: _this.nextMessage.type
-							})
+							if(_this.nextMessage.type == 1){
+								_this.$emit('submitSuccess', {
+									step: 1,
+									id: res.response.content.id,
+									type: _this.nextMessage.type
+								})
+							}else{
+								_this.$emit('submitSuccess', {
+									step: 1,
+									id: _this.message.id,
+									type: _this.nextMessage.type
+								})
+							}
 						}
 					}
 				})
@@ -132,6 +173,7 @@
 					name: this.nextMessage.message.maintainname,
 					detail: this.nextMessage.message.maintaincontent,
 					state: this.nextMessage.message.isstar,
+					id: this.nextMessage.message.id,
 				};
 			}
 		}
