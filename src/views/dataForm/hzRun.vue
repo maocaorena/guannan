@@ -1,7 +1,7 @@
 <template>
   <div id="eleForm" class="wrapper">
     <div class="leftBlock">
-      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" v-for="(item,index) of leftbars">
+      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" :key="index" v-for="(item,index) of leftbars">
         <p class="first-item">
           {{item.tit}}
         </p>
@@ -57,7 +57,7 @@
               <tr v-if="!ifPage">
                 <td colspan="8">暂无数据</td>
               </tr>
-              <tr v-for="(item,index) of items" class="list-con-item">
+              <tr v-for="(item,index) of items" :key="index"  class="list-con-item">
                 <td>{{item.timedetail}}</td>
                 <td>{{item.clientname}}</td>
                 <td>{{item.monitorplacename}}</td>
