@@ -5,10 +5,10 @@
 			<div class="tep-in" slot="con">
 				<div class="as-item">
 					<p class="as-item-tit">
-						保养计划：
+						保养周期：
 					</p>
 					<div class="as-item-con">
-						<textarea name="" v-model="message.detail" rows="5" cols="60"></textarea>
+						<input name="" v-model="message.detail" type="input">
 					</div>
 				</div>
 				<div class="as-item">
@@ -73,13 +73,12 @@
 					this.$message.warning({message: '请填写保养计划',duration: Util.time()});
 					return;
 				};
-				
+				let _url = '/maintain/timePlanSet';
 				let _params = {
-                        maintainid: this.tomessage.id,
-                        maintainplan: Util.trim(this.message.detail),
-                        timesource: this.selectId,
-                   };
-                let _url = '/maintain/timePlanSet';
+                    maintainid: this.tomessage.id,
+                    maintainplan: Util.trim(this.message.detail),
+                    timesource: this.selectId,
+               	};
 				if(this.tomessage.type == 2){
 					_params.id = this.tomessage.item.id;
 					_url = '/maintain/modifyTimePlan';

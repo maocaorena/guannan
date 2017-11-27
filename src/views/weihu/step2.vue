@@ -115,13 +115,13 @@
 				if(type==1){//新增
 					this.message = {
 						type: 1,
-						id: this.id,
+						id: this.secondMessage.id,
 					}
 					this.showAdd = true;
 				}else{//编辑
 					this.message = {
 						type: 2,
-						id: this.id,
+						id: this.secondMessage.id,
 						item: item,
 					}
 					this.showAdd = true;

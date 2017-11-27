@@ -91,7 +91,7 @@
 						名称：
 					</p>
 					<div class="as-item-con">
-						<input type="text" name="" v-model="handleDetail.maintainname" value="">
+						<input type="text" readonly name="" v-model="handleDetail.maintainname" value="">
 					</div>
 				</div>
 				<div class="as-item">
@@ -99,7 +99,7 @@
 						内容：
 					</p>
 					<div class="as-item-con">
-						<textarea name="" rows="5" v-model="handleDetail.maintaincontent" cols="60"></textarea>
+						<textarea name="" readonly rows="5" v-model="handleDetail.maintaincontent" cols="60"></textarea>
 					</div>
 				</div>
 				<div class="as-item">
@@ -182,7 +182,6 @@
 				return Util.dateTime(val, 'date')
 			}
 		},
-		computed: {},
 		methods: {
 			search() {
 				this.pageNum = 1;
@@ -219,26 +218,22 @@
 				this.handleDetail.maintainname = item.maintainname;
 				this.handleDetail.maintaincontent = item.maintaincontent;
 				this.handleDetail.isdoaction = item.isdoaction;
-				this.handleDetail.assign = item.assign;
-				this.handleDetail.advice = item.advice;
+				this.handleDetail.assign = item.assign||'';
+				this.handleDetail.advice = item.advice||'';
 				console.log(item)
 				console.log(this.handleDetail)
 			},
 			next() {
-				console.log(2222);
-				if(Util.trim(this.handleDetail.maintainname).length<1){
-					this.$message.warning({message: '请填写名称',duration: Util.time()});
+				console.log(this.handleDetail.advice);
+				if(!this.handleDetail.isdoaction){
+					this.$message.warning({message: '请填写处理方案',duration: Util.time()});
 					return;
 				};
-				if(Util.trim(this.handleDetail.maintaincontent).length<1){
-					this.$message.warning({message: '请填写内容',duration: Util.time()});
-					return;
-				};
-				if(Util.trim(this.handleDetail.assign).length<1){
+				if(this.handleDetail.assign.length < 1){
 					this.$message.warning({message: '请填写指派',duration: Util.time()});
 					return;
 				};
-				if(Util.trim(this.handleDetail.advice).length<1){
+				if(this.handleDetail.advice.length < 1){
 					this.$message.warning({message: '请填写处理意见',duration: Util.time()});
 					return;
 				};
