@@ -158,12 +158,6 @@ export default{
             }else{
                 url = '/monitorplace/addMonitorPlaceByClient';
             };
-            _this.$store.dispatch('SetAddId', _this.addid);
-            _this.$emit('changeAlert','下一步');
-            _this.$store.dispatch('SetFirstStepAlert',{
-                type: _this.firstStepAlert.type,
-                state: 2,
-            });
             this.loading = true;
             this.api.postN({
                 url: url,
@@ -174,9 +168,13 @@ export default{
                     if(res.response.info.code==100000){
                         _this.$message.success({message: res.response.info.msg,duration: Util.time()});
                         if(_this.firstStepAlert.type==2){
+                        	console.log('222')
                             _this.$store.dispatch('SetAddId', _this.addid);
                         }else{
+                        	console.log('11111')
                             _this.$store.dispatch('SetAddId',res.response.content.id);
+                            console.log('res.response.content.id',res.response.content.id);
+                            console.log('this.$store.getters.addid',_this.$store.getters.addid);
                         };
                         //进入第二步
                         _this.$emit('changeAlert',2)

@@ -43,7 +43,7 @@
                             <tr>
                                 <th>序号</th>
                                 <th>项目名称</th>
-                                <th>保养计划</th>
+                                <th>保养周期</th>
                                 <th>保养内容</th>
                                 <th>处理方案</th>
                                 <th>指派</th>
@@ -79,7 +79,7 @@
                                 <td>
                                     {{item.maintainname}}
                                 </td>
-                                <td>{{item.maintainsettime}}</td>
+                                <td>{{item.maintainplan}}</td>
                                 <td>{{item.maintaincontent}}</td>
                                 <td>{{item.domethod}}</td>
                                 <td>{{item.assign}}</td>

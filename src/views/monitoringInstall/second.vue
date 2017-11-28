@@ -148,6 +148,7 @@
             }
         },
         created(){
+        	console.log(this.addid)
             this.findModuleInfoById()
         }
     }

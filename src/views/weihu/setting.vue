@@ -83,7 +83,7 @@
                                 </td>
                                 <td>{{item.maintainname}}</td>
                                 <td>{{item.maintaincontent}}</td>
-                                <td>{{item.maintainsettime}}</td>
+                                <td>{{item.maintainplan}}</td>
                                 <td>
                                     <a href="javascript:;" class="mode" @click="del(1,item)">删除</a>
                                     <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
