@@ -246,6 +246,21 @@
                     }
                 })
             },
+            findModuleInfoById(moduleid){
+            	let _this = this;
+                this.api.postN({
+                    url: "/module/findModuleInfoById",
+                    params: {
+                        moduleid: moduleid
+                    },
+                    success: function(res){
+                        console.log(res)
+                        if(res.response.info.code==100000){
+                        	this.list = res.response.content
+                        }
+                    }
+                })
+            }
         },
         created(){
             console.log('1111',this.secondAdd.type)
@@ -255,8 +270,10 @@
                 this.btn = '确定修改';
                 _list.monitorplaceid = this.addid;
                 this.checkboxModel.push(0);
-                this.list.push(_list);
+//              this.list.push(_list);
+                console.log(_list)
                 this.getModuleById(_list.moduleid);
+                this.findModuleInfoById(_list.moduleid)
             }else{
                 this.findAllModuleModel();
                 for (let i = 0; i < 5; i++) {
