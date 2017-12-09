@@ -54,7 +54,7 @@
                                 <th>项目名称</th>
                                 <th>保养内容</th>
                                 <th>保养周期</th>
-                                <th>操作{{showStep}}</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
                     </table>
@@ -101,8 +101,8 @@
                 <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
             </div>
         </div>
-        <step-v v-if="showStep==1" v-on:close="close" v-on:submitSuccess="submitSuccess"></step-v>
-        <steptwo-v v-if="showStep==2" :id="nextid" v-on:close="close" v-on:submitSuccess="submitSuccess"></steptwo-v>
+        <step-v v-if="showStep==1" :nextMessage="nextMessage" v-on:close="close" v-on:submitSuccess="submitSuccess"></step-v>
+        <steptwo-v v-if="showStep==2" :secondMessage="secondMessage" v-on:close="close" v-on:submitSuccess="submitSuccess"></steptwo-v>
     </div>
 </template>
 <script>
@@ -141,6 +141,7 @@ export default {
             ],
             showStep: -1,
             nextid: '',//新增或者修改之后把id传入下一个组件
+            nextMessage: {}
         }
     },
     components: {
@@ -153,16 +154,7 @@ export default {
             return Util.dateTime(val,'date')
         }
     },
-    computed: {
-    },
     watch: {
-        '$route' (to, from) {
-            console.log(to)
-            if(to.path.indexOf('item')<0){
-                this.pageNum = 1;
-                this.getList();
-            }
-        },
         'checkboxModel': {
             handler: function (val, oldVal) {
                 console.log(this.checkboxModel)
@@ -180,10 +172,12 @@ export default {
     		this.showStep = 3;
     	},
     	submitSuccess(val){
-    		console
     		if(val.step == 1){
     			this.showStep = 2;
-    			this.nextid = val.id
+    			this.secondMessage = {
+    				id: val.id,
+    				type: val.type,
+    			}
     		}else{
     			this.showStep = 3;
     			this.getList()
@@ -214,8 +208,16 @@ export default {
         },
         add(type,item) {//1是新增，2是编辑
             if(type == 2){
-                
+            	console.log(item)
+            	this.nextMessage = {
+            		message: item,
+            		type: 2
+            	}
+                this.showStep = 1;
             }else{
+            	this.nextMessage = {
+                	type: 1
+                }
             	this.showStep = 1;
             };
             
@@ -225,7 +227,7 @@ export default {
             if(type==1){//1为单个删除，2为删除多个
                 this.checkboxModel = [];
                 this.checkboxModel.push(item.id);
-                delname = item.monitorplacename;
+                delname = item.maintainname;
             }else{
                 delname = '多个';
                 console.log('more',delname)
@@ -239,7 +241,7 @@ export default {
                 let _this = this;
                 let ids = this.checkboxModel.join(',')
                 this.api.postN({
-                    url: '/monitorplace/deleteMonitorPlaceById',
+                    url: '/maintain/deleteMaintainContent',
                     params: {
                         ids: ids,
                     },

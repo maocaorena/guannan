@@ -3,7 +3,8 @@ import Vuex from 'vuex';
 import permission from './modules/permission';
 import monitorinstall from './modules/monitoringInstall';
 import user from './modules/user';
-import accout from './modules/accout';
+import account from './modules/account';
+import roles from './modules/roles';
 import getters from './getters';
 
 Vue.use(Vuex);
@@ -13,7 +14,8 @@ const store = new Vuex.Store({
         permission,
         monitorinstall,
         user,
-        accout
+        account,
+        roles
     },
     getters
 });

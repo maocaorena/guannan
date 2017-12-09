@@ -1,7 +1,7 @@
 <template>
     <div class="firstStep">
         <alert-v v-on:close="close" v-on:next="next" :btn="btn">
-            <span slot="name">增加监控点</span>
+            <span slot="name">{{$store.getters.firstStepAlert.type==1?'新增':'编辑'}}监控点</span>
             <div class="tep-in" slot="con">
                 <div class="tep-bar">
                     <div class="tep-bar-item" :class="{select: firstStepAlert.state==1}">
@@ -59,15 +59,8 @@
                         this.$refs.third.sunmessage(); // 方法2
                         break;
                     default:
-
+						break;
                 }
-                // let ss = this.firstStepAlert;
-                // if(ss == 3){
-                //     this.close();
-                //     return;
-                // }
-                // ss++;
-                // this.changeAlert(ss)
             },
             changeAlert(step){//改变步数状态
                 console.log('step',step)

@@ -1,6 +1,6 @@
 <template>
     <div class="alertSetting">
-        <div class="alertSetting-in" :style="{height:height}">
+        <div class="alertSetting-in" :style="{height:height,width:width}">
             <div class="alertSetting-tit">
                 <p class="alertSetting-name"><slot name="name">设置</slot></p>
                 <div class="alertSetting-handle">
@@ -27,7 +27,8 @@
     	props: [
             "type",
             "btn",
-            "height"
+            "height",
+            "width"
         ],
         data(){
             return{

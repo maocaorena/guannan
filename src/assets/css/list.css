@@ -74,9 +74,9 @@ th {
 td {
 	color: #333;
 	text-align: center;
-	white-space: nowrap;
+	/*white-space: nowrap;
 	text-overflow: ellipsis;
-	overflow: hidden;
+	overflow: hidden;*/
 }
 
 

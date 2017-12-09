@@ -1,7 +1,7 @@
 <template>
   <div id="accountList" class="wrapper">
     <div class="leftBlock">
-      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" v-for="(item,index) of leftbars">
+      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" :key="index" v-for="(item,index) of leftbars">
         <p class="first-item">
           {{item.tit}}
         </p>
@@ -66,7 +66,7 @@
               <tr v-if="!ifPage">
                 <td colspan="6">暂无数据</td>
               </tr>
-              <tr v-for="(item,index) of items" class="list-con-item">
+              <tr v-for="(item,index) of items" :key="index" class="list-con-item">
                 <!-- 操作 -->
                 <td>
                   <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.roleId">
@@ -78,8 +78,8 @@
 
                 <td>
                   <a href="javascript:;" class="mode" @click="deleteData(item.roleId,2)">删除</a>
-                  <a href="javascript:;" class="mode" @click="add(2,item.roleId)">编辑</a>
-                  <a href="javascript:;" class="mode">设置角色</a>
+                  <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
+                  <a href="javascript:;" class="mode" @click = "setRights(item.roleId)">设置权限</a>
                 </td>
               </tr>
             </tbody>
@@ -90,42 +90,17 @@
         <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
       </div>
     </div>
-    <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
-">
-      <span slot="name">添加角色</span>
-      <div class="tep-in" slot="con">
-        <input type="hidden" v-model="systemId">
-        <div class="as-item" style="margin-top: 15px">
-          <p class="as-item-tit">
-            角色名称：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="username">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            角色类型：
-          </p>
-          <div class="as-item-con">
-            <input type="password" name="" value="" v-model="password">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            备注：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="name">
-          </div>
-        </div>
-      </div>
-    </alert-v>
+    <roleListDialog :item="roleData" :addType="addType" v-if="addDialog" @getParentData="getData"></roleListDialog>
+
+    <rightDialog :roleId="roleModId" :addType="addType" v-if="rightDialog" @getParentData="getData"></rightDialog>
+
   </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
 import alert from '../../components/alert.vue';
+import roleListDialog from './roleListDialog.vue';
+import rightDialog from './rightDialog.vue';
 
 export default {
   data() {
@@ -141,6 +116,7 @@ export default {
       ],
       width: "",
       btn: '确定',
+      moduleTitle: "添加角色",      
       pageNum: 1,
       pageSize: 10,
       total: 200,
@@ -150,35 +126,27 @@ export default {
       checked: false,
       width: '',
       ifPage: false,
+      roleData: {},
+      roleModId: "",
       // 增加相关
-      systemId: "",
-      username: "",
-      password: "",
-      name: "",
-      phone: "",
-      email: "ali@alibaba.com",
-      // 添加1 or 更新2
       addType: 1
     }
   },
   components: {
     'pages-v': pages,
-    'alert-v': alert
+    roleListDialog,
+    rightDialog
   },
   created() {
-    // let tabs = [
-    //     {
-    //         isurl : 'accountList',
-    //         name : '账号列表'
-    //     }
-    // ];
-    // this.$store.dispatch('ChangeRightbar',tabs)
     this.getData();
 
   },
   computed: {
     addDialog() {
-      return this.$store.getters.accoutDialog.state;
+      return this.$store.getters.roleListDialog.state;
+    },
+    rightDialog() {
+      return this.$store.getters.rightDialog.state;      
     }
   },
   methods: {
@@ -193,6 +161,7 @@ export default {
         _this.checkboxModel = [];
       }
     },
+    // 删除数据
     deleteData(ids, type) {
       var self = this;
       var ids = ids;
@@ -206,7 +175,7 @@ export default {
         type: 'warning'
       }).then(() => {
         self.loading = true;
-        let url = "dropUser";
+        let url = "/deleteRole";
         let data = {
           id: ids
         }
@@ -214,7 +183,7 @@ export default {
           self.$message.success({ message: "删除成功！", duration: Util.time() });
           self.getData();
         }).fail(function(res) {
-          console.log(res);
+          // console.log(res);
         })
 
       }).catch(() => {
@@ -229,8 +198,7 @@ export default {
     },
     getData() {
       var self = this;
-      console.log(0)
-      let url = "selectRoleList";
+      let url = "/selectRoleList";
       let data = {
         currentpage: this.pageNum,
         pagesize: this.pageSize,
@@ -249,82 +217,32 @@ export default {
         }
       }).fail(function(res) {})
     },
-    getBar() {
-      let _this1 = this;
-      this.api.postN({
-        url: "/client/findProvinceAndCompanys",
-        success: function(res) {
-          let _res = res.response;
-          if (_res.info.code == 100000) {
-            _this1.leftbars = _res.content;
-            console.log(_this1.$route.path.indexOf('item'))
-            if (!_this1.$route.query.clientid && _this1.$route.path.indexOf('item') < 0) {
-              // _this1.$router.replace({path:'/monitoringInstall/list',query:{clientid: _res.content[0].clientList[0].clientid}})
-            }
-          }
-        }
-      });
-    },
-    add(type, id) {
+    add(type, param) {
       var self = this;
-      this.$store.dispatch('ChangeAccountDialogState', {
+      this.$store.dispatch('ChangeRoleListDialogState', {
         type: type,
         state: true,
       });
+
       if (type == 2) {
         self.addType = 2;
-        let url = "addSystemUser";
-        let data = {
-          systemId: id
-        };
-        this.api.handleAjax(url, data).done(function(res) {
-          // console.log(res);
-          self.systemId = res.systemId;
-          self.username = res.username;
-          self.password = res.password;
-          self.name = res.name;
-          self.phone = res.phone;
-        })
+        self.roleData = param
       }
+      // if (type == 2) {
+      //   self.addType = 2;
+      //   self.roleid = param.roleId;
+      //   self.rolename = param.roleName;
+      //   self.roletype = param.roleType;
+      //   self.roleremark = param.roleRemark;
+      // }
     },
-
-    close() {
-      this.$store.dispatch('ChangeDialogState', {
-        state: false,
-      })
-    },
-
-    next() {
-      if (!this.username) {
-        this.$message("用户名不能为空");
-        return;
-      }
-      if (!this.password) {
-        this.$message("密码不能为空");
-        return;
-      }
-      
-      
-      var self = this;
-      let url = "addSystemUser";
-      let data = {
-        systemid: this.systemid,
-        username: this.username,
-        password: this.password,
-        name: this.name,
-        phone: this.phone,
-        email: this.email
-      };
-      if (self.addType == 2) {
-        url = "modifyUser"
-      }
-      this.api.handleAjax(url, data).done(function(res) {
-        self.close();
-        self.getData();
-      }).fail(function(res) {
-        this.$message(res)
-      })
+    setRights(id) {
+      this.$store.dispatch('ChangeRightDialogState', {
+        state: true,
+      });
+      this.roleModId = id;
     }
+    
   },
   mounted() {
     this.width = this.$refs.list.getBoundingClientRect().width - 17;

@@ -1,9 +1,9 @@
 <template>
 	<div class="firstStep">
 		<alert-v v-on:close="close" v-on:next="next" :btn="btn">
-			<span slot="name">增加设置</span>
+			<span slot="name">{{secondMessage.type == 1?'增加':'修改'}}设置</span>
 			<div class="tep-in" slot="con">
-				<div class="content">
+				<div class="content" style="top: 5px;">
 					<div class="list-tit">
 						<table class="list" border="1" cellspacing="0" cellpadding="0">
 							<colgroup>
@@ -73,7 +73,7 @@
 			}
 		},
 		props:[
-			'id'
+			'secondMessage'
 		],
 		components: {
 			'alert-v': alert,
@@ -86,7 +86,7 @@
                 this.api.postN({
                     url: '/maintain/getTimePlan',
                     params: {
-                        maintainid: _this.id
+                        maintainid: _this.secondMessage.id
                     },
                     success: function(res){
                         _this.loading = false;
@@ -115,13 +115,13 @@
 				if(type==1){//新增
 					this.message = {
 						type: 1,
-						id: this.id,
+						id: this.secondMessage.id,
 					}
 					this.showAdd = true;
 				}else{//编辑
 					this.message = {
 						type: 2,
-						id: this.id,
+						id: this.secondMessage.id,
 						item: item,
 					}
 					this.showAdd = true;
@@ -156,6 +156,7 @@
 			}
 		},
 		created() {
+			console.log(this.secondMessage)
 			this.getList();
 		}
 	}

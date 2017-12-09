@@ -5,10 +5,10 @@
 			<div class="tep-in" slot="con">
 				<div class="as-item">
 					<p class="as-item-tit">
-						保养计划：
+						保养周期：
 					</p>
 					<div class="as-item-con">
-						<textarea name="" v-model="message.detail" rows="5" cols="60"></textarea>
+						<input name="" v-model="message.detail" type="input">
 					</div>
 				</div>
 				<div class="as-item">
@@ -16,7 +16,7 @@
 						时间来源：
 					</p>
 					<div class="as-item-con flex">
-						<select name="" v-model='selectId'>
+						<select name="" v-model='selectId' v-if="showSelect">
 							<option v-for="item of timeList" :value="item.timesource">{{item.timesource}}</option>
 						</select>
 					</div>
@@ -37,6 +37,7 @@
 				},
 				timeList: [],
 				selectId: '',
+				showSelect: false,
 			}
 		},
 		props:[
@@ -56,11 +57,11 @@
                     success: function(res){
                         if(res.response.info.code==100000){
                             if(res.response.content){
-                            	_this.selectId = res.response.content[0].id;
                                 _this.timeList = res.response.content;
                             }else{
                                 _this.timeList = [];
-                            }
+                            };
+                             _this.showSelect = true;
                         }else{
                             _this.$message.error({message: res.response.info.msg,duration: Util.time()});
                         }
@@ -72,19 +73,20 @@
 					this.$message.warning({message: '请填写保养计划',duration: Util.time()});
 					return;
 				};
-				
-				let params = {
-                        maintainid: this.tomessage.id,
-                        maintainplan: Util.trim(this.message.detail),
-                        timesource: this.selectId,
-                   };
+				let _url = '/maintain/timePlanSet';
+				let _params = {
+                    maintainid: this.tomessage.id,
+                    maintainplan: Util.trim(this.message.detail),
+                    timesource: this.selectId,
+               	};
 				if(this.tomessage.type == 2){
-					params.id = this.tomessage.item.id
+					_params.id = this.tomessage.item.id;
+					_url = '/maintain/modifyTimePlan';
 				};
 				let _this = this;
                 this.api.postN({
-                    url: '/maintain/timePlanSet',
-                    params: params,
+                    'url': _url,
+                    params: _params,
                     success: function(res){
                     	console.log('rtert')
                         if(res.response.info.code==100000){
@@ -101,6 +103,7 @@
 		created() {
 			this.getTimeList();
 			if(this.tomessage.type == 2){
+				this.btn = '确认修改';
 				this.message.detail = this.tomessage.item.maintainplan;
 				this.selectId = this.tomessage.item.timesource;
 				console.log(this.selectId)
