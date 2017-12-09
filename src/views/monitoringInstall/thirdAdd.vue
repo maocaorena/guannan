@@ -50,17 +50,17 @@
                                         {{item.name}}
         							</td>
         							<td>
-                                        <select class="" name="" v-model="item.datasource">
+                                        <select v-model="item.datasource"  @change="firstChange(item)">
                                             <option v-for="item2 of dataSourcename" :value="item2.name">{{item2.name}}</option>
                                         </select>
                                     </td>
         							<td>
-                                        <select class="" name="" v-model="item.dataport">
+                                        <select v-model="item.dataport" :disabled="item.secondState" @change="secondChange(item)">
                                             <option v-for="item2 of dataPort" :value="item2.name">{{item2.name}}</option>
                                         </select>
                                     </td>
         							<td>
-                                        <select class="" name="" v-model="item.portstate">
+                                        <select v-model="item.portstate" :disabled="item.thirdState">
                                             <option v-for="item1 of portstate" :value="item1.state">{{item1.state}}</option>
                                         </select>
                                     </td>
@@ -117,6 +117,30 @@
             }
         },
         methods:{
+        	firstChange(item){
+        		if(item.datasource == '监控器'){
+        			item.secondState = false;
+        		}else{
+        			item.secondState = true;
+        			item.thirdState = true;
+        			item.dataport = '';
+        			item.portstate = '';
+        		}
+        	},
+        	secondChange(item){
+        		console.log('222',item.dataport)
+        		if(item.dataport){
+        			if(item.dataport.indexOf("DI")>=0){
+        				item.thirdState = false;
+        			}else{
+        				item.thirdState = true;
+        				item.portstate = '';
+        			}
+        		}else{
+        			item.thirdState = true;
+    				item.portstate = '';
+        		}
+        	},
             checkedAll() {
                 let _this = this;
                 if (this.checked) {//实现反选
@@ -196,6 +220,8 @@
                                     res.response.content[i].dataport = null;
                                     res.response.content[i].portstate = null;
                                     res.response.content[i].monitorplaceid = _addid;
+                                    res.response.content[i].secondState = true;
+                                    res.response.content[i].thirdState = true;
                                 };
                                 _this.list = res.response.content;
                             }else{
