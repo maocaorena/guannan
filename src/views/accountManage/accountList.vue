@@ -98,7 +98,7 @@
     </div>
     <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
 ">
-      <span slot="name">添加客户</span>
+      <span slot="name">{{modTitle}}</span>
       <div class="tep-in" slot="con">
         <input type="hidden" v-model="systemId">
         <div class="as-item" style="margin-top: 15px">
@@ -148,6 +148,8 @@
 <script>
 import pages from '../../components/pages.vue';
 import alert from '../../components/alert.vue';
+import { Util } from '../../lib/util.js';
+
 
 export default {
   data() {
@@ -161,6 +163,7 @@ export default {
           url: '/accountManage/roleList'
         }
       ],
+      modTitle: "添加帐号",
       width: "",
       btn: '确定',
       pageNum: 1,
@@ -220,7 +223,7 @@ export default {
         type: 'warning'
       }).then(() => {
         self.loading = true;
-        let url = "dropUser";
+        let url = "/dropUser";
         let data = {
           id: ids
         }
@@ -286,7 +289,8 @@ export default {
       });
       if (type == 2) {
         self.addType = 2;
-        let url = "addSystemUser";
+        self.modTitle = "编缉帐号";
+        let url = "/addSystemUser";
         let data = {
           systemId: id
         };
