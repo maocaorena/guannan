@@ -40,6 +40,9 @@
                     <div class="handle-item">
                         <button type="button" name="button" @click="add(1)">增加监控点</button>
                     </div>
+                    <div class="handle-item">
+                        <button type="button" name="button" @click="setting()">配置监控器</button>
+                    </div>
                 </div>
             </div>
             <div class="content" v-loading.body="loading">
@@ -111,6 +114,8 @@
                                 <td>
                                     <a href="javascript:;" class="mode" @click="del(1,item)">删除</a>
                                     <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
+                                    <br />
+                                    <a href="javascript:;" class="mode" @click="lookSetting(item.id)">查询配置</a>
                                 </td>
                             </tr>
                             <tr v-if="list.length==0">
@@ -173,15 +178,88 @@ export default {
             handler: function (val, oldVal) {
                 console.log(this.checkboxModel)
                 if (this.checkboxModel.length === this.list.length) {
-                    this.checked=true;
+                    this.checked = true;
                 }else{
-                    this.checked=false;
+                    this.checked = false;
                 };
             },
             deep: true
         }
     },
     methods: {
+    	lookSetting(id){
+    		let _this = this;
+    		this.api.postN({
+                url: '/datasourcequery/monitorDataSourceQuery',
+                params: {
+                    id: id,
+                },
+                success: function(res){
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                    }else{
+                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                    }
+                },
+                error: function(error){
+                	_this.$message.error({message: '服务器错误',duration: Util.time()});
+                }
+            });
+            this.api.postN({
+                url: '/moduleparam/moduleCommunicateStatus',
+                params: {
+                    id: id,
+                },
+                success: function(res){
+                    if(res.response.info.code==100000){
+                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+                    }else{
+                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
+                    }
+                },
+                error: function(error){
+                	_this.$message.error({message: '服务器错误',duration: Util.time()});
+                }
+            })
+    	},
+    	setting(){
+    		if(this.checkboxModel.length > 0){
+	    		let _this = this;
+	    		let ids = this.checkboxModel.join(',')
+	    		this.api.postN({
+	                url: '/moduleparam/moduleParamSet',
+	                params: {
+	                    ids: ids,
+	                },
+	                success: function(res){
+	                    if(res.response.info.code==100000){
+	                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+	                    }else{
+	                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
+	                    }
+	                },
+	                error: function(error){
+	                	_this.$message.error({message: '服务器错误',duration: Util.time()});
+	                }
+	            })
+	    		this.api.postN({
+	                url: '/datasourceset/monitorDataSourceSet',
+	                params: {
+	                    monitorplaceid: ids,
+	                },
+	                success: function(res){
+	                    if(res.response.info.code==100000){
+	                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+	                    }else{
+	                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
+	                    }
+	                },
+	                error: function(error){
+	                	_this.$message.error({message: '服务器错误',duration: Util.time()});
+	                }
+	            })
+    		}
+    	},
         search(){
             this.pageNum = 1;
             this.getList();
@@ -231,7 +309,7 @@ export default {
             }).then(() => {
                 this.loading = true;
                 let _this = this;
-                let ids = this.checkboxModel.join(',')
+                let ids = this.checkboxModel.join(',');
                 this.api.postN({
                     url: '/monitorplace/deleteMonitorPlaceById',
                     params: {
@@ -336,7 +414,6 @@ export default {
         }
         .rt-handle {
             float: right;
-            width: 400px;
             height: 30px;
         }
         .handle-item {
