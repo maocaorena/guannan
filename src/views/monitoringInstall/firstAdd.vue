@@ -68,7 +68,7 @@
 
                 var autoOptions = {
                     city: "北京", //城市，默认全国
-                    input: "haha"//使用联想输入的input的id
+                    input: ""//使用联想输入的input的id
                 };
                 var autocomplete= new AMap.Autocomplete(autoOptions);
                 var placeSearch = new AMap.PlaceSearch({

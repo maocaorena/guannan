@@ -15,7 +15,7 @@
 							<thead>
 								<tr>
 									<th>序号</th>
-									<th>保养计划</th>
+									<th>保养周期</th>
 									<th>时间来源</th>
 									<th>操作</th>
 								</tr>

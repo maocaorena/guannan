@@ -5,7 +5,7 @@
 			<div class="tep-in" slot="con" v-loading.body="loading">
 				<div class="as-item" v-if="nextMessage.type == 1">
 					<p class="as-item-tit">
-						监控空点选择：
+						监控点选择：
 					</p>
 					<div class="as-item-con">
 						<data-filter v-on:monitorplaceId="getMonId"></data-filter>
