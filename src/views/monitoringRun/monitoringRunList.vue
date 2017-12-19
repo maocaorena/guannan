@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="downpage" v-if="total>0 && $route.path.indexOf('item')<0">
-                <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
+                <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
             </div>
         </div>
     </div>
@@ -153,9 +153,6 @@ export default {
         pagechange(val) {
             console.log(val + '页')
         },
-        selectall(val) {
-            console.log(val)
-        },
         add() {
             this.$store.dispatch('SetFirstStepAlert', 1)
         },
@@ -175,7 +172,6 @@ export default {
                     clientnameormonitorplacename: this.clientnameormonitorplacename,
                 },
                 success: function(res){
-                    console.log(res)
                     _this.loading = false;
                     let _res = res.response;
                     if(_res.info.code==100000){
@@ -193,7 +189,6 @@ export default {
                     let _res = res.response;
                     if(_res.info.code == 100000){
                         _this1.leftbars = _res.content;
-                        console.log(_this1.$route.path.indexOf('item'))
                         if(!_this1.$route.query.clientid && _this1.$route.path.indexOf('item')<0){
                             _this1.$router.replace({path:'/monitoringRun/list',query:{clientid: _res.content[0].clientList[0].clientid}})
                         }
@@ -203,14 +198,12 @@ export default {
         }
     },
     created() {
-        console.log(this.$route.query.clientid)
         this.getBar();
         if(this.$route.query.clientid){
             this.getList()
         };
     },
     mounted(){
-        console.log('asas',this.$refs.list.getBoundingClientRect().width);
         this.width = this.$refs.list.getBoundingClientRect().width - 17;
         let _this = this;
         window.onresize = function(){

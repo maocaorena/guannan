@@ -168,7 +168,6 @@ export default {
     },
     watch: {
         '$route' (to, from) {
-            console.log(to)
             if(to.path.indexOf('item')<0){
                 this.pageNum = 1;
                 this.getList();
@@ -300,7 +299,6 @@ export default {
                 delname = item.monitorplacename;
             }else{
                 delname = '多个';
-                console.log('more',delname)
             };
             this.$confirm('是否删除'+delname+'?', '提示', {
                 confirmButtonText: '确定',
@@ -316,7 +314,6 @@ export default {
                         ids: ids,
                     },
                     success: function(res){
-                        console.log(res);
                         _this.loading = false;
                         if(res.response.info.code==100000){
                             _this.$message.success({message: res.response.info.msg,duration: Util.time()});
@@ -343,7 +340,6 @@ export default {
                     monitorplacenameorinstallname: this.keyWords,
                 },
                 success: function(res){
-                    console.log(res)
                     _this.loading = false;
                     let _res = res.response;
                     if(_res.info.code==100000){
@@ -361,7 +357,6 @@ export default {
                     let _res = res.response;
                     if(_res.info.code == 100000){
                         _this1.leftbars = _res.content;
-                        console.log(_this1.$route.path.indexOf('item'))
                         if(!_this1.$route.query.clientid && _this1.$route.path.indexOf('item')<0){
                             _this1.$router.replace({path:'/monitoringInstall/list',query:{clientid: _res.content[0].clientList[0].clientid}})
                         }
@@ -371,6 +366,15 @@ export default {
         }
     },
     created() {
+    	var goEasy = new GoEasy({
+             appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
+        });
+        goEasy.subscribe({
+		    channel: 'modulecommunicate',
+		    onMessage: function(message){
+		        console.log('modulecommunicate',message);
+		    }
+		});
         this.getBar();
         if(this.$route.query.clientid){
             this.getList()
