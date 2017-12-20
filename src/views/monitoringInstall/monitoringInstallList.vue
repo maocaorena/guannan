@@ -130,12 +130,14 @@
                 <pages-v :pageNum="pageNum" :pageSize="pagesize" :total="total" v-on:pagechange="pagechange" v-on:selectall="selectall"></pages-v>
             </div>
             <step-v v-if="firstStepAlert.state > 0"></step-v>
+            <lookSetting-v :id="lookSettingId" v-if="lookSettingState" v-on:close="closeLookSetting"></lookSetting-v>
         </div>
     </div>
 </template>
 <script>
 import pages from '../../components/pages.vue';
 import step from './step.vue';
+import lookSetting from './lookSetting.vue';
 import { Util } from '../../lib/util.js'
 export default {
     data() {
@@ -150,11 +152,14 @@ export default {
             keyWords: '',
             leftbars: [],
             width: '',
+            lookSettingState: false,
+            lookSettingId: ''
         }
     },
     components: {
         'pages-v': pages,
         'step-v': step,
+        'lookSetting-v': lookSetting,
     },
     filters:{
         cutTime(val){
@@ -186,40 +191,12 @@ export default {
         }
     },
     methods: {
+    	closeLookSetting(){
+    		this.lookSettingState = false;
+    	},
     	lookSetting(id){
-    		let _this = this;
-    		this.api.postN({
-                url: '/datasourcequery/monitorDataSourceQuery',
-                params: {
-                    id: id,
-                },
-                success: function(res){
-                    if(res.response.info.code==100000){
-                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-                    }else{
-                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
-                    }
-                },
-                error: function(error){
-                	_this.$message.error({message: '服务器错误',duration: Util.time()});
-                }
-            });
-            this.api.postN({
-                url: '/moduleparam/moduleCommunicateStatus',
-                params: {
-                    id: id,
-                },
-                success: function(res){
-                    if(res.response.info.code==100000){
-                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-                    }else{
-                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
-                    }
-                },
-                error: function(error){
-                	_this.$message.error({message: '服务器错误',duration: Util.time()});
-                }
-            })
+    		this.lookSettingId = id;
+    		this.lookSettingState = true;
     	},
     	setting(){
     		if(this.checkboxModel.length > 0){
@@ -366,15 +343,6 @@ export default {
         }
     },
     created() {
-    	var goEasy = new GoEasy({
-             appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
-        });
-        goEasy.subscribe({
-		    channel: 'modulecommunicate',
-		    onMessage: function(message){
-		        console.log('modulecommunicate',message);
-		    }
-		});
         this.getBar();
         if(this.$route.query.clientid){
             this.getList()
