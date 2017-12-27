@@ -129,7 +129,7 @@ export default {
     exportExcel(param) {
       let url = "/exceldata/exportTransducerRun";
       let data = param;
-      this.api.handleAjax(url, data).done(function(res) {
+      this.api.handleAjax(url, data,'get').done(function(res) {
 
       }).fail(function(res) {
         console.log(res);
