@@ -96,58 +96,10 @@
         <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
       </div>
     </div>
-<<<<<<< HEAD
-    <alert-v v-on:close="close" height="320px" :btn="btn" v-on:next="next" v-if="addDialog
-">
-      <span slot="name">{{modTitle}}</span>
-      <div class="tep-in" slot="con">
-        <input type="hidden" v-model="systemId">
-        <div class="as-item" style="margin-top: 15px">
-          <p class="as-item-tit">
-            用户名：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="username">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            密码：
-          </p>
-          <div class="as-item-con">
-            <input type="password" name="" value="" v-model="password">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            真实姓名：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="name">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            手机号：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="phone">
-          </div>
-        </div>
-        <div class="as-item">
-          <p class="as-item-tit">
-            邮箱：
-          </p>
-          <div class="as-item-con">
-            <input type="text" name="" value="" v-model="email">
-          </div>
-        </div>
-      </div>
-    </alert-v>
-=======
+
     <accountDialog :item="accountData" :addType="addType" v-if="addDialog" @getParentData="getData"></accountDialog>
     <roleDialog :userId="userId" :addType="addType" v-if="roleDialog" @getParentData="getData"></roleDialog>
->>>>>>> 6078c944b2aefee2dd8d3dc22f44ee726ce70f75
+
   </div>
 </template>
 <script>
@@ -156,10 +108,6 @@ import accountDialog from './accountDialog.vue';
 import roleDialog from './roleDialog.vue';
 import alert from '../../components/alert.vue';
 import { Util } from '../../lib/util.js';
-<<<<<<< HEAD
-
-=======
->>>>>>> 6078c944b2aefee2dd8d3dc22f44ee726ce70f75
 
 export default {
   data() {
@@ -293,23 +241,8 @@ export default {
       
       if (type == 2) {
         self.addType = 2;
-<<<<<<< HEAD
-        self.modTitle = "编缉帐号";
-        let url = "/addSystemUser";
-        let data = {
-          systemId: id
-        };
-        this.api.handleAjax(url, data).done(function(res) {
-          // console.log(res);
-          self.systemId = res.systemId;
-          self.username = res.username;
-          self.password = res.password;
-          self.name = res.name;
-          self.phone = res.phone;
-        })
-=======
+
         self.accountData = param
->>>>>>> 6078c944b2aefee2dd8d3dc22f44ee726ce70f75
       }
     },
     setRoles(id) {

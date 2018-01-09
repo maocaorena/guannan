@@ -7,7 +7,7 @@
           </select>
         </div>
         <div class="handle-item">
-          <select name="" id="" v-model="clientCompany">
+          <select name="" id="" v-model="clientId">
             <option value=" ">请选择公司</option>
             <option :value="item.clientid" :key="item.clientid" v-for="(item,index) of companyArr">{{item.clientname}}</option>
           </select>
@@ -44,7 +44,7 @@
         data(){
             return {
                 clientCity: "",
-                clientCompany: "",
+                clientId: "",
                 monitorplaceId: "",
                 timedetail: 1,
                 starttime: "",
@@ -61,6 +61,7 @@
         },
         methods:{
             exportExcel() {
+              // console.log(this.clientId);
               this.$emit("exportExcel",{
                 clientId: this.clientId,
                 monitorplaceid: this.monitorplaceid,

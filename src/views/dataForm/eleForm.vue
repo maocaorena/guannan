@@ -148,6 +148,14 @@
 			this.getData();
 		},
 		methods: {
+			createURL (myURL,param){
+				let url = ""
+				for (var key in param) {
+					var link = '&' + key + "=" + param[key];
+					url += link; 
+				}	            
+	            return myURL + "?" + url.substr(1)
+	        },
 			pagechange(val) {
 				console.log(val + '页')
 			},
@@ -179,13 +187,24 @@
 				})
 			},
 			exportExcel(param) {
-				let url = "/exceldata/excelExportElecricConsume";
+				let url = "http://120.26.222.27:10003/exceldata/excelExportElecricConsume";
 				let data = param;
-				this.api.handleAjax(url, data,'get').done(function(res) {
+      			window.location.href = this.createURL(url,data)
 
-				}).fail(function(res) {
-					console.log(res);
-				})
+				// console.log(this.createURL(url,data));
+				// for( let v in data) {
+				// 	console.log(v, data[v])
+				// }
+				// console.log(data)
+				// data.forEach(function(v,index) {
+				// 	console.log(v,index)
+				// })
+				// console.log(this.createURL(url,data));
+				// this.api.handleAjax(url, data,'get').done(function(res) {
+
+				// }).fail(function(res) {
+				// 	console.log(res);
+				// })
 			}
 		},
 		watch: {

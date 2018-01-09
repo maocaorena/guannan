@@ -1,7 +1,7 @@
 <template>
   <div id="eleForm" class="wrapper">
     <div class="leftBlock">
-      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" :key="index"  v-for="(item,index) of leftbars">
+      <router-link :to="{path:item.url}" :class="{selected:$route.fullPath==item.url}" tag="div" class="first-list type1" :key="index" v-for="(item,index) of leftbars">
         <p class="first-item">
           {{item.tit}}
         </p>
@@ -156,17 +156,21 @@ export default {
 
   },
   methods: {
+    createURL(myURL, param) {
+      let url = ""
+      for (var key in param) {
+        var link = '&' + key + "=" + param[key];
+        url += link;
+      }
+      return myURL + "?" + url.substr(1)
+    },
     pagechange(val) {
       console.log(val + '页')
     },
     exportExcel(param) {
-      let url = "/exceldata/exportexcelFanFalult";
+      let url = "http://120.26.222.27:10003/exceldata/exportexcelFanFalult";
       let data = param;
-      this.api.handleAjax(url, data,'get').done(function(res) {
-
-      }).fail(function(res) {
-        console.log(res);
-      })
+      window.location.href = this.createURL(url,data)
     },
     getData() {
       let url = "/finddata/findFanFaultByCondition";

@@ -139,17 +139,21 @@ export default {
 
   },
   methods: {
+    createURL(myURL, param) {
+      let url = ""
+      for (var key in param) {
+        var link = '&' + key + "=" + param[key];
+        url += link;
+      }
+      return myURL + "?" + url.substr(1)
+    },
     pagechange(val) {
       console.log(val + '页')
     },
     exportExcel(param) {
-      let url = "/exceldata/exportexcelFanRun";
+      let url = "http://120.26.222.27:10003/exceldata/exportexcelFanRun";
       let data = param;
-      this.api.handleAjax(url, data).done(function(res) {
-
-      }).fail(function(res) {
-        console.log(res);
-      })
+      window.location.href = this.createURL(url,data)
     },
     getData() {
       let url = "/finddata/findFandataByCondition";
