@@ -123,6 +123,25 @@
 
 		},
 		methods: {
+			sendMessage(){
+				let _this = this;
+	    		this.api.postN({
+	                url: '/readmonitordata/readMonitorData',
+	                params: {
+	                    deviceUUID: this.deviceUUID,
+	                },
+	                success: function(res){
+	                    if(res.response.info.code==100000){
+	                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+	                    }else{
+	                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
+	                    }
+	                },
+	                error: function(error){
+	                	_this.$message.error({message: '服务器错误',duration: Util.time()});
+	                }
+	            });
+			},
 			initChart() {
 				this.chart = echarts.init(document.getElementById('main'));
 				this.chart.setOption({
@@ -162,7 +181,23 @@
 				});
 			},
 		},
-		created() {},
+		created() {
+			goEasy = new GoEasy({
+	             appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
+	        });
+	        goEasy.subscribe({
+			    channel: 'modulecommunicate',
+			    onMessage: function(message){
+			        console.log('modulecommunicate',message);
+			    }
+			});
+			goEasy.subscribe({
+			    channel: 'monitornameport',
+			    onMessage: function(message){
+			        console.log('monitornameport',message);
+			    }
+			});
+		},
 		mounted() {
 			this.initChart();
 		}

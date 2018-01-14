@@ -68,7 +68,7 @@
 			sendMessage(){
 				let _this = this;
 	    		this.api.postN({
-	                url: '/datasourcequery/monitorDataSourceQuery',
+	                url: '/datasourcequery/monitorModulemonitorParameQuery',
 	                params: {
 	                    id: this.id,
 	                },
@@ -86,28 +86,28 @@
 			}
 		},
 		created(){
-			this.sendMessage();
 			goEasy = new GoEasy({
 	             appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
 	        });
 	        goEasy.subscribe({
 			    channel: 'modulecommunicate',
 			    onMessage: function(message){
-			        console.log('modulecommunicate',message);
+			        console.log('modulecommunicate',message.content);
 			    }
 			});
 			goEasy.subscribe({
 			    channel: 'monitornameport',
 			    onMessage: function(message){
-			        console.log('monitornameport',message);
+			        console.log('monitornameport',message.content);
 			    }
 			});
+			this.sendMessage();
 		},
 		beforeDestroy(){
-			goEasy. unsubscribe ({
+			goEasy.unsubscribe ({
 				channel: "monitornameport"
 			});
-			goEasy. unsubscribe ({
+			goEasy.unsubscribe ({
 				channel: "modulecommunicate"
 			});
 		}
