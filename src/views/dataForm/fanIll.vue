@@ -12,7 +12,7 @@
         <div class="rt-item rtItemSelect">
           用机故障报表
         </div>
-        <data-filter v-on:exportExcel="exportExcel"></data-filter>
+        <data-filter v-on:exportExcel="exportExcel" v-on:searchFn="getData"></data-filter>
       </div>
       <div class="content">
         <div class="list-tit">

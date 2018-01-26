@@ -64,8 +64,8 @@
               // console.log(this.clientId);
               this.$emit("exportExcel",{
                 clientId: this.clientId,
-                monitorplaceid: this.monitorplaceid,
-                timedetail: this.timedetail,
+                monitorplaceid: this.monitorplaceId,
+                timetype: this.timedetail,
                 starttime: this.starttime,
                 endtime: this.endtime
               })
@@ -74,7 +74,7 @@
               this.$emit("searchFn",{
                 clientid: this.clientCompany,
                 monitorplaceid: this.monitorplaceId,
-                timedetail: this.dataType
+                time: this.dataType
               })
             },
             getData() {
@@ -102,9 +102,9 @@
               let self = this;
               let url = "/monitorplace/findMonitorplaceByConditions";
               let data = {
-                clientid: this.clientCompany
+                clientid: this.clientId
               };
-              if (this.clientCompany == " ") return;
+              if (!this.clientId) return;
               // debugger;
               this.api.handleAjax(url, data).done(function(res) {
                 self.monitorArr = res.list;
@@ -118,7 +118,7 @@
         },
         watch: {
           clientCity: 'getCompany',
-          clientCompany: 'getMonitor'
+          clientId: 'getMonitor'
         },
     }
 </script>
