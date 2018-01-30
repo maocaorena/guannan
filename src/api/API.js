@@ -7,7 +7,14 @@ var config = {
 	dataType: "json",
 	timeout: 1800000,
 };
+
+const goEasy = new GoEasy({
+     appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
+});
 class API {
+	createdGoEasy(){
+		return goEasy;
+	}
 	commonUrl (){
 		return config.baseUrl;
 	};
