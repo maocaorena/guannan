@@ -114,7 +114,7 @@
 <script>
 	import echarts from 'echarts';
 	import { Util } from '../../lib/util.js';
-	var goEasy = null;
+//	var goEasy = null;
 	export default {
 		data() {
 			return {
@@ -184,18 +184,22 @@
 			},
 		},
 		created() {
-			goEasy = new GoEasy({
+			/*goEasy = new GoEasy({
 	             appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
 	        });
 	        goEasy.subscribe({
 			    channel: 'infocurrentdata',
 			    onMessage: function(message){
-			        console.log('infocurrentdata',message);
+			        console.log('modulecommunicate',message.content);
 			    }
+			});*/
+			this.api.createdGoEasy().subscribe({
+				channel: 'infocurrentdata',
+				onMessage: function(message) {
+					console.log('modulecommunicate', message.content);
+				}
 			});
-			setTimeout(() => {
-				this.sendMessage()
-			}, 5000)
+			this.sendMessage()
 		},
 		mounted() {
 			this.initChart();
