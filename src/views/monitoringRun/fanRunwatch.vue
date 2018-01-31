@@ -113,6 +113,8 @@
 
 <script>
 	import echarts from 'echarts';
+	import { Util } from '../../lib/util.js';
+	var goEasy = null;
 	export default {
 		data() {
 			return {
@@ -186,20 +188,22 @@
 	             appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
 	        });
 	        goEasy.subscribe({
-			    channel: 'modulecommunicate',
+			    channel: 'infocurrentdata',
 			    onMessage: function(message){
-			        console.log('modulecommunicate',message);
+			        console.log('infocurrentdata',message);
 			    }
 			});
-			goEasy.subscribe({
-			    channel: 'monitornameport',
-			    onMessage: function(message){
-			        console.log('monitornameport',message);
-			    }
-			});
+			setTimeout(() => {
+				this.sendMessage()
+			}, 5000)
 		},
 		mounted() {
 			this.initChart();
+		},
+		beforeDestroy(){
+			goEasy.unsubscribe ({
+				channel: "infocurrentdata"
+			});
 		}
 	}
 </script>

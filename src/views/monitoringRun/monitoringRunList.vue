@@ -204,10 +204,12 @@ export default {
         };
     },
     mounted(){
-        this.width = this.$refs.list.getBoundingClientRect().width - 17;
-        let _this = this;
-        window.onresize = function(){
-            _this.width = _this.$refs.list.getBoundingClientRect().width - 17;
+        if(this.$route.path === 'list'){
+            this.width = this.$refs.list.getBoundingClientRect().width - 17;
+            let _this = this;
+            window.onresize = function(){
+                _this.width = _this.$refs.list.getBoundingClientRect().width - 17;
+            }
         }
     }
 }
