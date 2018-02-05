@@ -139,17 +139,14 @@ export default {
       let data = param;
       window.location.href = this.createURL(url,data)
     },
-    getData() {
+    getData(param) {
       let url = "/finddata/findTransducerByCondition";
       let data = {
         currentpage: this.pageNum,
-        pagesize: this.pageSize,
-        clientid: 1,
-        monitorplaceid: 1,
-        timedetail: "",
-        startTime: "",
-        endTime: ""
+        pagesize: this.pageSize
       }
+      Object.assign(data, param);
+
       this.api.handleAjax(url,data).done(function(res){
         if(res.list.length > 0) {
           self.total = res.total;

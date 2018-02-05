@@ -27,15 +27,16 @@
             <option value="3">报表</option>
           </select>
         </div>
+        
         <div class="handle-item">
           <button type="button" name="button" @click="searchFn()">查询</button>
         </div>
-        <div class="handle-item">
+        <div class="handle-item" style="margin-right: 20px;">
           <button type="button" name="button" @click="exportExcel()">导出</button>
         </div>
-        <div class="handle-item">
+        <!-- <div class="handle-item" >
           <button type="button" name="button">自定义报表</button>
-        </div>
+        </div> -->
 
       </div>
 </template>
@@ -52,7 +53,8 @@
                 dataType: 1,
                 provinceArr: [],
                 companyArr: [],
-                monitorArr: []
+                monitorArr: [],
+                value6: ''
             }
         },
         props: [],
@@ -71,10 +73,14 @@
               })
             },
             searchFn() {
+              // console.log(this.value6);
+              // return;
               this.$emit("searchFn",{
-                clientid: this.clientCompany,
+                clientId: this.clientId,
                 monitorplaceid: this.monitorplaceId,
-                time: this.dataType
+                timetype: this.timedetail,
+                starttime: this.starttime,
+                endtime: this.endtime
               })
             },
             getData() {

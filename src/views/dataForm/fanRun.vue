@@ -153,20 +153,19 @@ export default {
     exportExcel(param) {
       let url = "http://120.26.222.27:10003/exceldata/exportexcelFanRun";
       let data = param;
+      // console.log(this.createURL(url,data));
+      //   return;
       window.location.href = this.createURL(url,data)
     },
-    getData() {
+    getData(param) {
       let url = "/finddata/findFandataByCondition";
       let data = {
         currentpage: this.pageNum,
-        pagesize: this.pageSize,
-        clientid: 1,
-        monitorplaceid: 1,
-        timedetail: "",
-        startTime: "",
-        endTime: ""
+        pagesize: this.pageSize
       }
-      this.api.handleAjax(url, data,'get').done(function(res) {
+      Object.assign(data, param);
+
+      this.api.handleAjax(url, data).done(function(res) {
         if (res.list.length > 0) {
           self.total = res.total;
           self.pageSize = res.pageSize;

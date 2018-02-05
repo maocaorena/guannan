@@ -70,7 +70,7 @@ export default {
       var self = this;
       let url = "/getPermission";
       let data = {
-        idList: "["+self.roleId+"]"
+        id: self.roleId
       }
       this.api.handleAjax(url,data).done(function(res){
           res.list.forEach(function(item){
