@@ -9,11 +9,16 @@ var config = {
 };
 
 const goEasy = new GoEasy({
-     appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f'
+     appkey: 'BC-fe15f72d698248f6986042fc4549f238'
 });
 class API {
 	createdGoEasy(){
 		return goEasy;
+	}
+	unsubscribe(txt){
+		goEasy.unsubscribe ({
+			channel: txt
+		});
 	}
 	commonUrl (){
 		return config.baseUrl;
@@ -27,7 +32,7 @@ class API {
 			type:"get",
 			dataType: config.dataType,
 			timeout: config.timeout,
-			data: dd.params,
+			params: dd.params,
 			success: dd.success,
 			error:function(xhr,textstatus,thrown){
 

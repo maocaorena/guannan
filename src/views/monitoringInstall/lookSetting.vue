@@ -86,9 +86,23 @@ export default {
 
 	},
 	mounted(){
-		this.sendMessage()
+		this.sendMessage();
 		let that = this;
-		that.sendMessage();
+		this.api.createdGoEasy().subscribe({
+			channel: 'modulecommunicate',
+			onMessage: function(result) {
+				that.list.push(JSON.parse(result.content))
+				console.log(that.list)
+			}
+		});
+		this.api.createdGoEasy().subscribe({
+			channel: 'monitornameport',
+			onMessage: function(result) {
+				console.log('monitornameport',result.content);
+				that.list1.push(...JSON.parse(result.content))
+			}
+		});
+		/*that.sendMessage();
 		goEasy = new GoEasy({
 			appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f',
 			onConnected: function () {
@@ -110,15 +124,17 @@ export default {
 				console.log('monitornameport',result.content);
 				that.list1.push(...JSON.parse(result.content))
 			}
-		});
+		});*/
 	},
 	beforeDestroy(){
-		goEasy.unsubscribe ({
+		this.api.unsubscribe('monitornameport');
+		this.api.unsubscribe('modulecommunicate');
+		/*goEasy.unsubscribe ({
 			channel: "monitornameport"
 		});
 		goEasy.unsubscribe ({
 			channel: "modulecommunicate"
-		});
+		});*/
 	}
 }
 </script>

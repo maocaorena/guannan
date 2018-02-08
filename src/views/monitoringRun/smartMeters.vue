@@ -2,7 +2,7 @@
 	<div id="smartMeters">
 		<div class="rightTabbar">
 			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid}}">
+				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
 					风机运行监测
 				</router-link>
 			</div>
@@ -12,7 +12,7 @@
 				</router-link>
 			</div>
 			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid}}">
+				<router-link :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
 					变频器运行监测
 				</router-link>
 			</div>
@@ -28,120 +28,122 @@
 						<div class="bottom-state">
 							<div class="bottom-state-col">
 								<div class="bottom-state-item">
-									<p class="left">A相电压</p>
-									<p class="right white">223</p>
+									<p class="left" @click="getList('A相电压')">A相电压</p>
+									<p class="right white">{{message.avm}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">B相电压</p>
-									<p class="right white">235</p>
+									<p class="left" @click="getList('B相电压')">B相电压</p>
+									<p class="right white">{{message.bvm}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">C相电压</p>
-									<p class="right white">238</p>
+									<p class="left" @click="getList('C相电压')">C相电压</p>
+									<p class="right white">{{message.cvm}}</p>
 								</div>
 							</div>
 							<div class="bottom-state-col">
 
 								<div class="bottom-state-item">
-									<p class="left">A相电流</p>
-									<p class="right white">89</p>
+									<p class="left" @click="getList('A相电流')">A相电流</p>
+									<p class="right white">{{message.aam}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">B相电流</p>
-									<p class="right white">95</p>
+									<p class="left" @click="getList('B相电流')">B相电流</p>
+									<p class="right white">{{message.bam}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">C相电流</p>
-									<p class="right white">90</p>
+									<p class="left" @click="getList('C相电流')">C相电流</p>
+									<p class="right white">{{message.cam}}</p>
 								</div>
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150">有功功率</p>
-									<p class="right white">138</p>
+									<p class="left width150" @click="getList('有功功率')">有功功率</p>
+									<p class="right white">{{message.posipower}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">无功功率</p>
-									<p class="right white">54</p>
+									<p class="left width150" @click="getList('无功功率')">无功功率</p>
+									<p class="right white">{{message.negipower}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">C相电流</p>
-									<p class="right white">90</p>
+									<p class="left width150" @click="getList('功率因素')">功率因素</p>
+									<p class="right white">{{message.powerfactor}}</p>
 								</div>
 							</div>
 							<div style="clear: both;;"></div>
 						</div>
 					</div>
 				</div>
-				<div class="con-item">
-					<p class="con-item-tit">
-						风机运行状态
-					</p>
-					<div class="con-item-con">
-						<div class="bottom-state">
-							<div id="main" style="width: 800px;height: 400px;"></div>
-						</div>
-					</div>
-				</div>
+				<data-v :paramsName="paramsName"></data-v>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import echarts from 'echarts';
+	import { Util } from '../../lib/util.js';
+	import data from './data.vue'
 	export default {
 		data() {
 			return {
-				chart: null
+				deviceUUID: this.$route.query.monitoruid,
+				message: {
+					avm: '-',
+					bvm: '-',
+					cvm: '-',
+					aam: '-',
+					bam: '-',
+					cam: '-',
+					posipower: '-',
+					negipower: '-',
+					powerfactor: '-'
+				},
+				paramsName: ''
 			}
 		},
 		components: {
-
+			'data-v' : data
 		},
 		methods: {
-			initChart() {
-				this.chart = echarts.init(document.getElementById('main'));
-				this.chart.setOption({
-					title: {
-						text: '月平均气温'
-					},
-					tooltip: {
-						trigger: 'axis'
-					},
-					grid: {
-						left: '3%',
-						right: '4%',
-						bottom: '3%',
-						containLabel: true
-					},
-					toolbox: {
-						feature: {
-							saveAsImage: {}
-						}
-					},
-					xAxis: {
-						type: 'category',
-						boundaryGap: false,
-						data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月','八月','九月','十月','十一月','十二月']
-					},
-					yAxis: {
-						type: 'value'
-					},
-					series: [
-						{
-							name: '温度',
-							type: 'line',
-							stack: '总量',
-							data: [20, 22, 11, 34, 20, 30, 10,40,20.5,42,13,11,]
-						}
-					]
-				});
+			getList(name){
+				console.log(name)
+				this.paramsName = name;
+			},
+			sendMessage(){
+				let _this = this;
+	    		this.api.postN({
+	                url: '/readmonitordata/readMonitorData',
+	                params: {
+	                    deviceUUID: this.deviceUUID,
+	                },
+	                success: function(res){
+	                    if(res.response.info.code==100000){
+	                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+	                    }else{
+	                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
+	                    }
+	                },
+	                error: function(error){
+	                	_this.$message.error({message: '服务器错误',duration: Util.time()});
+	                }
+	            });
 			},
 		},
-		created() {},
+		created() {
+			let _this = this;
+			this.api.createdGoEasy().subscribe({
+				channel: 'infocurrentdata',
+				onMessage: function(message) {
+					_this.message = JSON.parse(message.content);
+					console.log('infocurrentdata', message.content);
+				}
+			});
+			this.sendMessage()
+		},
 		mounted() {
-			this.initChart();
+			this.getList('A相电压');
+		},
+		beforeDestroy(){
+			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>
