@@ -2,12 +2,12 @@
 	<div id="hzWatch">
 		<div class="rightTabbar">
 			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid}}">
+				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
 					风机运行监测
 				</router-link>
 			</div>
 			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid}}">
+				<router-link :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
 					智能电表
 				</router-link>
 			</div>
@@ -26,11 +26,11 @@
 						<div class="bottom-state">
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150">变频器运行频率</p>
-									<p class="right white">43</p>
+									<p class="left width150" @click="getList('变频器运行频率')">变频器运行频率</p>
+									<p class="right white">{{message.tranfrequency}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">变频器运行时间</p>
+									<p class="left width150" @click="getList('变频器运行时间')">变频器运行时间</p>
 									<p class="right white">300.2</p>
 								</div>
 							</div>
@@ -48,75 +48,70 @@
 						</div>
 					</div>
 				</div>
-				<div class="con-item">
-					<p class="con-item-tit">
-						风机运行状态
-					</p>
-					<div class="con-item-con">
-						<div class="bottom-state">
-							<div id="main" style="width: 800px;height: 400px;"></div>
-						</div>
-					</div>
-				</div>
+				<data-v :paramsName="paramsName"></data-v>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import echarts from 'echarts';
+	import { Util } from '../../lib/util.js';
+	import data from './data.vue'
 	export default {
 		data() {
 			return {
-				chart: null
+				deviceUUID: this.$route.query.monitoruid,
+				message: {
+					tranfrequency: '-',
+					bvm: '-',
+				},
+				paramsName: ''
 			}
 		},
 		components: {
-
+			'data-v' : data
 		},
 		methods: {
-			initChart() {
-				this.chart = echarts.init(document.getElementById('main'));
-				this.chart.setOption({
-					title: {
-						text: '月平均气温'
-					},
-					tooltip: {
-						trigger: 'axis'
-					},
-					grid: {
-						left: '3%',
-						right: '4%',
-						bottom: '3%',
-						containLabel: true
-					},
-					toolbox: {
-						feature: {
-							saveAsImage: {}
-						}
-					},
-					xAxis: {
-						type: 'category',
-						boundaryGap: false,
-						data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月','八月','九月','十月','十一月','十二月']
-					},
-					yAxis: {
-						type: 'value'
-					},
-					series: [
-						{
-							name: '温度',
-							type: 'line',
-							stack: '总量',
-							data: [20, 22, 11, 34, 20, 30, 10,40,20.5,42,13,11,]
-						}
-					]
-				});
+			getList(name){
+				console.log(name)
+				this.paramsName = name;
+			},
+			sendMessage(){
+				let _this = this;
+	    		this.api.postN({
+	                url: '/readmonitordata/readMonitorData',
+	                params: {
+	                    deviceUUID: this.deviceUUID,
+	                },
+	                success: function(res){
+	                    if(res.response.info.code==100000){
+	                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
+	                    }else{
+	                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
+	                    }
+	                },
+	                error: function(error){
+	                	_this.$message.error({message: '服务器错误',duration: Util.time()});
+	                }
+	            });
 			},
 		},
-		created() {},
+		created() {
+			let _this = this;
+			this.api.createdGoEasy().subscribe({
+				channel: 'infocurrentdata',
+				onMessage: function(message) {
+					_this.message = JSON.parse(message.content);
+					console.log('infocurrentdata', message.content);
+				}
+			});
+			this.sendMessage()
+		},
 		mounted() {
-			this.initChart();
+			this.getList('变频器运行频率');
+		},
+		beforeDestroy(){
+			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>
