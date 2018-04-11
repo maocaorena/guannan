@@ -171,7 +171,7 @@
 					endTime: ""
 				}
 				Object.assign(data, param);
-				this.api.handleAjax(url, data, "get").done(function(res) {
+				this.api.handleAjax(url, data, "post").done(function(res) {
 					if(res.list.length > 0) {
 						self.total = res.total;
 						self.pageSize = res.pageSize;
