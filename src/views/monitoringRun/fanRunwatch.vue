@@ -5,12 +5,12 @@
 				风机运行监测
 			</div>
 			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid}}">
+				<router-link :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
 					智能电表
 				</router-link>
 			</div>
 			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid}}">
+				<router-link :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
 					变频器运行监测
 				</router-link>
 			</div>
@@ -28,10 +28,10 @@
 								风机控制继电器
 							</div>
 							<div class="right">
-								<div class="right-l">
+								<div class="right-l" @click="open">
 									开启
 								</div>
-								<div class="right-r">
+								<div class="right-r" @click="close">
 									关闭
 								</div>
 							</div>
@@ -43,12 +43,12 @@
 									<p class="right white">开机/停机</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">风机运行时间(h)</p>
-									<p class="right white">300.35</p>
+									<p class="left" @click="getList('风机运行时间')">风机运行时间(h)</p>
+									<p class="right white">{{message.hours}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left">风机环境温度(℃)</p>
-									<p class="right white">35</p>
+									<p class="left" @click="getList('风机环境温度')">风机环境温度(℃)</p>
+									<p class="right white">{{message.temp}}</p>
 								</div>
 							</div>
 							<div class="bottom-state-col">
@@ -67,28 +67,28 @@
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150">进气滤网铀压值</p>
-									<p class="right white mr">-128</p>
+									<p class="left width150" @click="getList('进气滤网负压值')">进气滤网负压值</p>
+									<p class="right white mr">{{message.infilnegpressure}}</p>
 									<p class="right bad">正常</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">出气压力</p>
-									<p class="right white mr">0.04</p>
+									<p class="left width150" @click="getList('出气压力')">出气压力</p>
+									<p class="right white mr">{{message.outairpressure}}</p>
 									<p class="right soheight">正常</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">出气温度</p>
-									<p class="right white mr">58</p>
+									<p class="left width150" @click="getList('出气温度')">出气温度</p>
+									<p class="right white mr">{{message.outairtemp}}</p>
 									<p class="right allright">过高</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">润滑油油压</p>
-									<p class="right white mr">1.2</p>
+									<p class="left width150" @click="getList('润滑油油压')">润滑油油压</p>
+									<p class="right white mr">{{message.oilpressure}}</p>
 									<p class="right soheight">正常</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150">润滑油油温</p>
-									<p class="right white mr">79</p>
+									<p class="left width150" @click="getList('润滑油油温')">润滑油油温</p>
+									<p class="right white mr">{{message.oiltemp}}</p>
 									<p class="right allright">正常</p>
 								</div>
 							</div>
@@ -96,75 +96,123 @@
 						</div>
 					</div>
 				</div>
-				<div class="con-item">
-					<p class="con-item-tit">
-						风机运行状态
-					</p>
-					<div class="con-item-con">
-						<div class="bottom-state">
-							<div id="main" style="width: 800px;height: 400px;"></div>
-						</div>
-					</div>
-				</div>
+				<data-v :paramsName="paramsName"></data-v>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import echarts from 'echarts';
+	import { Util } from '../../lib/util.js';
+	import data from './data.vue'
 	export default {
 		data() {
 			return {
-				chart: null
+				deviceUUID: this.$route.query.monitoruid,
+				message: {
+					hours: '-',
+					timedetail: '-',
+					temp: '-',
+					infilnegpressure: '-',
+					outairpressure: '-',
+					outairtemp: '-',
+					oilpressure: '-',
+					oiltemp: '-'
+				},
+				paramsName: ''
 			}
 		},
 		components: {
-
+			'data-v': data
 		},
 		methods: {
-			initChart() {
-				this.chart = echarts.init(document.getElementById('main'));
-				this.chart.setOption({
-					title: {
-						text: '月平均气温'
+			open() {
+				let _this = this;
+				let pw = prompt("请输入密码：");
+				if(pw) {
+					console.log(pw)
+					this.api.postN({
+						url: 'monitor/openMonitor',
+						params: {
+							deviceUUID: this.deviceUUID,
+						},
+						success: function(res) {
+							if(res.response.info.code == 100000) {
+								_this.$message.success({
+									message: res.response.info.msg,
+									duration: Util.time()
+								});
+							} else {
+								_this.$message.error({
+									message: res.response.info.msg,
+									duration: Util.time()
+								});
+							}
+						},
+						error: function(error) {
+							console.log(error)
+							_this.$message.error({
+								message: '服务器错误',
+								duration: Util.time()
+							});
+						}
+					})
+				} else {
+
+				}
+			},
+			close(){
+				
+			},
+			getList(name) {
+				console.log(name)
+				this.paramsName = name;
+			},
+			sendMessage() {
+				let _this = this;
+				this.api.postN({
+					url: '/readmonitordata/readMonitorData',
+					params: {
+						deviceUUID: this.deviceUUID,
 					},
-					tooltip: {
-						trigger: 'axis'
-					},
-					grid: {
-						left: '3%',
-						right: '4%',
-						bottom: '3%',
-						containLabel: true
-					},
-					toolbox: {
-						feature: {
-							saveAsImage: {}
+					success: function(res) {
+						if(res.response.info.code == 100000) {
+							_this.$message.success({
+								message: res.response.info.msg,
+								duration: Util.time()
+							});
+						} else {
+							_this.$message.error({
+								message: res.response.info.msg,
+								duration: Util.time()
+							});
 						}
 					},
-					xAxis: {
-						type: 'category',
-						boundaryGap: false,
-						data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月','八月','九月','十月','十一月','十二月']
-					},
-					yAxis: {
-						type: 'value'
-					},
-					series: [
-						{
-							name: '温度',
-							type: 'line',
-							stack: '总量',
-							data: [20, 22, 11, 34, 20, 30, 10,40,20.5,42,13,11,]
-						}
-					]
+					error: function(error) {
+						_this.$message.error({
+							message: '服务器错误',
+							duration: Util.time()
+						});
+					}
 				});
 			},
 		},
-		created() {},
+		created() {
+			let _this = this;
+			this.api.createdGoEasy().subscribe({
+				channel: 'infocurrentdata',
+				onMessage: function(message) {
+					_this.message = JSON.parse(message.content);
+					console.log('infocurrentdata', message.content);
+				}
+			});
+			this.sendMessage()
+		},
 		mounted() {
-			this.initChart();
+			this.getList('风机运行时间');
+		},
+		beforeDestroy() {
+			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>
@@ -214,16 +262,6 @@
 			.con {
 				width: 100%;
 				padding: 0 10px;
-			}
-			.con-item {
-				width: 100%;
-				padding: 10px 0 0;
-			}
-			.con-item-tit {
-				width: 100%;
-				height: 29px;
-				border-bottom: 1px solid #eeeeee;
-				color: #0f78c9;
 			}
 			.switch {
 				width: 100%;
