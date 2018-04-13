@@ -72,7 +72,7 @@
               <tr v-for="(item,index) of items" :key="index" class="list-con-item">
                 <!-- 操作 -->
                 <td>
-                  <input type="checkbox">
+                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.clientid">
                 </td>
                 <td>{{index}}</td>
                 <td>{{item.userName}}</td>
@@ -238,7 +238,7 @@ export default {
         type: type,
         state: true,
       });
-      
+
       if (type == 2) {
         self.addType = 2;
 

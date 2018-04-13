@@ -85,7 +85,7 @@
               </tr>
               <tr v-for="(item,index) of items" class="list-con-item">
                 <td>
-                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.systemId">
+                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.clientid">
                 </td>
                 <td>
                   {{index}}
