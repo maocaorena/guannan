@@ -163,14 +163,13 @@
 				let url = "/finddata/findElectricUseByCondition";
 				let data = {
 					currentpage: this.pageNum,
-					pagesize: this.pageSize,
-					clientid: 1,
-					monitorplaceid: 1,
-					timetype: "",
-					startTime: "",
-					endTime: ""
+					pagesize: this.pageSize
 				}
 				Object.assign(data, param);
+<<<<<<< HEAD
+=======
+				
+>>>>>>> 01eff3f76a1e54be7ea1bf060b30aafa1f79ebcd
 				this.api.handleAjax(url, data, "post").done(function(res) {
 					if(res.list.length > 0) {
 						self.total = res.total;
@@ -189,6 +188,8 @@
 			exportExcel(param) {
 				let url = "http://120.26.222.27:10003/exceldata/excelExportElecricConsume";
 				let data = param;
+				// console.log(this.createURL(url,data));
+				// return;
       			window.location.href = this.createURL(url,data)
 
 				// console.log(this.createURL(url,data));
