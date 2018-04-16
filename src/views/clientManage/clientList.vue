@@ -341,6 +341,15 @@ export default {
           self.cityid = res.cityid;
           self.provinceid = res.provinceid;
         })
+      } else {
+        self.clientid = "";
+        self.clientname = "";
+        self.address = "";
+        self.name = "";
+        self.phone = "";
+        self.remark = "";
+        self.cityid = "";
+        self.provinceid = "";
       }
     },
 

@@ -72,7 +72,7 @@
               <tr v-for="(item,index) of items" :key="index" class="list-con-item">
                 <!-- 操作 -->
                 <td>
-                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.clientid">
+                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.systemId">
                 </td>
                 <td>{{index}}</td>
                 <td>{{item.userName}}</td>
@@ -243,6 +243,8 @@ export default {
         self.addType = 2;
 
         self.accountData = param
+      } else {
+        this.accountData = {}
       }
     },
     setRoles(id) {
