@@ -163,13 +163,10 @@ export default {
         currentpage: this.pageNum,
         pagesize: this.pageSize
       }
-<<<<<<< HEAD
-      this.api.handleAjax(url, data,'post').done(function(res) {
-=======
+
       Object.assign(data, param);
 
       this.api.handleAjax(url, data).done(function(res) {
->>>>>>> 01eff3f76a1e54be7ea1bf060b30aafa1f79ebcd
         if (res.list.length > 0) {
           self.total = res.total;
           self.pageSize = res.pageSize;

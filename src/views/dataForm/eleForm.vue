@@ -152,8 +152,8 @@
 				let url = ""
 				for (var key in param) {
 					var link = '&' + key + "=" + param[key];
-					url += link; 
-				}	            
+					url += link;
+				}
 	            return myURL + "?" + url.substr(1)
 	        },
 			pagechange(val) {
@@ -166,10 +166,6 @@
 					pagesize: this.pageSize
 				}
 				Object.assign(data, param);
-<<<<<<< HEAD
-=======
-				
->>>>>>> 01eff3f76a1e54be7ea1bf060b30aafa1f79ebcd
 				this.api.handleAjax(url, data, "post").done(function(res) {
 					if(res.list.length > 0) {
 						self.total = res.total;
