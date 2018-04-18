@@ -1,20 +1,6 @@
 <template>
 	<div id="hzWatch">
-		<div class="rightTabbar">
-			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
-					风机运行监测
-				</router-link>
-			</div>
-			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
-					智能电表
-				</router-link>
-			</div>
-			<div class="rt-item rtItemSelect">
-					变频器运行监测
-			</div>
-		</div>
+		<topbar-v></topbar-v>
 		<div class="item">
 			<p class="tit">浙江永丰A车间风机</p>
 			<div class="con">
@@ -31,17 +17,17 @@
 								</div>
 								<div class="bottom-state-item">
 									<p class="left width150" @click="getList('变频器运行时间')">变频器运行时间</p>
-									<p class="right white">300.2</p>
+									<p class="right white">{{message.totalDay}}</p>
 								</div>
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
 									<p class="left width150">变频器运行情况</p>
-									<p class="right white">正常</p>
+									<p class="right white">{{message.Transducerstate}}</p>
 								</div>
 								<div class="bottom-state-item">
 									<p class="left width150">变频器状态</p>
-									<p class="right white">正常</p>
+									<state-v :state="message.Tranalert"></state-v>
 								</div>
 							</div>
 							<div style="clear: both;;"></div>
@@ -56,7 +42,9 @@
 
 <script>
 	import { Util } from '../../lib/util.js';
-	import data from './data.vue'
+	import data from './data.vue';
+	import topbar from './topBar.vue';
+	import state from './state.vue';
 	export default {
 		data() {
 			return {
@@ -64,12 +52,16 @@
 				message: {
 					tranfrequency: '-',
 					bvm: '-',
+					Tranalert: '未知',
+					Transducerstate: '未知'
 				},
 				paramsName: ''
 			}
 		},
 		components: {
-			'data-v' : data
+			'data-v' : data,
+			'topbar-v': topbar,
+			'state-v': state
 		},
 		methods: {
 			getList(name){
@@ -118,32 +110,6 @@
 
 <style lang="scss" scoped>
 	#hzWatch {
-		.rightTabbar {
-			width: 100%;
-			height: 30px;
-			border-bottom: 4px solid #2899ee;
-			.rt-item {
-				margin-right: 3px;
-				float: left;
-				width: 120px;
-				height: 26px;
-				line-height: 26px;
-				text-align: center;
-				border: 1px solid #cfdde7;
-				border-bottom: 0;
-				cursor: pointer;
-				a {
-					display: block;
-					width: 100%;
-					height: 100%;
-				}
-			}
-			.rtItemSelect {
-				background: #2899ee;
-				border-color: #2899ee;
-				color: #fff;
-			}
-		}
 		.item {
 			width: 100%;
 			margin-top: 10px;

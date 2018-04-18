@@ -1,22 +1,6 @@
 <template>
 	<div id="smartMeters">
-		<div class="rightTabbar">
-			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
-					风机运行监测
-				</router-link>
-			</div>
-			<div class="rt-item rtItemSelect">
-				<router-link to="/monitoringRun/item/smartMeters">
-					智能电表
-				</router-link>
-			</div>
-			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
-					变频器运行监测
-				</router-link>
-			</div>
-		</div>
+		<topbar-v></topbar-v>
 		<div class="item">
 			<p class="tit">浙江永丰A车间风机</p>
 			<div class="con">
@@ -81,7 +65,8 @@
 
 <script>
 	import { Util } from '../../lib/util.js';
-	import data from './data.vue'
+	import data from './data.vue';
+	import topbar from './topBar.vue';
 	export default {
 		data() {
 			return {
@@ -101,7 +86,8 @@
 			}
 		},
 		components: {
-			'data-v' : data
+			'data-v' : data,
+			'topbar-v': topbar
 		},
 		methods: {
 			getList(name){
@@ -150,35 +136,6 @@
 
 <style lang="scss" scoped>
 	#smartMeters {
-		.rightTabbar {
-			width: 100%;
-			height: 30px;
-			border-bottom: 4px solid #2899ee;
-			.rt-item {
-				margin-right: 3px;
-				float: left;
-				width: 120px;
-				height: 26px;
-				line-height: 26px;
-				text-align: center;
-				border: 1px solid #cfdde7;
-				border-bottom: 0;
-				cursor: pointer;
-				a {
-					display: block;
-					width: 100%;
-					height: 100%;
-				}
-			}
-			.rtItemSelect {
-				background: #2899ee;
-				border-color: #2899ee;
-				color: #fff;
-				a{
-					color: #fff;
-				}
-			}
-		}
 		.item {
 			width: 100%;
 			margin-top: 10px;

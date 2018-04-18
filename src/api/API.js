@@ -53,7 +53,7 @@ class API {
 			success: dd.success,
 			error: function(xhr,status,error){
 				if(dd.error){
-					dd.error();
+					dd.error(error);
 				}else{
 					console.log('服务器错误')
 				}
