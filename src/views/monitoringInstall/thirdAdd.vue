@@ -51,12 +51,12 @@
         							</td>
         							<td>
                                         <select v-model="item.datasource"  @change="firstChange(item)">
-                                            <option v-for="item2 of dataSourcename" :value="item2.name">{{item2.name}}</option>
+                                            <option v-for="item2 of item.list" :value="item2">{{item2}}</option>
                                         </select>
                                     </td>
         							<td>
                                         <select v-model="item.dataport" :disabled="item.secondState" @change="secondChange(item)">
-                                            <option v-for="item2 of dataPort" :value="item2.name">{{item2.name}}</option>
+                                            <option v-for="item3 of dataPort" :disabled="thisStr.indexOf(item3.name)>-1" :value="item3.name">{{item3.name}}</option>
                                         </select>
                                     </td>
         							<td>
@@ -82,6 +82,7 @@
                 btn: '确定添加',
                 tittxt: '添加',
                 list: [],
+                thisStr: '',
                 checkboxModel:[],//选中的id
                 checked: false,//全选的状态
                 dataPort: [],//数据端口下拉列表
@@ -118,6 +119,7 @@
         },
         methods:{
         	firstChange(item){
+        		console.log('sdfsdf',JSON.parse(JSON.stringify(item)))
         		if(item.datasource == '监控器'){
         			item.secondState = false;
         		}else{
@@ -129,6 +131,15 @@
         	},
         	secondChange(item){
         		console.log('222',item.dataport)
+        		console.log(this.dataPort)
+        		for(let i = 0; i < this.dataPort.length; i++){
+        			for(let j = 0; j < this.list.length; j++){
+        				if(this.list[j].dataport === this.dataPort[i].name){
+        					console.log(this.dataPort[i].name)
+        					this.thisStr += this.dataPort[i].name;
+        				}
+	        		}
+        		}
         		if(item.dataport){
         			if(item.dataport.indexOf("DI")>=0){
         				item.thirdState = false;

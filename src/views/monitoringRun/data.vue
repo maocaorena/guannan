@@ -32,7 +32,6 @@
 		],
 		watch: {
 			'paramsName' (newData, oldData) {
-				console.log(newData, oldData)
 				this.getData(newData)
 			},
 		},
@@ -48,7 +47,6 @@
 				this.getData();
 			},
 			getData(name) {
-				console.log(name)
 				let _this = this;
 				this.chart.showLoading();
 				this.api.postN({
@@ -119,7 +117,6 @@
 			}
 		},
 		mounted() {
-			console.log(Util.dateTime(Date.parse(new Date())))
 			this.initChart();
 			this.getData();
 		}

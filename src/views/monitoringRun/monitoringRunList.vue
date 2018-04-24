@@ -54,6 +54,7 @@
                             <col width="9">
                             <col width="9">
                             <col width="9">
+                            <col width="9">
                         </colgroup>
                         <thead>
                             <tr>
@@ -68,6 +69,7 @@
                                 <th>润滑油油压</th>
                                 <th>润滑油油温</th>
                                 <th>变频器频率</th>
+                                <th>监控器状态</th>
                             </tr>
                         </thead>
                     </table>
@@ -87,6 +89,7 @@
                                 <col width="9">
                                 <col width="9">
                                 <col width="9">
+                                <col width="9">
                             </colgroup>
                             <tbody class="list-con">
                                 <tr v-if="total>0" class="list-con-item" v-for="(item,index) of list">
@@ -94,7 +97,7 @@
                                     <td v-else> {{index+1}} </td>
                                     <td> {{item.clientname}} </td>
                                     <td>
-                                        <router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{monitoruid:item.monitoruid}}">
+                                        <router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{monitoruid:item.monitoruid,clientid:$route.query.clientid}}">
                                             {{item.monitorplacename}}
                                         </router-link>
                                     </td>
@@ -106,6 +109,7 @@
                                     <td> {{item.oilpressure}} </td>
                                     <td> {{item.oiltemp}} </td>
                                     <td> {{item.tranfrequency}} </td>
+                                    <td> {{item.onlineoroffline=='0'?'在线':'离线'}} </td>
                                 </tr>
                                 <tr v-if="total==0">
                                     <td colspan="11">暂无数据</td>
@@ -204,7 +208,9 @@ export default {
         };
     },
     mounted(){
-        if(this.$route.path === 'list'){
+    	console.log(this.$route.path)
+        if(this.$route.path === '/monitoringRun/list'){
+        	console.log('ddd')
             this.width = this.$refs.list.getBoundingClientRect().width - 17;
             let _this = this;
             window.onresize = function(){
