@@ -120,7 +120,7 @@
 				channel: 'infocurrentdata',
 				onMessage: function(message) {
 					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata', message.content);
+					console.log('infocurrentdata，电表数据', message.content);
 				}
 			});
 			this.sendMessage()
@@ -129,7 +129,6 @@
 			this.getList('A相电压');
 		},
 		beforeDestroy(){
-			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>

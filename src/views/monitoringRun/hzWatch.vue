@@ -94,7 +94,7 @@
 				channel: 'infocurrentdata',
 				onMessage: function(message) {
 					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata', message.content);
+					console.log('infocurrentdata，变频器数据', message.content);
 				}
 			});
 			this.sendMessage()
@@ -103,7 +103,6 @@
 			this.getList('变频器运行频率');
 		},
 		beforeDestroy(){
-			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>

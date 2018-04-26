@@ -224,7 +224,7 @@
 				channel: 'infocurrentdata',
 				onMessage: function(message) {
 					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata', message.content);
+					console.log('infocurrentdata,风机运行数据', message.content);
 				}
 			});
 			this.api.createdGoEasy().subscribe({
@@ -239,7 +239,6 @@
 			this.getList('风机运行时间');
 		},
 		beforeDestroy() {
-			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>
