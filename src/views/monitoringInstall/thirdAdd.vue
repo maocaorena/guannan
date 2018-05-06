@@ -55,12 +55,12 @@
                                         </select>
                                     </td>
         							<td>
-                                        <select v-model="item.dataport" :disabled="item.secondState" @change="secondChange(item)">
+                                        <select v-model="item.dataport" :oldPort="item.oldPort" :disabled="item.datasource != '监控器'" @change="secondChange($event,item)">
                                             <option v-for="item3 of dataPort" :disabled="thisStr.indexOf(item3.name)>-1" :value="item3.name">{{item3.name}}</option>
                                         </select>
                                     </td>
         							<td>
-                                        <select v-model="item.portstate" :disabled="item.thirdState">
+                                        <select v-model="item.portstate" :disabled="item.datasource != '监控器'">
                                             <option v-for="item1 of portstate" :value="item1.state">{{item1.state}}</option>
                                         </select>
                                     </td>
@@ -82,7 +82,7 @@
                 btn: '确定添加',
                 tittxt: '添加',
                 list: [],
-                thisStr: '',
+                thisStr: [],
                 checkboxModel:[],//选中的id
                 checked: false,//全选的状态
                 dataPort: [],//数据端口下拉列表
@@ -91,6 +91,7 @@
                 loading: false,
             }
         },
+        props:['portList'],
         computed:{
             thirdAdd(){
                 return this.$store.getters.thirdAdd;
@@ -129,28 +130,28 @@
         			item.portstate = '';
         		}
         	},
-        	secondChange(item){
-        		console.log('222',item.dataport)
-        		console.log(this.dataPort)
+        	secondChange(e,item){
+        		let oldPort = e.target.getAttribute('oldPort');
+        		this.thisStr.splice(this.thisStr.indexOf(oldPort),1);
+        		item.oldPort = item.dataport;
         		for(let i = 0; i < this.dataPort.length; i++){
         			for(let j = 0; j < this.list.length; j++){
         				if(this.list[j].dataport === this.dataPort[i].name){
-        					console.log(this.dataPort[i].name)
-        					this.thisStr += this.dataPort[i].name;
-        				}
-	        		}
-        		}
+        					this.thisStr.push(this.dataPort[i].name);
+        				};
+	        		};
+        		};
         		if(item.dataport){
         			if(item.dataport.indexOf("DI")>=0){
         				item.thirdState = false;
         			}else{
         				item.thirdState = true;
         				item.portstate = '';
-        			}
+        			};
         		}else{
         			item.thirdState = true;
     				item.portstate = '';
-        		}
+        		};
         	},
             checkedAll() {
                 let _this = this;
@@ -161,7 +162,7 @@
                     });
                 }else{//实现全选
                     _this.checkboxModel = [];
-                }
+                };
             },
             close(){
                 this.$store.dispatch('SetThirdAddAlert',{
@@ -176,6 +177,7 @@
                         let bb = JSON.parse(JSON.stringify(this.list[this.checkboxModel[i]]));
                         delete bb.id;
                         delete bb.idx;
+                        delete bb.oldPort;
                         subMessage.push(bb);
                     };
                     this.loading = true;
@@ -228,7 +230,8 @@
                                 for (let i = 0; i < res.response.content.length; i++) {
                                     res.response.content[i].idx = i;
                                     res.response.content[i].datasource = null;
-                                    res.response.content[i].dataport = null;
+                                    res.response.content[i].dataport = '';
+                                    res.response.content[i].oldPort = '1';
                                     res.response.content[i].portstate = null;
                                     res.response.content[i].monitorplaceid = _addid;
                                     res.response.content[i].secondState = true;
@@ -301,6 +304,7 @@
                     success: function(res){
                         _this.loading = false;
                         if(res.response.info.code==100000){
+                    		res.response.content.oldPort = res.response.content.dataport;
                             _this.list.push(res.response.content);
                         }
                     }
@@ -308,6 +312,7 @@
             }
         },
         created(){
+        	this.thisStr = this.portList;
             if(this.thirdAdd.type == 2){
                 this.tittxt = '修改';
                 this.btn = '确定修改';

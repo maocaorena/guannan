@@ -8,11 +8,16 @@ var config = {
 	timeout: 1800000,
 };
 
-
 class API {
-	createdGoEasy(){
-		let goEasy = new GoEasy({
-		    appkey: 'BC-fe15f72d698248f6986042fc4549f238'
+    createdGoEasy(){
+        const goEasy = new GoEasy({
+             appkey: 'BC-fe15f72d698248f6986042fc4549f238'
+        });
+		return goEasy;
+	}
+	unsubscribe(txt){
+		goEasy.unsubscribe ({
+			channel: txt
 		});
 		return goEasy;
 	}

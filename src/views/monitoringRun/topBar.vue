@@ -1,17 +1,17 @@
 <template>
 	<div class="rightTabbar">
 		<div class="rt-item">
-			<router-link :class="{'rtItemSelect': $route.path.indexOf('fanRunwatch') > -1}" :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
+			<router-link :class="{'rtItemSelect': $route.path.indexOf('fanRunwatch') > -1}" :to="{path:'/monitoringRun/list/item/fanRunwatch',query:message}">
 				风机运行监测
 			</router-link>
 		</div>
 		<div class="rt-item">
-			<router-link :class="{'rtItemSelect': $route.path.indexOf('smartMeters') > -1}" :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
+			<router-link :class="{'rtItemSelect': $route.path.indexOf('smartMeters') > -1}" :to="{path:'/monitoringRun/list/item/smartMeters',query:message}">
 				智能电表
 			</router-link>
 		</div>
 		<div class="rt-item">
-			<router-link :class="{'rtItemSelect': $route.path.indexOf('hzWatch') > -1}" :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
+			<router-link :class="{'rtItemSelect': $route.path.indexOf('hzWatch') > -1}" :to="{path:'/monitoringRun/list/item/hzWatch',query:message}">
 				变频器运行监测
 			</router-link>
 		</div>
@@ -19,17 +19,20 @@
 </template>
 
 <script>
-	export default{
-		data(){
+	export default {
+		data() {
 			return {
-				
+				message: {
+					clientid: this.$route.query.clientid,
+					monitoruid: this.$route.query.monitoruid,
+					name: this.$route.query.name
+				}
 			}
 		},
-		methods:{
-			
+		methods: {
+
 		},
-		created(){
-		}
+		created() {}
 	}
 </script>
 

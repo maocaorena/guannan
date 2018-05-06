@@ -97,7 +97,7 @@
                                     <td v-else> {{index+1}} </td>
                                     <td> {{item.clientname}} </td>
                                     <td>
-                                        <router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{monitoruid:item.monitoruid,clientid:$route.query.clientid}}">
+                                        <router-link :to="{path:'/monitoringRun/list/item/fanRunwatch',query:{monitoruid:item.monitoruid,clientid:$route.query.clientid,name:item.monitorplacename}}">
                                             {{item.monitorplacename}}
                                         </router-link>
                                     </td>
