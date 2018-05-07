@@ -8,17 +8,18 @@ var config = {
 	timeout: 1800000,
 };
 
-const goEasy = new GoEasy({
-     appkey: 'BC-fe15f72d698248f6986042fc4549f238'
-});
 class API {
-	createdGoEasy(){
+    createdGoEasy(){
+        const goEasy = new GoEasy({
+             appkey: 'BC-fe15f72d698248f6986042fc4549f238'
+        });
 		return goEasy;
 	}
 	unsubscribe(txt){
 		goEasy.unsubscribe ({
 			channel: txt
 		});
+		return goEasy;
 	}
 	commonUrl (){
 		return config.baseUrl;

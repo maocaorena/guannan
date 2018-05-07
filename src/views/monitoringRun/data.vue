@@ -1,7 +1,7 @@
 <template>
 	<div class="con-item">
 		<p class="con-item-tit">
-			{{paramsName}}
+			{{paramsName}}（{{danwei}}）
 			<select v-model="selectTime" @change="selectThis" name="">
 				<option :value="1">过去一小时</option>
 				<option :value="2">过去五小时</option>
@@ -28,7 +28,8 @@
 			}
 		},
 		props: [
-			'paramsName'
+			'paramsName',
+			'danwei'
 		],
 		watch: {
 			'paramsName' (newData, oldData) {
@@ -60,7 +61,7 @@
 					success: function(res) {
 						_this.chart.hideLoading();
 						if(res.response.info.code == 100000) {
-							_this.setChart(res.response.content,_this.paramsName)
+							_this.setChart(res.response.content,_this.paramsName+ '（'+_this.danwei + '）')
 						} else {
 							_this.$message.error({
 								message: res.response.info.msg,

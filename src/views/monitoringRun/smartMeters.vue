@@ -2,7 +2,7 @@
 	<div id="smartMeters">
 		<topbar-v></topbar-v>
 		<div class="item">
-			<p class="tit">浙江永丰A车间风机</p>
+			<p class="tit">{{this.$route.query.name}}</p>
 			<div class="con">
 				<div class="con-item">
 					<p class="con-item-tit">
@@ -12,44 +12,44 @@
 						<div class="bottom-state">
 							<div class="bottom-state-col">
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('A相电压')">A相电压</p>
+									<p class="left" @click="getList('A相电压', 'V')">A相电压(V)</p>
 									<p class="right white">{{message.avm}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('B相电压')">B相电压</p>
+									<p class="left" @click="getList('B相电压', 'V')">B相电压(V)</p>
 									<p class="right white">{{message.bvm}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('C相电压')">C相电压</p>
+									<p class="left" @click="getList('C相电压', 'V')">C相电压(V)</p>
 									<p class="right white">{{message.cvm}}</p>
 								</div>
 							</div>
 							<div class="bottom-state-col">
 
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('A相电流')">A相电流</p>
+									<p class="left" @click="getList('A相电流', 'A')">A相电流(A)</p>
 									<p class="right white">{{message.aam}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('B相电流')">B相电流</p>
+									<p class="left" @click="getList('B相电流', 'A')">B相电流(A)</p>
 									<p class="right white">{{message.bam}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('C相电流')">C相电流</p>
+									<p class="left" @click="getList('C相电流', 'A')">C相电流(A)</p>
 									<p class="right white">{{message.cam}}</p>
 								</div>
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('有功功率')">有功功率</p>
+									<p class="left width150" @click="getList('有功功率', 'KW')">有功功率(KW)</p>
 									<p class="right white">{{message.posipower}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('无功功率')">无功功率</p>
+									<p class="left width150" @click="getList('无功功率', 'KW')">无功功率(KVar)</p>
 									<p class="right white">{{message.negipower}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('功率因素')">功率因素</p>
+									<p class="left width150" @click="getList('功率因素', 'KW')">功率因素</p>
 									<p class="right white">{{message.powerfactor}}</p>
 								</div>
 							</div>
@@ -57,7 +57,7 @@
 						</div>
 					</div>
 				</div>
-				<data-v :paramsName="paramsName"></data-v>
+				<data-v :paramsName="paramsName" :danwei="danwei"></data-v>
 			</div>
 		</div>
 	</div>
@@ -82,7 +82,8 @@
 					negipower: '-',
 					powerfactor: '-'
 				},
-				paramsName: ''
+				paramsName: '',
+				danwei: ''
 			}
 		},
 		components: {
@@ -90,9 +91,9 @@
 			'topbar-v': topbar
 		},
 		methods: {
-			getList(name){
-				console.log(name)
+			getList(name, danwei) {
 				this.paramsName = name;
+				this.danwei = danwei;
 			},
 			sendMessage(){
 				let _this = this;
@@ -120,16 +121,15 @@
 				channel: 'infocurrentdata',
 				onMessage: function(message) {
 					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata', message.content);
+					console.log('infocurrentdata，电表数据', message.content);
 				}
 			});
 			this.sendMessage()
 		},
 		mounted() {
-			this.getList('A相电压');
+			this.getList('A相电压', 'V');
 		},
 		beforeDestroy(){
-			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>

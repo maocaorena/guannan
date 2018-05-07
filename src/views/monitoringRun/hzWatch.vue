@@ -2,7 +2,7 @@
 	<div id="hzWatch">
 		<topbar-v></topbar-v>
 		<div class="item">
-			<p class="tit">浙江永丰A车间风机</p>
+			<p class="tit">{{this.$route.query.name}}</p>
 			<div class="con">
 				<div class="con-item">
 					<p class="con-item-tit">
@@ -12,11 +12,11 @@
 						<div class="bottom-state">
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('变频器运行频率')">变频器运行频率</p>
-									<p class="right white">{{message.tranfrequency}}</p>
+									<p class="left width150" @click="getList('变频器运行频率', 'Hz')">变频器运行频率(Hz)</p>
+									<p class="right white">{{message.frequency}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('变频器运行时间')">变频器运行时间</p>
+									<p class="left width150" @click="getList('变频器运行时间', 'H')">变频器运行时间(H)</p>
 									<p class="right white">{{message.totalDay}}</p>
 								</div>
 							</div>
@@ -34,7 +34,7 @@
 						</div>
 					</div>
 				</div>
-				<data-v :paramsName="paramsName"></data-v>
+				<data-v :paramsName="paramsName" :danwei="danwei"></data-v>
 			</div>
 		</div>
 	</div>
@@ -55,7 +55,8 @@
 					Tranalert: '未知',
 					Transducerstate: '未知'
 				},
-				paramsName: ''
+				paramsName: '',
+				danwei: ''
 			}
 		},
 		components: {
@@ -64,9 +65,9 @@
 			'state-v': state
 		},
 		methods: {
-			getList(name){
-				console.log(name)
+			getList(name, danwei) {
 				this.paramsName = name;
+				this.danwei = danwei;
 			},
 			sendMessage(){
 				let _this = this;
@@ -94,16 +95,15 @@
 				channel: 'infocurrentdata',
 				onMessage: function(message) {
 					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata', message.content);
+					console.log('infocurrentdata，变频器数据', JSON.parse(message.content));
 				}
 			});
 			this.sendMessage()
 		},
 		mounted() {
-			this.getList('变频器运行频率');
+			this.getList('变频器运行频率', 'Hz');
 		},
 		beforeDestroy(){
-			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>
