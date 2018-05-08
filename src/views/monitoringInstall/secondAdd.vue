@@ -246,17 +246,18 @@
                     }
                 })
             },
-            findModuleInfoById(moduleid){
+            findModuleInfoById(id){
             	let _this = this;
                 this.api.postN({
                     url: "/module/findModuleInfoById",
                     params: {
-                        moduleid: moduleid
+                        moduleid: id
                     },
                     success: function(res){
                         console.log(res)
                         if(res.response.info.code==100000){
-                        	this.list = res.response.content
+                        	console.log('res.response.content',res.response.content)
+                        	_this.list.push(res.response.content) 
                         }
                     }
                 })
@@ -273,7 +274,7 @@
 //              this.list.push(_list);
                 console.log(_list)
                 this.getModuleById(_list.moduleid);
-                this.findModuleInfoById(_list.moduleid)
+                this.findModuleInfoById(_list.id)
             }else{
                 this.findAllModuleModel();
                 for (let i = 0; i < 5; i++) {

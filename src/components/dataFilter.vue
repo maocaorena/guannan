@@ -67,7 +67,7 @@
               this.$emit("exportExcel",{
                 clientId: this.clientId,
                 monitorplaceid: this.monitorplaceId,
-                timetype: this.timedetail,
+                timetype: this.dataType,
                 starttime: this.starttime,
                 endtime: this.endtime
               })
@@ -78,7 +78,7 @@
               this.$emit("searchFn",{
                 clientId: this.clientId,
                 monitorplaceid: this.monitorplaceId,
-                timetype: this.timedetail,
+                timetype: this.dataType,
                 starttime: this.starttime,
                 endtime: this.endtime
               })

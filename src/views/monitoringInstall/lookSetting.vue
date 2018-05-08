@@ -47,6 +47,7 @@ export default {
 			btn: '确定',
 			list: [],
 			list1: [],
+			list2: [],
 		}
 	},
 	props:[
@@ -102,39 +103,19 @@ export default {
 				that.list1.push(...JSON.parse(result.content))
 			}
 		});
-		/*that.sendMessage();
-		goEasy = new GoEasy({
-			appkey: 'BC-035ed8182aac46d2b2b32d3c082af08f',
-			onConnected: function () {
-				console.log("成功连接GoEasy。");
-			},
-
-		});
-		goEasy.subscribe({
-			channel: 'modulecommunicate',
-			onMessage: function(result){
-				console.log('modulecommunicate',result.content);
-				that.list.push(JSON.parse(result.content))
-				console.log(that.list)
+		this.api.createdGoEasy().subscribe({
+			channel: 'electricMeterState',
+			onMessage: function(result) {
+				alert('eee')
+				console.log('electricMeterState',result.content);
+				that.list.push(...JSON.parse(result.content))
 			}
 		});
-		goEasy.subscribe({
-			channel: 'monitornameport',
-			onMessage: function(result){
-				console.log('monitornameport',result.content);
-				that.list1.push(...JSON.parse(result.content))
-			}
-		});*/
 	},
 	beforeDestroy(){
 		this.api.unsubscribe('monitornameport');
 		this.api.unsubscribe('modulecommunicate');
-		/*goEasy.unsubscribe ({
-			channel: "monitornameport"
-		});
-		goEasy.unsubscribe ({
-			channel: "modulecommunicate"
-		});*/
+		this.api.unsubscribe('electricMeterState');
 	}
 }
 </script>

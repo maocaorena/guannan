@@ -50,14 +50,16 @@ export default {
     methods:{
         login(){
             var self = this;
-            let url = "doLogin";
+            let url = "/doLogin";
             let data = {
                 username: this.username,
                 password: this.password
             };
+
             this.api.handleAjax(url,data).done(function(res){
                 Util.setItem("info", res)
-                self.$router.push('/monitoringRun')
+                console.log(res);
+                // self.$router.push('/monitoringRun')
             }).fail(function(res) {
                 // alert(res);
                 self.$message.error(res);

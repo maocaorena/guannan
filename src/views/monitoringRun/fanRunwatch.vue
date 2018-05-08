@@ -1,22 +1,8 @@
 <template>
 	<div id="fanRunwatch">
-		<div class="rightTabbar">
-			<div class="rt-item rtItemSelect">
-				风机运行监测
-			</div>
-			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/smartMeters',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
-					智能电表
-				</router-link>
-			</div>
-			<div class="rt-item">
-				<router-link :to="{path:'/monitoringRun/list/item/hzWatch',query:{clientid:$route.query.clientid,monitoruid:$route.query.monitoruid}}">
-					变频器运行监测
-				</router-link>
-			</div>
-		</div>
+		<topbar-v></topbar-v>
 		<div class="item">
-			<p class="tit">浙江永丰A车间风机</p>
+			<p class="tit">{{this.$route.query.name}}</p>
 			<div class="con">
 				<div class="con-item">
 					<p class="con-item-tit">
@@ -28,11 +14,14 @@
 								风机控制继电器
 							</div>
 							<div class="right">
-								<div class="right-l" @click="open">
+								<div class="right-l" :class="{'isthis':openOrClose==1}" @click="handle('open')">
 									开启
 								</div>
-								<div class="right-r" @click="close">
+								<div class="right-l" :class="{'isthis':openOrClose==0}" @click="handle('close')">
 									关闭
+								</div>
+								<div class="right-l isthis" @click="rest()">
+									重启
 								</div>
 							</div>
 						</div>
@@ -40,63 +29,67 @@
 							<div class="bottom-state-col">
 								<div class="bottom-state-item">
 									<p class="left">风机运行状态</p>
-									<p class="right white">开机/停机</p>
+									<p class="right white">{{message.maintainStatus}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('风机运行时间')">风机运行时间(h)</p>
+									<p class="left">风机运行时间(h)</p>
 									<p class="right white">{{message.hours}}</p>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left" @click="getList('风机环境温度')">风机环境温度(℃)</p>
-									<p class="right white">{{message.temp}}</p>
+									<p class="left" @click="getList('风机环境温度','℃')">风机环境温度(℃)</p>
+									<p class="right white">{{message.tem}}</p>
+								</div>
+								<div class="bottom-state-item">
+									<p class="left">监控器状态</p>
+									<p class="right white">{{message.onlineoroffline=='0'?'在线':'离线'}}</p>
 								</div>
 							</div>
 							<div class="bottom-state-col">
 								<div class="bottom-state-item">
 									<p class="left">风机故障状态</p>
-									<p class="right allright">正常</p>
+									<state-v :state="message.fanfault"></state-v>
 								</div>
 								<div class="bottom-state-item">
 									<p class="left">主电机热保护</p>
-									<p class="right allright">正常</p>
+									<state-v :state="message.thermalmotorfault"></state-v>
 								</div>
 								<div class="bottom-state-item">
 									<p class="left">油雾处理电机</p>
-									<p class="right noknow">未知</p>
+									<state-v :state="'未知'"></state-v>
 								</div>
 							</div>
 							<div class="bottom-state-col width340">
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('进气滤网负压值')">进气滤网负压值</p>
+									<p class="left width150" @click="getList('进气滤网负压值','mbar')">进气滤网负压值(mbar)</p>
 									<p class="right white mr">{{message.infilnegpressure}}</p>
-									<p class="right bad">正常</p>
+									<state-v :state="message.infilnegpressurefault"></state-v>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('出气压力')">出气压力</p>
+									<p class="left width150" @click="getList('出气压力','KPa')">出气压力(KPa)</p>
 									<p class="right white mr">{{message.outairpressure}}</p>
-									<p class="right soheight">正常</p>
+									<state-v :state="message.outairpressurefault"></state-v>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('出气温度')">出气温度</p>
+									<p class="left width150" @click="getList('出气温度','℃')">出气温度(℃)</p>
 									<p class="right white mr">{{message.outairtemp}}</p>
-									<p class="right allright">过高</p>
+									<state-v :state="message.outairtempfault"></state-v>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('润滑油油压')">润滑油油压</p>
+									<p class="left width150" @click="getList('润滑油油压','KPa')">润滑油油压(KPa)</p>
 									<p class="right white mr">{{message.oilpressure}}</p>
-									<p class="right soheight">正常</p>
+									<state-v :state="message.oilpressurelowfault"></state-v>
 								</div>
 								<div class="bottom-state-item">
-									<p class="left width150" @click="getList('润滑油油温')">润滑油油温</p>
+									<p class="left width150" @click="getList('润滑油油温','℃')">润滑油油温(℃)</p>
 									<p class="right white mr">{{message.oiltemp}}</p>
-									<p class="right allright">正常</p>
+									<state-v :state="message.oiltempupfault"></state-v>
 								</div>
 							</div>
 							<div style="clear: both;;"></div>
 						</div>
 					</div>
 				</div>
-				<data-v :paramsName="paramsName"></data-v>
+				<data-v :paramsName="paramsName" :danwei='danwei'></data-v>
 			</div>
 		</div>
 	</div>
@@ -104,43 +97,78 @@
 
 <script>
 	import { Util } from '../../lib/util.js';
-	import data from './data.vue'
+	import data from './data.vue';
+	import topbar from './topBar.vue';
+	import state from './state.vue';
 	export default {
 		data() {
 			return {
 				deviceUUID: this.$route.query.monitoruid,
+				openOrClose: '-1',
 				message: {
 					hours: '-',
 					timedetail: '-',
-					temp: '-',
+					tem: '-',
 					infilnegpressure: '-',
 					outairpressure: '-',
 					outairtemp: '-',
 					oilpressure: '-',
-					oiltemp: '-'
+					oiltemp: '-',
+					fanfault: '未知',
+					thermalmotorfault: '未知',
+					infilnegpressurefault: '未知',
+					outairpressurefault: '未知',
+					outairtempfault: '未知',
+					oilpressurelowfault: '未知',
+					oiltempupfault: '未知',
+					fanfault: '未知',
+					fanfault: '未知',
+					fanfault: '未知',
+					fanfault: '未知',
+					fanfault: '未知',
 				},
-				paramsName: ''
+				paramsName: '',
+				danwei: ''
 			}
 		},
 		components: {
-			'data-v': data
+			'data-v': data,
+			'topbar-v': topbar,
+			'state-v': state
 		},
 		methods: {
-			open() {
+			handle(state) {
 				let _this = this;
 				let pw = prompt("请输入密码：");
-				if(pw) {
+				if(pw && Util.trim(pw).length > 0) {
 					console.log(pw)
 					this.api.postN({
-						url: 'monitor/openMonitor',
+						url: '/monitor/' + state + 'Monitor',
 						params: {
 							deviceUUID: this.deviceUUID,
+							passworld: Util.trim(pw)
 						},
 						success: function(res) {
 							if(res.response.info.code == 100000) {
 								_this.$message.success({
-									message: res.response.info.msg,
+									message: '下发命令成功',
 									duration: Util.time()
+								});
+								this.api.createdGoEasy().subscribe({
+									channel: state+'Monitor',
+									onMessage: function(message) {
+										if(message.content.indexOf('打开')> -1){
+											if(message.content.indexOf('成功')> -1){
+												_this.openOrClose = 1
+											};
+										};
+										if(message.content.indexOf('关闭')> -1){
+											if(message.content.indexOf('成功')> -1){
+												_this.openOrClose = 0
+											};
+										};
+										console.log(state+'Monitor', message.content);
+									}
 								});
 							} else {
 								_this.$message.error({
@@ -158,15 +186,40 @@
 						}
 					})
 				} else {
-
+					
 				}
 			},
-			close(){
-				
-			},
-			getList(name) {
-				console.log(name)
+			getList(name, danwei) {
 				this.paramsName = name;
+				this.danwei = danwei;
+			},
+			rest(){
+				let _this = this;
+				this.api.postN({
+					url: '/monitorreboot/monitorReboot',
+					params: {
+						deviceUUID: this.deviceUUID,
+					},
+					success: function(res) {
+						if(res.response.info.code == 100000) {
+							_this.$message.success({
+								message: res.response.info.msg,
+								duration: Util.time()
+							});
+						} else {
+							_this.$message.error({
+								message: res.response.info.msg,
+								duration: Util.time()
+							});
+						}
+					},
+					error: function(error) {
+						_this.$message.error({
+							message: '服务器错误',
+							duration: Util.time()
+						});
+					}
+				});
 			},
 			sendMessage() {
 				let _this = this;
@@ -203,48 +256,27 @@
 				channel: 'infocurrentdata',
 				onMessage: function(message) {
 					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata', message.content);
+					console.log('infocurrentdata,风机运行数据', JSON.parse(message.content));
+				}
+			});
+			this.api.createdGoEasy().subscribe({
+				channel: 'cQueryMonitorStatus',
+				onMessage: function(message) {
+					console.log('cQueryMonitorStatus', JSON.parse(message.content));
 				}
 			});
 			this.sendMessage()
 		},
 		mounted() {
-			this.getList('风机运行时间');
+			this.getList('风机环境温度', '℃');
 		},
 		beforeDestroy() {
-			this.api.unsubscribe('infocurrentdata');
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	#fanRunwatch {
-		.rightTabbar {
-			width: 100%;
-			height: 30px;
-			border-bottom: 4px solid #2899ee;
-			.rt-item {
-				margin-right: 3px;
-				float: left;
-				width: 120px;
-				height: 26px;
-				line-height: 26px;
-				text-align: center;
-				border: 1px solid #cfdde7;
-				border-bottom: 0;
-				cursor: pointer;
-				a {
-					display: block;
-					width: 100%;
-					height: 100%;
-				}
-			}
-			.rtItemSelect {
-				background: #2899ee;
-				border-color: #2899ee;
-				color: #fff;
-			}
-		}
 		.item {
 			width: 100%;
 			margin-top: 10px;
@@ -276,26 +308,22 @@
 				.right {
 					float: left;
 					margin-top: 8px;
-					width: 120px;
 					height: 24px;
 					border: 1px solid #2899ee;
+					cursor: pointer;
 					.right-l {
 						float: left;
-						width: 59px;
-						height: 100%;
-						text-align: center;
-						line-height: 24px;
-						background: #2899ee;
-						color: #fff;
-					}
-					.right-r {
-						float: left;
+						margin-right: 3px;
 						width: 59px;
 						height: 100%;
 						text-align: center;
 						line-height: 24px;
 						color: #2899ee;
 						background: #e0edfb;
+					}
+					.isthis{
+						background: #2899ee;
+						color: #fff;
 					}
 				}
 			}

@@ -69,8 +69,9 @@
                 })
 			},
 			next(){
-				if(Util.trim(this.message.detail).length<1){
-					this.$message.warning({message: '请填写保养计划',duration: Util.time()});
+				// if(Util.trim(this.message.detail).length<1){
+				if(!/^[0-9]+$/.test(this.message.detail)){
+					this.$message.warning({message: '请正确填写保养时间',duration: Util.time()});
 					return;
 				};
 				let _url = '/maintain/timePlanSet';

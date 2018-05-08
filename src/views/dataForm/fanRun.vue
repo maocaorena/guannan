@@ -163,6 +163,7 @@ export default {
         currentpage: this.pageNum,
         pagesize: this.pageSize
       }
+
       Object.assign(data, param);
 
       this.api.handleAjax(url, data).done(function(res) {
