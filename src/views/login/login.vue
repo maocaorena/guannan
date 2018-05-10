@@ -58,8 +58,8 @@ export default {
 
             this.api.handleAjax(url,data).done(function(res){
                 Util.setItem("info", res)
-                console.log(res);
-                // self.$router.push('/monitoringRun')
+                // console.log(res);
+                self.$router.push('/monitoringRun')
             }).fail(function(res) {
                 // alert(res);
                 self.$message.error(res);
