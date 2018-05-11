@@ -74,7 +74,9 @@ export default {
       }
       this.api.handleAjax(url,data).done(function(res){
           res.list.forEach(function(item){
-            self.checkboxModel.push(item.permissionId);
+            if(item.checked) {
+              self.checkboxModel.push(item.permissionId);
+            }
           })
       })     
     },

@@ -158,6 +158,7 @@ export default {
       window.location.href = this.createURL(url,data)
     },
     getData(param) {
+      var self = this;
       let url = "/finddata/findFandataByCondition";
       let data = {
         currentpage: this.pageNum,

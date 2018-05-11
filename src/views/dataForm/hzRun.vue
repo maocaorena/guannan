@@ -140,6 +140,7 @@ export default {
       window.location.href = this.createURL(url,data)
     },
     getData(param) {
+      var self = this;
       let url = "/finddata/findTransducerByCondition";
       let data = {
         currentpage: this.pageNum,

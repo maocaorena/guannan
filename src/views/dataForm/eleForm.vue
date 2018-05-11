@@ -160,6 +160,7 @@
 				console.log(val + '页')
 			},
 			getData(param) {
+				var self = this;
 				let url = "/finddata/findElectricUseByCondition";
 				let data = {
 					currentpage: this.pageNum,
@@ -168,15 +169,16 @@
 				Object.assign(data, param);
 				this.api.handleAjax(url, data, "post").done(function(res) {
 					if(res.list.length > 0) {
+						
 						self.total = res.total;
 						self.pageSize = res.pageSize;
 						self.pageNum = res.pageNum;
 						self.items = res.list;
+
 						self.ifPage = true;
 					} else {
 						self.ifPage = false;
 					}
-					console.log(res.pageNum, res.pageSize, res.total)
 				}).fail(function(res) {
 					console.log(res);
 				})
@@ -184,24 +186,11 @@
 			exportExcel(param) {
 				let url = "http://120.26.222.27:10003/exceldata/excelExportElecricConsume";
 				let data = param;
-				// console.log(this.createURL(url,data));
-				// return;
+				console.log(this.createURL(url,data));
+				return;
       			window.location.href = this.createURL(url,data)
 
-				// console.log(this.createURL(url,data));
-				// for( let v in data) {
-				// 	console.log(v, data[v])
-				// }
-				// console.log(data)
-				// data.forEach(function(v,index) {
-				// 	console.log(v,index)
-				// })
-				// console.log(this.createURL(url,data));
-				// this.api.handleAjax(url, data,'get').done(function(res) {
-
-				// }).fail(function(res) {
-				// 	console.log(res);
-				// })
+				
 			}
 		},
 		watch: {
