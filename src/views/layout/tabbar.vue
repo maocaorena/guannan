@@ -3,7 +3,7 @@
         <ul class="tab-list">
             <li class="tab-item" :class="{tabItemSelected: $route.path.indexOf(item.path)>=0}" v-for="(item,index) of routesArr" v-if="item.children">
                 <router-link :to="item.path">
-                    <img :src="'./static/img/tab'+index+'.png'" alt="">
+                    <img :src="'./static/img/tab'+(index+1)+'.png'" alt="">
                     <span>{{item.name}}</span>
                 </router-link>
             </li>
