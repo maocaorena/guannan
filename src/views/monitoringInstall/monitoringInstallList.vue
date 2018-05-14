@@ -100,12 +100,13 @@
                                 </td>
                                 <td v-if="index<9"> {{pageNum-1}}{{index+1}} </td>
                                 <td v-else>{{index+1}} </td>
+                                
                                 <td>
                                     <router-link :to="{path:'/monitoringInstall/list/item',query:{clientid:$route.query.clientid,id:item.id}}">
                                         {{item.monitorplacename}}
                                     </router-link>
                                 </td>
-                                <td>{{item.monitormodel}}</td>
+                                <td>{{item.name}}</td>
                                 <td>{{item.monitoruid}}</td>
                                 <td>{{item.monitorno}}</td>
                                 <td>{{item.installname}}</td>
@@ -116,6 +117,7 @@
                                     <a href="javascript:;" class="mode" @click="add(2,item)">编辑</a>
                                     <br />
                                     <a href="javascript:;" class="mode" @click="lookSetting(item.id)">查询配置</a>
+                                    <a href="javascript:;" class="mode" @click="rest(item)">重启</a>
                                 </td>
                             </tr>
                             <tr v-if="list.length==0">
@@ -191,6 +193,36 @@ export default {
         }
     },
     methods: {
+    	rest(item){
+			let _this = this;
+			this.loading = true;
+			this.api.postN({
+				url: '/monitorreboot/monitorReboot',
+				params: {
+					deviceUUID: item.monitoruid,
+				},
+				success: function(res) {
+					if(res.response.info.code == 100000) {
+						_this.loading = false;
+						_this.$message.success({
+							message: '下发重启命令成功！',
+							duration: Util.time()
+						});
+					} else {
+						_this.$message.error({
+							message: 'res.response.info.msg',
+							duration: Util.time()
+						});
+					}
+				},
+				error: function(error) {
+					_this.$message.error({
+						message: '服务器错误',
+						duration: Util.time()
+					});
+				}
+			});
+		},
     	closeLookSetting(){
     		this.lookSettingState = false;
     	},

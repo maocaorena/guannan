@@ -3,7 +3,7 @@
 		class="right allright" 
 		:class="{'noknow':state == '未知','allright':state == '正常'||state == '运行','bad':state == '故障'||state == '报警','soheight':state == '报警'}"
 	>
-		{{state+'' == 'null' ? '未接装' : state}}
+		{{state}}
 	</p>
 </template>
 

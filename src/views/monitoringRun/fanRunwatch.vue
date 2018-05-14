@@ -20,9 +20,6 @@
 								<div class="right-l" :class="{'isthis':openOrClose==0}" @click="handle('close')">
 									关闭
 								</div>
-								<div class="right-l isthis" @click="rest()">
-									重启
-								</div>
 							</div>
 						</div>
 						<div class="bottom-state">
@@ -97,6 +94,7 @@
 
 <script>
 	import { Util } from '../../lib/util.js';
+	import { getToken } from '../../lib/auth.js';
 	import data from './data.vue';
 	import topbar from './topBar.vue';
 	import state from './state.vue';
@@ -146,7 +144,8 @@
 						url: '/monitor/' + state + 'Monitor',
 						params: {
 							deviceUUID: this.deviceUUID,
-							passworld: Util.trim(pw)
+							passworld: Util.trim(pw),
+							id: JSON.parse(getToken()).systemId
 						},
 						success: function(res) {
 							if(res.response.info.code == 100000) {
@@ -192,34 +191,6 @@
 			getList(name, danwei) {
 				this.paramsName = name;
 				this.danwei = danwei;
-			},
-			rest(){
-				let _this = this;
-				this.api.postN({
-					url: '/monitorreboot/monitorReboot',
-					params: {
-						deviceUUID: this.deviceUUID,
-					},
-					success: function(res) {
-						if(res.response.info.code == 100000) {
-							_this.$message.success({
-								message: res.response.info.msg,
-								duration: Util.time()
-							});
-						} else {
-							_this.$message.error({
-								message: res.response.info.msg,
-								duration: Util.time()
-							});
-						}
-					},
-					error: function(error) {
-						_this.$message.error({
-							message: '服务器错误',
-							duration: Util.time()
-						});
-					}
-				});
 			},
 			sendMessage() {
 				let _this = this;
