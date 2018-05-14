@@ -7,7 +7,7 @@
           </select>
         </div>
         <div class="handle-item">
-          <select name="" id="" v-model="clientCompany">
+          <select name="" id="" v-model="clientId">
             <option value=" ">请选择公司</option>
             <option :value="item.clientid" :key="item.clientid" v-for="(item,index) of companyArr">{{item.clientname}}</option>
           </select>
@@ -27,15 +27,16 @@
             <option value="3">报表</option>
           </select>
         </div>
+        
         <div class="handle-item">
           <button type="button" name="button" @click="searchFn()">查询</button>
         </div>
-        <div class="handle-item">
+        <div class="handle-item" style="margin-right: 20px;">
           <button type="button" name="button" @click="exportExcel()">导出</button>
         </div>
-        <div class="handle-item">
+        <!-- <div class="handle-item" >
           <button type="button" name="button">自定义报表</button>
-        </div>
+        </div> -->
 
       </div>
 </template>
@@ -44,7 +45,7 @@
         data(){
             return {
                 clientCity: "",
-                clientCompany: "",
+                clientId: "",
                 monitorplaceId: "",
                 timedetail: 1,
                 starttime: "",
@@ -52,7 +53,8 @@
                 dataType: 1,
                 provinceArr: [],
                 companyArr: [],
-                monitorArr: []
+                monitorArr: [],
+                value6: ''
             }
         },
         props: [],
@@ -61,19 +63,24 @@
         },
         methods:{
             exportExcel() {
+              // console.log(this.clientId);
               this.$emit("exportExcel",{
                 clientId: this.clientId,
-                monitorplaceid: this.monitorplaceid,
-                timedetail: this.timedetail,
+                monitorplaceid: this.monitorplaceId,
+                timetype: this.dataType,
                 starttime: this.starttime,
                 endtime: this.endtime
               })
             },
             searchFn() {
+              // console.log(this.value6);
+              // return;
               this.$emit("searchFn",{
-                clientid: this.clientCompany,
+                clientId: this.clientId,
                 monitorplaceid: this.monitorplaceId,
-                timedetail: this.dataType
+                timetype: this.dataType,
+                starttime: this.starttime,
+                endtime: this.endtime
               })
             },
             getData() {
@@ -101,9 +108,9 @@
               let self = this;
               let url = "/monitorplace/findMonitorplaceByConditions";
               let data = {
-                clientid: this.clientCompany
+                clientid: this.clientId
               };
-              if (this.clientCompany == " ") return;
+              if (!this.clientId) return;
               // debugger;
               this.api.handleAjax(url, data).done(function(res) {
                 self.monitorArr = res.list;
@@ -117,7 +124,7 @@
         },
         watch: {
           clientCity: 'getCompany',
-          clientCompany: 'getMonitor'
+          clientId: 'getMonitor'
         },
     }
 </script>

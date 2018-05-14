@@ -12,7 +12,7 @@
         <div class="rt-item rtItemSelect">
           用机运行报表
         </div>
-        <data-filter v-on:exportExcel="exportExcel"></data-filter>
+        <data-filter v-on:exportExcel="exportExcel" v-on:searchFn="getData"></data-filter>
       </div>
       <div class="content">
         <div class="list-tit">
@@ -139,29 +139,34 @@ export default {
 
   },
   methods: {
+    createURL(myURL, param) {
+      let url = ""
+      for (var key in param) {
+        var link = '&' + key + "=" + param[key];
+        url += link;
+      }
+      return myURL + "?" + url.substr(1)
+    },
     pagechange(val) {
       console.log(val + '页')
     },
     exportExcel(param) {
-      let url = "/exceldata/exportexcelFanRun";
+      let url = "http://120.26.222.27:10003/exceldata/exportexcelFanRun";
       let data = param;
-      this.api.handleAjax(url, data).done(function(res) {
-
-      }).fail(function(res) {
-        console.log(res);
-      })
+      // console.log(this.createURL(url,data));
+      //   return;
+      window.location.href = this.createURL(url,data)
     },
-    getData() {
+    getData(param) {
+      var self = this;
       let url = "/finddata/findFandataByCondition";
       let data = {
         currentpage: this.pageNum,
-        pagesize: this.pageSize,
-        clientid: 1,
-        monitorplaceid: 1,
-        timedetail: "",
-        startTime: "",
-        endTime: ""
+        pagesize: this.pageSize
       }
+
+      Object.assign(data, param);
+
       this.api.handleAjax(url, data).done(function(res) {
         if (res.list.length > 0) {
           self.total = res.total;

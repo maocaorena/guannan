@@ -72,7 +72,7 @@
               <tr v-for="(item,index) of items" :key="index" class="list-con-item">
                 <!-- 操作 -->
                 <td>
-                  <input type="checkbox">
+                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.systemId">
                 </td>
                 <td>{{index}}</td>
                 <td>{{item.userName}}</td>
@@ -96,8 +96,10 @@
         <pages-v :pageNum="pageNum" :pageSize="pageSize" :total="total" v-on:pagechange="pagechange"></pages-v>
       </div>
     </div>
+
     <accountDialog :item="accountData" :addType="addType" v-if="addDialog" @getParentData="getData"></accountDialog>
     <roleDialog :userId="userId" :addType="addType" v-if="roleDialog" @getParentData="getData"></roleDialog>
+
   </div>
 </template>
 <script>
@@ -119,6 +121,7 @@ export default {
           url: '/accountManage/roleList'
         }
       ],
+      modTitle: "添加帐号",
       width: "",
       btn: '确定',
       moduleTitle: "添加帐号",
@@ -235,10 +238,14 @@ export default {
         type: type,
         state: true,
       });
-      
+
       if (type == 2) {
         self.addType = 2;
+
         self.accountData = param
+      } else {
+        self.addType = 1;
+        this.accountData = {}
       }
     },
     setRoles(id) {

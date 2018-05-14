@@ -85,7 +85,7 @@
               </tr>
               <tr v-for="(item,index) of items" class="list-con-item">
                 <td>
-                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.systemId">
+                  <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.clientid">
                 </td>
                 <td>
                   {{index}}
@@ -341,6 +341,15 @@ export default {
           self.cityid = res.cityid;
           self.provinceid = res.provinceid;
         })
+      } else {
+        self.clientid = "";
+        self.clientname = "";
+        self.address = "";
+        self.name = "";
+        self.phone = "";
+        self.remark = "";
+        self.cityid = "";
+        self.provinceid = "";
       }
     },
 

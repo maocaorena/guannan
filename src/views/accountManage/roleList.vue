@@ -116,7 +116,7 @@ export default {
       ],
       width: "",
       btn: '确定',
-      moduleTitle: "添加角色",      
+      moduleTitle: "添加角色",
       pageNum: 1,
       pageSize: 10,
       total: 200,
@@ -146,7 +146,7 @@ export default {
       return this.$store.getters.roleListDialog.state;
     },
     rightDialog() {
-      return this.$store.getters.rightDialog.state;      
+      return this.$store.getters.rightDialog.state;
     }
   },
   methods: {
@@ -155,7 +155,7 @@ export default {
       if (this.checked) { //实现反选
         _this.checkboxModel = [];
         _this.items.forEach(function(item) {
-          _this.checkboxModel.push(item.systemId);
+          _this.checkboxModel.push(item.roleId);
         });
       } else { //实现全选
         _this.checkboxModel = [];
@@ -227,6 +227,8 @@ export default {
       if (type == 2) {
         self.addType = 2;
         self.roleData = param
+      } else {
+        this.roleData = {}
       }
       // if (type == 2) {
       //   self.addType = 2;
@@ -242,7 +244,7 @@ export default {
       });
       this.roleModId = id;
     }
-    
+
   },
   mounted() {
     this.width = this.$refs.list.getBoundingClientRect().width - 17;

@@ -289,7 +289,9 @@
 	}
 </script>
 <style lang="scss" scoped>
+
 	#setting {
+
 		.rightTabbar {
 			width: 100%;
 			height: 30px;
@@ -421,6 +423,9 @@
 		textarea {
 			resize: none;
 		}
+		.first-item {
+            color: #000;
+        }
 		.selected {
 			background: none;
 			background: #2899ee;

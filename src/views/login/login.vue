@@ -39,6 +39,7 @@
 
 <script>
 import { Util } from '../../lib/util.js';
+import { setToken } from '../../lib/auth.js';
 
 export default {
     data() {
@@ -50,13 +51,16 @@ export default {
     methods:{
         login(){
             var self = this;
-            let url = "doLogin";
+            let url = "/doLogin";
             let data = {
                 username: this.username,
                 password: this.password
             };
+
             this.api.handleAjax(url,data).done(function(res){
-                Util.setItem("info", res)
+                Util.setItem("info", res);
+                setToken(res);
+                // console.log(res);
                 self.$router.push('/monitoringRun')
             }).fail(function(res) {
                 // alert(res);

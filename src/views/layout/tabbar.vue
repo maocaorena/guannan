@@ -1,9 +1,9 @@
 <template>
     <div class="tabbar">
         <ul class="tab-list">
-            <li class="tab-item" :class="{tabItemSelected: $route.path.indexOf(item.path)>=0}" v-for="(item,index) of routes" v-if="item.children">
+            <li class="tab-item" :class="{tabItemSelected: $route.path.indexOf(item.path)>=0}" v-for="(item,index) of routesArr" v-if="item.children">
                 <router-link :to="item.path">
-                    <img :src="'./static/img/tab'+index+'.png'" alt="">
+                    <img :src="'./static/img/tab'+(index+1)+'.png'" alt="">
                     <span>{{item.name}}</span>
                 </router-link>
             </li>
@@ -14,10 +14,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { getToken } from '../../lib/auth' // 验权
+
 export default {
     data() {
         return {
-
+            routesArr: [],
         }
     },
     computed: {
@@ -26,7 +28,18 @@ export default {
         ]),
     },
     created(){
-        console.log()
+        console.log(this.routes);
+        // console.log("token:"+JSON.parse(getToken()).meunMap)
+        let arrt = JSON.parse(getToken()).meunMap;
+        for (var i in arrt) {
+            // arrt[i];
+            let route = this.routes.find(e => e.name == arrt[i]);
+            if(route) {
+                this.routesArr.push(route);
+            }
+        }
+
+        console.log("routesArr:"+this.routesArr);
     }
 }
 </script>

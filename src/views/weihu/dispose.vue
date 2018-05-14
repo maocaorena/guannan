@@ -372,6 +372,9 @@
 		textarea {
 			resize: none;
 		}
+		.first-item {
+            color: #000;
+        }
 		.selected {
 			background: none;
 			background: #2899ee;
