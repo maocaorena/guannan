@@ -114,8 +114,8 @@ export default {
       var self = this;
       let url = "/addSystemUser";
       let data = {
-        systemid: this.systemid,
-        username: this.username,
+        systemId: this.systemid,
+        userName: this.username,
         password: this.password,
         name: this.name,
         phone: this.phone,

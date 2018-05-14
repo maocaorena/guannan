@@ -244,6 +244,7 @@ export default {
 
         self.accountData = param
       } else {
+        self.addType = 1;
         this.accountData = {}
       }
     },
