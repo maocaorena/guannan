@@ -89,28 +89,49 @@ export default {
 	mounted(){
 		this.sendMessage();
 		let that = this;
-		this.api.createdGoEasy().subscribe({
-			channel: 'modulecommunicate',
-			onMessage: function(result) {
-				that.list.push(JSON.parse(result.content))
-				console.log(that.list)
-			}
+		this.api.createdGoEasy().then(res => {
+			res.subscribe('/modulecommunicate', function(respnose) {
+				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+				that.list.push(_data)
+			});
 		});
-		this.api.createdGoEasy().subscribe({
-			channel: 'monitornameport',
-			onMessage: function(result) {
-				console.log('monitornameport',result.content);
-				that.list1.push(...JSON.parse(result.content))
-			}
+		
+		this.api.createdGoEasy().then(res => {
+			res.subscribe('/monitornameport', function(respnose) {
+				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+				that.list1.push(..._data)
+			});
 		});
-		this.api.createdGoEasy().subscribe({
-			channel: 'electricMeterState',
-			onMessage: function(result) {
-				alert('eee')
-				console.log('electricMeterState',result.content);
-				that.list.push(...JSON.parse(result.content))
-			}
+		
+		this.api.createdGoEasy().then(res => {
+			res.subscribe('/electricMeterState', function(respnose) {
+				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+				that.list.push(..._data);
+			});
 		});
+		
+//		this.api.createdGoEasy().subscribe({
+//			channel: 'modulecommunicate',
+//			onMessage: function(result) {
+//				that.list.push(JSON.parse(result.content))
+//				console.log(that.list)
+//			}
+//		});
+//		this.api.createdGoEasy().subscribe({
+//			channel: 'monitornameport',
+//			onMessage: function(result) {
+//				console.log('monitornameport',result.content);
+//				that.list1.push(...JSON.parse(result.content))
+//			}
+//		});
+//		this.api.createdGoEasy().subscribe({
+//			channel: 'electricMeterState',
+//			onMessage: function(result) {
+//				alert('eee')
+//				console.log('electricMeterState',result.content);
+//				that.list.push(...JSON.parse(result.content))
+//			}
+//		});
 	},
 	beforeDestroy(){
 		this.api.unsubscribe('monitornameport');

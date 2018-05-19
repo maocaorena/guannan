@@ -58,10 +58,14 @@ export default {
             };
 
             this.api.handleAjax(url,data).done(function(res){
-                Util.setItem("info", res);
-                setToken(res);
-                // console.log(res);
-                self.$router.push('/monitoringRun')
+            	if(res){
+            		Util.setItem("info", res);
+            		setToken(res);
+            		   console.log(res);
+            		self.$router.push('/monitoringRun')
+            	}else{
+            		self.$message.error('登录失败');
+            	}
             }).fail(function(res) {
                 // alert(res);
                 self.$message.error(res);

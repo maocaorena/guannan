@@ -153,22 +153,22 @@
 									message: '下发命令成功',
 									duration: Util.time()
 								});
-								this.api.createdGoEasy().subscribe({
-									channel: state+'Monitor',
-									onMessage: function(message) {
-										if(message.content.indexOf('打开')> -1){
-											if(message.content.indexOf('成功')> -1){
+								this.api.createdGoEasy().then(res => {
+									res.subscribe( (state + 'Monitor'), function(respnose) {
+										let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+										console.log(state + 'Monitor', message.content);
+										if(_data.indexOf('打开') > -1) {
+											if(_data.indexOf('成功') > -1) {
 												_this.openOrClose = 1
 											};
 										};
-										if(message.content.indexOf('关闭')> -1){
-											if(message.content.indexOf('成功')> -1){
+										if(_data.indexOf('关闭') > -1) {
+											if(_data.indexOf('成功') > -1) {
 												_this.openOrClose = 0
 											};
 										};
-										console.log(state+'Monitor', message.content);
-									}
-								});
+									});
+								})
 							} else {
 								_this.$message.error({
 									message: res.response.info.msg,
@@ -185,7 +185,7 @@
 						}
 					})
 				} else {
-					
+
 				}
 			},
 			getList(name, danwei) {
@@ -223,26 +223,38 @@
 		},
 		created() {
 			let _this = this;
-			this.api.createdGoEasy().subscribe({
-				channel: 'infocurrentdata',
-				onMessage: function(message) {
-					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata,风机运行数据', JSON.parse(message.content));
-				}
+			this.api.createdGoEasy().then(res => {
+				res.subscribe('/infocurrentdata', function(respnose) {
+					console.log('infocurrentdata,风机运行数据', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
+					_this.message = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+				});
 			});
-			this.api.createdGoEasy().subscribe({
-				channel: 'cQueryMonitorStatus',
-				onMessage: function(message) {
-					console.log('cQueryMonitorStatus', JSON.parse(message.content));
-				}
-			});
+
+			this.api.createdGoEasy().then(res => {
+				res.subscribe('/cQueryMonitorStatus', function(respnose) {
+					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+					console.log('cQueryMonitorStatus,风机运行状态', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
+					if(_data.indexOf('打开') > -1) {
+						if(_data.indexOf('成功') > -1) {
+							_this.openOrClose = 1
+						};
+					};
+					if(_data.indexOf('关闭') > -1) {
+						if(_data.indexOf('成功') > -1) {
+							_this.openOrClose = 0
+						};
+					};
+				});
+			})
+			//			this.api.createdGoEasy().subscribe('cQueryMonitorStatus', function(message) {
+			//				console.log('cQueryMonitorStatus',JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
+			//			});
 			this.sendMessage()
 		},
 		mounted() {
 			this.getList('风机环境温度', '℃');
 		},
-		beforeDestroy() {
-		}
+		beforeDestroy() {}
 	}
 </script>
 
@@ -292,7 +304,7 @@
 						color: #2899ee;
 						background: #e0edfb;
 					}
-					.isthis{
+					.isthis {
 						background: #2899ee;
 						color: #fff;
 					}

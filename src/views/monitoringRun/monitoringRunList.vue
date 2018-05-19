@@ -112,7 +112,7 @@
                                     <td> {{item.onlineoroffline=='0'?'在线':'离线'}} </td>
                                 </tr>
                                 <tr v-if="total==0">
-                                    <td colspan="11">暂无数据</td>
+                                    <td colspan="12">暂无数据</td>
                                 </tr>
                             </tbody>
                         </table>

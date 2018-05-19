@@ -117,12 +117,11 @@
 		},
 		created() {
 			let _this = this;
-			this.api.createdGoEasy().subscribe({
-				channel: 'infocurrentdata',
-				onMessage: function(message) {
-					_this.message = JSON.parse(message.content);
-					console.log('infocurrentdata，电表数据', message.content);
-				}
+			this.api.createdGoEasy().then(res => {
+				res.subscribe('/infocurrentdata', function(respnose) {
+					console.log('infocurrentdata，电表数据', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
+					_this.message = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+				});
 			});
 			this.sendMessage()
 		},

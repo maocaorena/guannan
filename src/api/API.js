@@ -8,12 +8,25 @@ var config = {
 	timeout: 1800000,
 };
 
+var socket = new Promise(function(resolve, reject){
+	var socket = new SockJS('http://120.26.222.27:10004/endpointWisely'); //1连接SockJS的endpoint是“endpointWisely”，与后台代码中注册的endpoint要一样。
+	var stompClient = Stomp.over(socket);//2创建STOMP协议的webSocket客户端。
+	stompClient.connect({}, function(frame) {//3连接webSocket的服务端。
+	    console.log('开始进行连接Connected: ' + frame);
+	    resolve(stompClient)
+	    //4通过stompClient.subscribe（）订阅服务器的目标是'/topic/getResponse'发送过来的地址，与@SendTo中的地址对应。
+	//	        stompClient.subscribe('/infocurrentdata', function(respnose){
+	//	            console.log('res',JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
+	//	        });
+	});
+});
+
 class API {
     createdGoEasy(){
-        const goEasy = new GoEasy({
-             appkey: 'BC-fe15f72d698248f6986042fc4549f238'
-        });
-		return goEasy;
+    	return socket
+//      const goEasy = new GoEasy({
+//           appkey: 'BC-fe15f72d698248f6986042fc4549f238'
+//      });
 	}
 	unsubscribe(txt){
 		goEasy.unsubscribe ({
