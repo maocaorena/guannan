@@ -216,20 +216,15 @@
 			this.api.createdGoEasy().then(res => {
 				res.subscribe('/topic/cQueryMonitorStatus', function(respnose) {
 					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-					console.log('cQueryMonitorStatus,风机运行状态', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
-					if(_data.indexOf('打开') > -1) {
-						_this.openOrClose = 1
-					};
-					if(_data.indexOf('关闭') > -1) {
-						_this.openOrClose = 0
-					};
+					console.log('cQueryMonitorStatus,风机运行状态', _data);
+					_this.openOrClose = _data.reply;
 				});
 			})
 			
 			this.api.createdGoEasy().then(res => {
 				res.subscribe( ('/topic/openMonitor'), function(respnose) {
 					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-					console.log(state + 'Monitor', message.content);
+					console.log(state + 'Monitor', _data);
 					if(_data.indexOf('打开') > -1) {
 						if(_data.indexOf('成功') > -1) {
 							_this.openOrClose = 1
@@ -241,7 +236,7 @@
 			this.api.createdGoEasy().then(res => {
 				res.subscribe( ('/topic/closeMonitor'), function(respnose) {
 					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-					console.log(state + 'Monitor', message.content);
+					console.log(state + 'Monitor', _data);
 					if(_data.indexOf('关闭') > -1) {
 						if(_data.indexOf('成功') > -1) {
 							_this.openOrClose = 0
@@ -296,7 +291,6 @@
 					cursor: pointer;
 					.right-l {
 						float: left;
-						margin-right: 3px;
 						width: 59px;
 						height: 100%;
 						text-align: center;

@@ -33,7 +33,9 @@
 		],
 		watch: {
 			'paramsName' (newData, oldData) {
-				this.getData(newData)
+				if(newData&&newData.length > 0){
+					this.getData(newData)
+				}
 			},
 		},
 		methods: {
