@@ -90,21 +90,21 @@ export default {
 		this.sendMessage();
 		let that = this;
 		this.api.createdGoEasy().then(res => {
-			res.subscribe('/modulecommunicate', function(respnose) {
+			res.subscribe('/topic/modulecommunicate', function(respnose) {
 				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
 				that.list.push(_data)
 			});
 		});
 		
 		this.api.createdGoEasy().then(res => {
-			res.subscribe('/monitornameport', function(respnose) {
+			res.subscribe('/topic/monitornameport', function(respnose) {
 				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
 				that.list1.push(..._data)
 			});
 		});
 		
 		this.api.createdGoEasy().then(res => {
-			res.subscribe('/electricMeterState', function(respnose) {
+			res.subscribe('/topic/electricMeterState', function(respnose) {
 				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
 				that.list.push(..._data);
 			});

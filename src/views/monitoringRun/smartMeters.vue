@@ -118,7 +118,7 @@
 		created() {
 			let _this = this;
 			this.api.createdGoEasy().then(res => {
-				res.subscribe('/infocurrentdata', function(respnose) {
+				res.subscribe('/topic/infocurrentdata', function(respnose) {
 					console.log('infocurrentdata，电表数据', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
 					_this.message = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
 				});

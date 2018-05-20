@@ -139,7 +139,6 @@
 				let _this = this;
 				let pw = prompt("请输入密码：");
 				if(pw && Util.trim(pw).length > 0) {
-					console.log(pw)
 					this.api.postN({
 						url: '/monitor/' + state + 'Monitor',
 						params: {
@@ -153,22 +152,6 @@
 									message: '下发命令成功',
 									duration: Util.time()
 								});
-								this.api.createdGoEasy().then(res => {
-									res.subscribe( (state + 'Monitor'), function(respnose) {
-										let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-										console.log(state + 'Monitor', message.content);
-										if(_data.indexOf('打开') > -1) {
-											if(_data.indexOf('成功') > -1) {
-												_this.openOrClose = 1
-											};
-										};
-										if(_data.indexOf('关闭') > -1) {
-											if(_data.indexOf('成功') > -1) {
-												_this.openOrClose = 0
-											};
-										};
-									});
-								})
 							} else {
 								_this.$message.error({
 									message: res.response.info.msg,
@@ -224,21 +207,41 @@
 		created() {
 			let _this = this;
 			this.api.createdGoEasy().then(res => {
-				res.subscribe('/infocurrentdata', function(respnose) {
+				res.subscribe('/topic/infocurrentdata', function(respnose) {
 					console.log('infocurrentdata,风机运行数据', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
 					_this.message = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
 				});
 			});
 
 			this.api.createdGoEasy().then(res => {
-				res.subscribe('/cQueryMonitorStatus', function(respnose) {
+				res.subscribe('/topic/cQueryMonitorStatus', function(respnose) {
 					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
 					console.log('cQueryMonitorStatus,风机运行状态', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
+					if(_data.indexOf('打开') > -1) {
+						_this.openOrClose = 1
+					};
+					if(_data.indexOf('关闭') > -1) {
+						_this.openOrClose = 0
+					};
+				});
+			})
+			
+			this.api.createdGoEasy().then(res => {
+				res.subscribe( ('/topic/openMonitor'), function(respnose) {
+					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+					console.log(state + 'Monitor', message.content);
 					if(_data.indexOf('打开') > -1) {
 						if(_data.indexOf('成功') > -1) {
 							_this.openOrClose = 1
 						};
 					};
+				});
+			});
+			
+			this.api.createdGoEasy().then(res => {
+				res.subscribe( ('/topic/closeMonitor'), function(respnose) {
+					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+					console.log(state + 'Monitor', message.content);
 					if(_data.indexOf('关闭') > -1) {
 						if(_data.indexOf('成功') > -1) {
 							_this.openOrClose = 0
@@ -246,9 +249,6 @@
 					};
 				});
 			})
-			//			this.api.createdGoEasy().subscribe('cQueryMonitorStatus', function(message) {
-			//				console.log('cQueryMonitorStatus',JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
-			//			});
 			this.sendMessage()
 		},
 		mounted() {
