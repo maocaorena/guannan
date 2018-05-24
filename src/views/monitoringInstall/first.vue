@@ -65,6 +65,7 @@
 <script type="text/javascript">
 import firstadd from './firstAdd.vue';
 import { Util } from '../../lib/util.js';
+import { getToken } from '../../lib/auth.js';
 export default{
     data(){
         return{
@@ -149,6 +150,7 @@ export default{
                 latitude: this.firstAddMessage.jingwei.latitude,
                 longtitude: this.firstAddMessage.jingwei.longtitude,
                 address: this.firstAddMessage.addrs,
+                systemId: JSON.parse(getToken()).systemId
             };
             let _this = this;
             let url = '';

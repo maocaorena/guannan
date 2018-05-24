@@ -31,7 +31,7 @@
                         监控器型号：
                     </p>
                     <p class="right">
-                        {{canshu.monitormodel}}
+                        {{canshu.name}}
                     </p>
                 </div>
                 <div class="con-item">

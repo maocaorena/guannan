@@ -75,6 +75,7 @@
 <script type="text/javascript">
     import alert from '../../components/alert.vue';
     import { Util } from '../../lib/util.js';
+    import { getToken } from '../../lib/auth.js';
     export default{
         data(){
             return{
@@ -183,7 +184,8 @@
                     this.api.postN({
                         url: '/module/setModuleInfo',
                         params: {
-                            moduleinfos: JSON.stringify(subList)
+                            moduleinfos: JSON.stringify(subList),
+                            systemId: JSON.parse(getToken()).systemId
                         },
                         success: function(res){
                             _this.loading = false;
@@ -205,7 +207,8 @@
                     this.api.postN({
                         url: '/module/updateModuleInfo',
                         params: {
-                            moduleinfos: JSON.stringify(subList)
+                            moduleinfos: JSON.stringify(subList),
+                            systemId: JSON.parse(getToken()).systemId
                         },
                         success: function(res){
                             _this.loading = false;
