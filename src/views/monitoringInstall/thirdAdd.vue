@@ -60,7 +60,7 @@
                                         </select>
                                     </td>
         							<td>
-                                        <select v-model="item.portstate" :disabled="item.datasource != '监控器'">
+                                        <select v-model="item.portstate" :disabled="item.thirdState">
                                             <option v-for="item1 of portstate" :value="item1.state">{{item1.state}}</option>
                                         </select>
                                     </td>
@@ -123,6 +123,7 @@
         		console.log('sdfsdf',JSON.parse(JSON.stringify(item)))
         		if(item.datasource == '监控器'){
         			item.secondState = false;
+                    item.thirdState = false;
         		}else{
         			item.secondState = true;
         			item.thirdState = true;
@@ -131,8 +132,10 @@
         		}
         	},
         	secondChange(e,item){
-        		let oldPort = e.target.getAttribute('oldPort');
-        		this.thisStr.splice(this.thisStr.indexOf(oldPort),1);
+                if(e){
+        		    let oldPort = e.target.getAttribute('oldPort');
+        		    this.thisStr.splice(this.thisStr.indexOf(oldPort),1);
+                }
         		item.oldPort = item.dataport;
         		for(let i = 0; i < this.dataPort.length; i++){
         			for(let j = 0; j < this.list.length; j++){
@@ -142,6 +145,7 @@
 	        		};
         		};
         		if(item.dataport){
+                    console.log(item.dataport.indexOf("DI"))
         			if(item.dataport.indexOf("DI")>=0){
         				item.thirdState = false;
         			}else{
@@ -227,6 +231,7 @@
                             _this.$message.success({message: res.response.info.msg,duration: Util.time()});
                             let _addid = _this.addid;
                             if(res.response.content){
+                                console.log('bb')
                                 for (let i = 0; i < res.response.content.length; i++) {
                                     res.response.content[i].idx = i;
                                     res.response.content[i].datasource = null;
@@ -306,6 +311,7 @@
                         if(res.response.info.code==100000){
                     		res.response.content.oldPort = res.response.content.dataport;
                             _this.list.push(res.response.content);
+                            _this.secondChange(false,_this.list[0])
                         }
                     }
                 })

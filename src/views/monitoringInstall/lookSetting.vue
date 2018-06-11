@@ -110,33 +110,8 @@ export default {
 			});
 		});
 		
-//		this.api.createdGoEasy().subscribe({
-//			channel: 'modulecommunicate',
-//			onMessage: function(result) {
-//				that.list.push(JSON.parse(result.content))
-//				console.log(that.list)
-//			}
-//		});
-//		this.api.createdGoEasy().subscribe({
-//			channel: 'monitornameport',
-//			onMessage: function(result) {
-//				console.log('monitornameport',result.content);
-//				that.list1.push(...JSON.parse(result.content))
-//			}
-//		});
-//		this.api.createdGoEasy().subscribe({
-//			channel: 'electricMeterState',
-//			onMessage: function(result) {
-//				alert('eee')
-//				console.log('electricMeterState',result.content);
-//				that.list.push(...JSON.parse(result.content))
-//			}
-//		});
 	},
 	beforeDestroy(){
-		this.api.unsubscribe('monitornameport');
-		this.api.unsubscribe('modulecommunicate');
-		this.api.unsubscribe('electricMeterState');
 	}
 }
 </script>

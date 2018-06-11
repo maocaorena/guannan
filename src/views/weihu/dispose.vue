@@ -241,6 +241,7 @@
 					params: {
 						currentpage: this.pageNum,
 						pagesize: this.pagesize,
+                        monitorplacenameorinstallname: this.keyWords
 					},
 					success: function(res) {
 						_this.loading = false;

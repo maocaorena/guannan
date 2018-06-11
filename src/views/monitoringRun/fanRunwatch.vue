@@ -11,13 +11,21 @@
 					<div class="con-item-con">
 						<div class="switch">
 							<div class="left">
-								风机控制继电器
+								风机控制继电器状态
 							</div>
-							<div class="right">
-								<div class="right-l" :class="{'isthis':openOrClose==1}" @click="handle('open')">
+							<div class="right" style="border:none; height:100%; margin:0; line-height: 42px;margin-right:20px">
+								<div v-if="openOrClose==1">
+									开启状态
+								</div>
+								<div v-if="openOrClose==0">
+									关闭状态
+								</div>
+							</div>
+                            <div class="right">
+								<div class="right-l isthis" v-if="openOrClose==0" @click="handle('open')">
 									开启
 								</div>
-								<div class="right-l" :class="{'isthis':openOrClose==0}" @click="handle('close')">
+								<div class="right-l isthis" v-if="openOrClose==1" @click="handle('close')">
 									关闭
 								</div>
 							</div>
@@ -278,7 +286,7 @@
 				height: 52px;
 				.left {
 					float: left;
-					width: 104px;
+					width: 154px;
 					height: 100%;
 					line-height: 42px;
 					color: #535353;
@@ -286,10 +294,11 @@
 				.right {
 					float: left;
 					margin-top: 8px;
+                    width: 59px;
 					height: 24px;
 					border: 1px solid #2899ee;
-					cursor: pointer;
 					.right-l {
+					    cursor: pointer;
 						float: left;
 						width: 59px;
 						height: 100%;

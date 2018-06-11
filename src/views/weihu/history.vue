@@ -174,6 +174,7 @@ export default {
                 params: {
                     currentpage: this.pageNum,
                     pagesize: this.pagesize,
+                    condationname: this.keyWords
                 },
                 success: function(res){
                     console.log(res)
