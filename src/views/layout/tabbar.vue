@@ -28,18 +28,14 @@ export default {
         ]),
     },
     created(){
-        console.log(this.routes);
-        // console.log("token:"+JSON.parse(getToken()).meunMap)
         let arrt = JSON.parse(getToken()).meunMap;
         for (var i in arrt) {
-            // arrt[i];
             let route = this.routes.find(e => e.name == arrt[i]);
             if(route) {
                 this.routesArr.push(route);
             }
         }
 
-        console.log("routesArr:"+this.routesArr);
     }
 }
 </script>

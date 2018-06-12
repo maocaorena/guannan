@@ -1,6 +1,6 @@
 <template>
     <div class="pages">
-        <div class="middle">
+        <!-- <div class="middle">
             <a href="javascript:;" v-show="pageNums == 1">
                 <img src="../assets/img/pages/Page1.png" alt="">
             </a>
@@ -24,7 +24,7 @@
                 <img src="../assets/img/pages/Page6.png" alt="">
             </a>
 
-            <a href="javascript:;" v-show="pageNums < pages" @click="setCurrent(pages)"">
+            <a href="javascript:;" v-show="pageNums < pages" @click="setCurrent(pages)">
                 <img src="../assets/img/pages/Page4.png" alt="">
             </a>
             <a href="javascript:;" v-show="pageNums == pages">
@@ -43,7 +43,15 @@
         <div class="pages-right">
             {{(pageNums-1)*pageSize + 1}} - {{(pageNums)*pageSize}} &nbsp 共 {{total}} 条
         </div>
-        <p style="display: none;">{{bb}}</p>
+        <p style="display: none;">{{bb}}</p> -->
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage4"
+            :page-size="10"
+            layout="total, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
     </div>
 </template>
 <script type="text/javascript">
@@ -55,60 +63,65 @@
     // 返回的事件
     // v-on:pagechange(val) 页码改变事件 val 为页码
     // v-on:selectall(val) 页码改变事件 val 为全选状态
-    export default{
-        data(){
+    export default {
+        data() {
             return {
                 pageNums: this.pageNum,
                 all: false,
+                currentPage4: this.pageNum
             }
         },
         props: {
-            total: {// 数据总条数
+            total: { // 数据总条数
                 type: Number,
                 default: 0
             },
-            pageSize: {// 每页显示条数
+            pageSize: { // 每页显示条数
                 type: Number,
                 default: 10
             },
-            pageNum: {// 当前页码
+            pageNum: { // 当前页码
                 type: Number,
                 default: 1
             },
         },
-        computed:{
-            pages: function () { // 总页数
+        computed: {
+            pages: function() { // 总页数
                 return Math.ceil(this.total / this.pageSize);
             },
-            bb: function () { // 总页数
+            bb: function() { // 总页数
                 this.pageNums = this.pageNum
                 return this.pageNum;
             },
         },
-        methods:{
+        methods: {
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+                this.$emit('pagechange', val);
+            },
             setCurrent: function(idx) {
-                if( this.pageNums != idx && idx > 0 && idx < this.pages + 1) {
+                if (this.pageNums != idx && idx > 0 && idx < this.pages + 1) {
                     this.pageNums = idx;
-                    this.$emit('pagechange',this.pageNums);
+                    this.$emit('pagechange', this.pageNums);
                 }
             },
-            selectAll(){
-                this.$emit('selectall',this.all);
-            }
         },
-        created(){
+        created() {
 
         }
     }
 </script>
 <style lang="scss" scoped>
-    .pages{
+    .pages {
         position: relative;
         width: 100%;
         height: 30px;
         text-align: center;
         background: #f1f1f1;
-        .pages-left{
+        overflow: hidden;
+        .pages-left {
             width: 60px;
             height: 100%;
             position: absolute;
@@ -117,31 +130,29 @@
             line-height: 30px;
             font-size: 12px;
             color: #333;
-            input{
+            input {
                 position: relative;
                 top: 2px;
             }
         }
-        .middle{
+        .middle {
             display: inline-block;
             vertical-align: middle;
-            width: 255px;
             height: 30px;
             line-height: 30px;
-            a{
+            a {
                 display: inline-block;
                 padding: 0 6px;
                 height: 100%;
             }
         }
-        .middle-mid{
+        .middle-mid {
             display: inline-block;
-            width: 86px;
             height: 100%;
-            i{
+            i {
                 font-style: normal;
             }
-            .white{
+            .white {
                 display: inline-block;
                 width: 30px;
                 height: 19px;
@@ -151,12 +162,12 @@
                 font-size: 12px;
                 line-height: 18px;
             }
-            .all{
+            .all {
                 color: #6c6c6c;
                 font-size: 12px;
             }
         }
-        .handle-page{
+        .handle-page {
             display: inline-block;
             position: relative;
             top: 5px;
@@ -165,7 +176,7 @@
             background: #F9F9F9;
             border: 1px solid #E4E4E4;
             border-radius: 5px;
-            .dd{
+            .dd {
                 position: relative;
                 bottom: 7px;
                 width: 20px;
@@ -175,27 +186,27 @@
                 font-size: 12px;
                 padding-left: 2px;
             }
-            .change-page{
+            .change-page {
                 display: inline-block;
                 width: 20px;
-                i{
+                i {
                     position: absolute;
                     display: inline-block;
                     width: 10px;
                     height: 9px;
                     right: 5px;
                 }
-                .to-top{
+                .to-top {
                     top: 0;
                     background: url(../assets/img/pages/shang.png) no-repeat center;
                 }
-                .to-bottom{
+                .to-bottom {
                     top: 10px;
                     background: url(../assets/img/pages/xia.png) no-repeat center;
                 }
             }
         }
-        .pages-right{
+        .pages-right {
             position: absolute;
             top: 0;
             right: 20px;
@@ -207,7 +218,8 @@
             color: #666666;
         }
     }
-    .pages:after{
+
+    .pages:after {
         content: "";
         display: inline-block;
         height: 100%;

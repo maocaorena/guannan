@@ -130,7 +130,8 @@
 					}
 				],
 				width: '',
-				ifPage: false
+				ifPage: false,
+                param: {}
 			}
 		},
 		components: {
@@ -158,15 +159,20 @@
 	        },
 			pagechange(val) {
 				console.log(val + '页')
+                this.pageNum = val;
+                this.getData(false)
 			},
 			getData(param) {
+                if(param){
+                    this.param = param;
+                };
 				var self = this;
 				let url = "/finddata/findElectricUseByCondition";
 				let data = {
 					currentpage: this.pageNum,
 					pagesize: this.pageSize
 				}
-				Object.assign(data, param);
+				Object.assign(data, this.param);
 				this.api.handleAjax(url, data, "post").done(function(res) {
 					if(res.list.length > 0) {
 						
@@ -187,7 +193,6 @@
 				let url = "http://120.26.222.27:10003/exceldata/excelExportElecricConsume";
 				let data = param;
 				console.log(this.createURL(url,data));
-				return;
       			window.location.href = this.createURL(url,data)
 
 				
