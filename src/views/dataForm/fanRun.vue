@@ -66,7 +66,7 @@
               <tr v-if="!ifPage">
                 <td colspan="11">暂无数据</td>
               </tr>
-              <tr v-for="(item,index) of items" class="list-con-item">
+              <tr v-if="ifPage" v-for="(item,index) of items" class="list-con-item">
                 <td>{{item.timedetail}}</td>
                 <td>
                   {{item.clientname}}
@@ -122,6 +122,7 @@
                         url: '/dataForm/hzRun'
                     }
                 ],
+                param: {}
             }
         },
         components: {
@@ -158,6 +159,9 @@
                 window.location.href = this.createURL(url, data)
             },
             getData(param) {
+            		if(param){
+                    this.param = param;
+                };
                 var self = this;
                 let url = "/finddata/findFandataByCondition";
                 let data = {
@@ -165,7 +169,7 @@
                     pagesize: this.pageSize
                 }
 
-                Object.assign(data, param);
+                Object.assign(data, this.param);
 
                 this.api.handleAjax(url, data).done(function(res) {
                     if (res.list.length > 0) {

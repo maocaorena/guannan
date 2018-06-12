@@ -83,7 +83,7 @@
               <tr v-if="!ifPage">
                 <td colspan="10">暂无数据</td>
               </tr>
-              <tr v-for="(item,index) of items" class="list-con-item">
+              <tr v-if="ifPage" v-for="(item,index) of items" class="list-con-item">
                 <td>
                   <input type="checkbox" name="checkboxinput" v-model='checkboxModel' :value="item.clientid">
                 </td>

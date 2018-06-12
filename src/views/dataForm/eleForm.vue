@@ -72,7 +72,7 @@
 							<tr v-if="!ifPage">
 								<td colspan="13">暂无数据</td>
 							</tr>
-							<tr v-for="(item,index) in items" class="list-con-item">
+							<tr v-if="ifPage" v-for="(item,index) in items" class="list-con-item">
 								<td>
 									{{item.timedetail}}
 								</td>
@@ -194,8 +194,6 @@
 				let data = param;
 				console.log(this.createURL(url,data));
       			window.location.href = this.createURL(url,data)
-
-				
 			}
 		},
 		watch: {
