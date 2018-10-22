@@ -29,17 +29,21 @@
 			<table class="list" style="width: 300px;" border="1" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
-						<th>数据源</th>
 						<th>监控参数</th>
+						<th>数据源</th>
+						<th>数据端口</th>
 					</tr>
 				</thead>
 				<tbody class="list-con">
 					<tr v-for="(item,index) of list1">
+                        <td>
+							{{item.monitorname}}
+						</td>
 						<td>
 							{{item.monitorportname}}
 						</td>
                         <td>
-							{{item.monitorname}}
+							{{item.dataSource}}
 						</td>
 					</tr>
 				</tbody>
