@@ -39,11 +39,11 @@
                         <td>
 							{{item.monitorname}}
 						</td>
-						<td>
-							{{item.monitorportname}}
-						</td>
                         <td>
 							{{item.dataSource}}
+						</td>
+						<td>
+							{{item.monitorportname}}
 						</td>
 					</tr>
 				</tbody>
