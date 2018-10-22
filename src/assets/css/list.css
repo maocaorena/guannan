@@ -22,7 +22,7 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 28px;
+	top: 48px;
 	bottom: 0;
 	margin: auto;
 	height: auto;
@@ -51,24 +51,20 @@ tr:hover {
 }
 td,
 th {
-	height: 28px;
+	height: 48px;
 	border-color: #cfdde7;
 	font-size: 12px;
 	word-wrap:break-word;
-
 }
 
 th {
-	background: url(../img/th_bg.png) repeat-x;
+    background: url(../img/th_bg.png) repeat-x;
+    background-size: 100% 100%;
 	color: #2899ee;
 	text-align: center;
 	border-bottom: none;
-	white-space: nowrap;
     position: relative;
-    overflow: hidden;
-    text-overflow: ellipsis;
     max-width: 100%;
-
 }
 
 td {

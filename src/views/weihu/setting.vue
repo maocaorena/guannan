@@ -22,7 +22,7 @@
                         <button type="button" name="button" @click="search">搜索</button>
                     </div>	
                     <div class="handle-item">
-                        <input type="text" placeholder="" v-model="keyWords">
+                        <input type="text" placeholder="" placeholder="项目名称/保养内容" v-model="keyWords">
                     </div>
                     <div class="handle-item">
                         <button type="button" name="button" @click="del(2)">批量删除</button>

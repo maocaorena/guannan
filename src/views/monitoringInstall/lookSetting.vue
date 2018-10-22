@@ -5,13 +5,21 @@
 			<table class="list" style="width: 300px;" border="1" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
-						<th>监控参数名称</th>
+						<th>通信模块类型</th>
+						<th>通信模块型号</th>
+						<th>通信模块地址</th>
 					</tr>
 				</thead>
 				<tbody class="list-con">
 					<tr v-for="(item,index) of list">
 						<td>
 							{{item.modulename}}
+						</td>
+                        <td>
+							{{item.moduleModelName}}
+						</td>
+                        <td>
+							{{item.moduleAddress}}
 						</td>
 					</tr>
 				</tbody>
@@ -21,13 +29,17 @@
 			<table class="list" style="width: 300px;" border="1" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
-						<th>监控端口名称</th>
+						<th>数据源</th>
+						<th>监控参数</th>
 					</tr>
 				</thead>
 				<tbody class="list-con">
 					<tr v-for="(item,index) of list1">
 						<td>
 							{{item.monitorportname}}
+						</td>
+                        <td>
+							{{item.monitorname}}
 						</td>
 					</tr>
 				</tbody>
@@ -47,7 +59,6 @@ export default {
 			btn: '确定',
 			list: [],
 			list1: [],
-			list2: [],
 		}
 	},
 	props:[
@@ -91,21 +102,24 @@ export default {
 		let that = this;
 		this.api.createdGoEasy().then(res => {
 			res.subscribe('/topic/modulecommunicate', function(respnose) {
-				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+                let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+                console.log(JSON.parse(JSON.stringify(_data)))
 				that.list.push(_data)
 			});
 		});
 		
 		this.api.createdGoEasy().then(res => {
 			res.subscribe('/topic/monitornameport', function(respnose) {
-				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+                let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+                console.log(JSON.parse(JSON.stringify(_data)))
 				that.list1.push(..._data)
 			});
 		});
 		
 		this.api.createdGoEasy().then(res => {
 			res.subscribe('/topic/electricMeterState', function(respnose) {
-				let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+                let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
+                console.log('只能',JSON.parse(JSON.stringify(_data)))
 				that.list.push(..._data);
 			});
 		});

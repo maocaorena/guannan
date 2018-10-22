@@ -215,7 +215,7 @@
 		created() {
 			let _this = this;
 			this.api.createdGoEasy().then(res => {
-				res.subscribe('/topic/infocurrentdata', function(respnose) {
+				res.subscribe('/user/'+this.deviceUUID+'/msg', function(respnose) {
 					console.log('infocurrentdata,风机运行数据', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
 					_this.message = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
 				});
