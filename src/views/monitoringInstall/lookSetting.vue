@@ -124,7 +124,8 @@ export default {
 			res.subscribe('/topic/electricMeterState', function(respnose) {
                 let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
                 console.log('只能',JSON.parse(JSON.stringify(_data)))
-				that.list.push(..._data);
+                that.list.push(_data);
+                console.log(that.list)
 			});
 		});
 		

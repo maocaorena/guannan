@@ -1,16 +1,26 @@
 <template>
     <div id="monitoringRunItem">
-        <router-view></router-view>
+        <hzWatch v-show="$route.name === 'hzWatch'"></hzWatch>
+        <smartMeters v-show="$route.name === 'smartMeters'"></smartMeters>
+        <fanRunwatch v-show="$route.name === 'fanRunwatch'"></fanRunwatch>
     </div>
 </template>
 
 <script>
-import rightTabbar from '../layout/rightTabbar.vue'
+import hzWatch from './hzWatch.vue';
+import smartMeters from './smartMeters.vue';
+import fanRunwatch from './fanRunwatch.vue';
+
 export default {
     data() {
         return {
 
         }
+    },
+    components: {
+        'hzWatch': hzWatch,
+        'smartMeters': smartMeters,
+        'fanRunwatch': fanRunwatch,
     },
     created(){
         let tabs = [
@@ -26,7 +36,7 @@ export default {
             }
         ];
         this.$store.dispatch('ChangeRightbar',tabs);
-
+        console.log(this.$route)
     }
 }
 </script>

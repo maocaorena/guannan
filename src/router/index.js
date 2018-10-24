@@ -54,19 +54,19 @@ export const routes = [
                         redirect: '/monitoringRun/list/item/fanRunwatch',
                         children: [
                             {//风机运行监测
+                                name: 'fanRunwatch',
                                 path: '/monitoringRun/list/item/fanRunwatch',
-                                component: fanRunwatch,
-                                name: '风机运行监测'
+                                component: monitoringRunItem,
                             },
                             {//智能电表
+                                name: 'smartMeters',
                                 path: '/monitoringRun/list/item/smartMeters',
-                                component: smartMeters,
-                                name: '智能电表'
+                                component: monitoringRunItem,
                             },
                             {//变频器运行监测
+                                name: 'hzWatch',
                                 path: '/monitoringRun/list/item/hzWatch',
-                                component: hzWatch,
-                                name: '变频器运行监测'
+                                component: monitoringRunItem,
                             },
                         ]
                     },
