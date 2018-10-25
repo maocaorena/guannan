@@ -71,21 +71,11 @@
 		data() {
 			return {
 				deviceUUID: this.$route.query.monitoruid,
-				message: {
-					avm: '-',
-					bvm: '-',
-					cvm: '-',
-					aam: '-',
-					bam: '-',
-					cam: '-',
-					posipower: '-',
-					negipower: '-',
-					powerfactor: '-'
-				},
 				paramsName: '',
 				danwei: ''
 			}
-		},
+        },
+        props: ['message'],
 		components: {
 			'data-v' : data,
 			'topbar-v': topbar
@@ -95,35 +85,8 @@
 				this.paramsName = name;
 				this.danwei = danwei;
 			},
-			sendMessage(){
-				let _this = this;
-	    		this.api.postN({
-	                url: '/readmonitordata/readMonitorData',
-	                params: {
-	                    deviceUUID: this.deviceUUID,
-	                },
-	                success: function(res){
-	                    if(res.response.info.code==100000){
-	                        _this.$message.success({message: res.response.info.msg,duration: Util.time()});
-	                    }else{
-	                    	_this.$message.error({message: res.response.info.msg,duration: Util.time()});
-	                    }
-	                },
-	                error: function(error){
-	                	_this.$message.error({message: '服务器错误',duration: Util.time()});
-	                }
-	            });
-			},
 		},
 		created() {
-			let _this = this;
-			this.api.createdGoEasy().then(res => {
-				res.subscribe('/topic/infocurrentdata', function(respnose) {
-					console.log('infocurrentdata，电表数据', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
-					_this.message = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-				});
-			});
-			this.sendMessage()
 		},
 		mounted() {
 			this.getList('A相电压', 'V');

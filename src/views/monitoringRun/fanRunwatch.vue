@@ -110,29 +110,6 @@
 		data() {
 			return {
 				deviceUUID: this.$route.query.monitoruid,
-				openOrClose: '-1',
-				message: {
-					hours: '-',
-					timedetail: '-',
-					tem: '-',
-					infilnegpressure: '-',
-					outairpressure: '-',
-					outairtemp: '-',
-					oilpressure: '-',
-					oiltemp: '-',
-					fanfault: '未知',
-					thermalmotorfault: '未知',
-					infilnegpressurefault: '未知',
-					outairpressurefault: '未知',
-					outairtempfault: '未知',
-					oilpressurelowfault: '未知',
-					oiltempupfault: '未知',
-					fanfault: '未知',
-					fanfault: '未知',
-					fanfault: '未知',
-					fanfault: '未知',
-					fanfault: '未知',
-				},
 				paramsName: '',
 				danwei: ''
 			}
@@ -141,7 +118,8 @@
 			'data-v': data,
 			'topbar-v': topbar,
 			'state-v': state
-		},
+        },
+        props: ['message', 'openOrClose'],
 		methods: {
 			handle(state) {
 				let _this = this;
@@ -183,76 +161,10 @@
 				this.paramsName = name;
 				this.danwei = danwei;
 			},
-			sendMessage() {
-				let _this = this;
-				this.api.postN({
-					url: '/readmonitordata/readMonitorData',
-					params: {
-						deviceUUID: this.deviceUUID,
-					},
-					success: function(res) {
-						if(res.response.info.code == 100000) {
-							_this.$message.success({
-								message: res.response.info.msg,
-								duration: Util.time()
-							});
-						} else {
-							_this.$message.error({
-								message: res.response.info.msg,
-								duration: Util.time()
-							});
-						}
-					},
-					error: function(error) {
-						_this.$message.error({
-							message: '服务器错误',
-							duration: Util.time()
-						});
-					}
-				});
-			},
 		},
 		created() {
-			let _this = this;
-			this.api.createdGoEasy().then(res => {
-				res.subscribe('/user/'+this.deviceUUID+'/msg', function(respnose) {
-					console.log('infocurrentdata,风机运行数据', JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage));
-					_this.message = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-				});
-			});
+            console.log(this.openOrClose)
 
-			this.api.createdGoEasy().then(res => {
-				res.subscribe('/topic/cQueryMonitorStatus', function(respnose) {
-					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-					console.log('cQueryMonitorStatus,风机运行状态', _data);
-					_this.openOrClose = _data.reply;
-				});
-			})
-			
-			this.api.createdGoEasy().then(res => {
-				res.subscribe( ('/topic/openMonitor'), function(respnose) {
-					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-					console.log(state + 'Monitor', _data);
-					if(_data.indexOf('打开') > -1) {
-						if(_data.indexOf('成功') > -1) {
-							_this.openOrClose = 1
-						};
-					};
-				});
-			});
-			
-			this.api.createdGoEasy().then(res => {
-				res.subscribe( ('/topic/closeMonitor'), function(respnose) {
-					let _data = JSON.parse(JSON.parse(respnose.body).WiselyResponse.responseMessage);
-					console.log(state + 'Monitor', _data);
-					if(_data.indexOf('关闭') > -1) {
-						if(_data.indexOf('成功') > -1) {
-							_this.openOrClose = 0
-						};
-					};
-				});
-			})
-			this.sendMessage()
 		},
 		mounted() {
 			this.getList('风机环境温度', '℃');

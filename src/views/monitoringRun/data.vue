@@ -50,7 +50,10 @@
 				this.getData();
 			},
 			getData(name) {
-				let _this = this;
+                let _this = this;
+                if(!name || name.length<1){
+                    return
+                }
 				this.chart.showLoading();
 				this.api.postN({
 					url: '/findmaindata/findDataByTimeAndType',
